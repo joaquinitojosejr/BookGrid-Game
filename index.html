@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookGrid - Verified Literary Puzzle</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;600;700&display=swap');
+    body { font-family: 'Montserrat', sans-serif; background-color: #0c0a09; color: #e7e5e4; }
+    .font-serif-title { font-family: 'Merriweather', serif; }
+    .cell-spacer { background-color: #1c1917; border: 1px dashed #44403c; }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+    .speaking { animation: pulse-ring 1.5s infinite; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-stone-950 text-amber-50 selection:bg-amber-500 selection:text-stone-950">
+
+  <!-- Header -->
+  <header class="border-b border-amber-900/40 bg-stone-900/80 backdrop-blur-md sticky top-0 z-20 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <i class="fa-solid fa-book-bookmark text-amber-500 text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold font-serif-title tracking-wide text-amber-100">BookGrid</h1>
+      </div>
+      
+      <div class="flex items-center space-x-2 md:space-x-3 text-xs md:text-sm">
+        <div id="roomBadge" class="hidden flex items-center space-x-1.5 bg-green-950/80 border border-green-700/60 px-2.5 py-1.5 rounded-lg text-green-300 font-mono font-bold">
+          <i class="fa-solid fa-signal text-green-400 text-xs"></i>
+          <span id="roomCodeDisplay">ROOM: ----</span>
+        </div>
+        <div class="flex items-center space-x-1 bg-stone-800 px-2.5 py-1.5 rounded-lg border border-amber-900/30" title="Net Score">
+          <i class="fa-solid fa-trophy text-amber-400"></i>
+          <span id="scoreDisplay" class="font-semibold text-amber-200">0</span>
+        </div>
+        <div class="flex items-center space-x-1 bg-stone-800 px-2.5 py-1.5 rounded-lg border border-red-900/40" title="Dynamic Trial Penalty Percentage">
+          <i class="fa-solid fa-circle-minus text-red-400 text-xs"></i>
+          <span id="penaltyDisplay" class="font-semibold text-red-400">-0%</span>
+        </div>
+        <div class="flex items-center space-x-1 bg-stone-800 px-2.5 py-1.5 rounded-lg border border-amber-900/30">
+          <i class="fa-solid fa-stopwatch text-amber-400"></i>
+          <span id="timerDisplay" class="font-mono text-amber-200">00:00</span>
+        </div>
+        <button id="toggleCipherBtn" class="bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-700/50 px-2.5 py-1.5 rounded-lg text-xs transition font-semibold">
+          <i class="fa-solid fa-arrow-rotate-right mr-1"></i> <span id="cipherBtnText">Numbers</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div id="liveSyncBanner" class="hidden bg-green-900/50 border-b border-green-700 text-green-200 text-center py-2 px-4 text-xs md:text-sm flex items-center justify-center space-x-2">
+    <i class="fa-solid fa-bolt text-amber-400"></i>
+    <span>Live Room Active! Correct letters lock in green. Wrong trial guesses incur dynamic penalty %.</span>
+  </div>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl w-full mx-auto p-4 flex-grow flex flex-col items-center justify-center pb-24">
+
+    <div class="w-full flex flex-col md:flex-row items-center justify-between gap-2 mb-4 bg-stone-900/50 p-3 rounded-xl border border-stone-800">
+      <div>
+        <span class="text-xs uppercase tracking-widest text-amber-500 font-semibold">Verified Literary Clue</span>
+        <h2 id="puzzleTitle" class="text-sm md:text-base font-serif-title font-semibold text-amber-100">Loading quote...</h2>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button id="nextPuzzleBtn" title="Load a new authentic quote" class="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-amber-900/50 text-amber-300 border border-amber-900/40 transition text-xs font-semibold flex items-center space-x-1">
+          <i class="fa-solid fa-shuffle"></i>
+          <span>New Quote</span>
+        </button>
+        <button id="speakerBtn" title="Read passage aloud" class="p-2.5 rounded-full bg-stone-800 hover:bg-amber-900/50 text-amber-400 border border-amber-900/40 transition">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+
+        <div class="text-right">
+          <div class="text-xs text-stone-400">Resolved Progress</div>
+          <div id="progressPercent" class="text-sm font-bold text-amber-400">0%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid Container -->
+    <div id="gridContainer" class="w-full flex justify-center items-center my-2 overflow-x-auto p-2 scroll-smooth"></div>
+
+    <div class="w-full max-w-xl flex flex-wrap items-center justify-between gap-2 mt-2 bg-stone-900 p-3 rounded-xl border border-stone-800">
+      <div class="flex items-center space-x-1 text-xs text-stone-400">
+        <span>Checks:</span>
+        <span id="heartsContainer" class="flex space-x-1 text-red-500">
+          <i class="fa-solid fa-heart"></i>
+          <i class="fa-solid fa-heart"></i>
+          <i class="fa-solid fa-heart"></i>
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-2 flex-wrap">
+        <button id="revealBtn" class="bg-stone-800 hover:bg-stone-700 text-amber-300 border border-amber-900/30 px-3 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1 transition">
+          <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+          <span>Reveal Hint</span>
+        </button>
+        <button id="checkBtn" class="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-4 py-2 rounded-lg text-xs transition flex items-center space-x-1 shadow-lg shadow-amber-600/20">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Check Grid</span>
+        </button>
+        <button id="createRoomBtn" class="bg-green-700 hover:bg-green-600 text-white font-semibold px-3 py-2 rounded-lg text-xs transition flex items-center space-x-1">
+          <i class="fa-solid fa-users text-sm"></i>
+          <span id="roomBtnText">Live Room</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Sticky Fixed Bottom Keypad Container -->
+  <div class="sticky bottom-0 left-0 right-0 z-30 w-full bg-stone-950/95 border-t border-amber-900/40 backdrop-blur-md p-2 flex justify-center shadow-2xl">
+    <div id="virtualKeypad" class="w-full max-w-md flex flex-col gap-1.5">
+      <div class="flex justify-center gap-1">
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="Q">Q</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="W">W</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="E">E</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="R">R</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="T">T</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="Y">Y</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="U">U</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="I">I</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="O">O</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="P">P</button>
+      </div>
+      <div class="flex justify-center gap-1 px-4">
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="A">A</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="S">S</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="D">D</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="F">F</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="G">G</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="H">H</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="J">J</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="K">K</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="L">L</button>
+      </div>
+      <div class="flex justify-center gap-1 px-8">
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="Z">Z</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="X">X</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="C">C</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="V">V</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="B">B</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="N">N</button>
+        <button class="key-btn flex-1 bg-stone-800 hover:bg-amber-700 text-amber-100 font-bold py-2.5 rounded-lg text-sm active:bg-amber-500 transition" data-key="M">M</button>
+        <button id="keyDel" class="flex-1 bg-red-950/80 hover:bg-red-900 text-red-200 font-bold py-2.5 rounded-lg text-xs flex items-center justify-center transition">
+          <i class="fa-solid fa-delete-left"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="roomModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-stone-900 border border-amber-900/60 p-6 rounded-2xl max-w-md w-full shadow-2xl relative">
+      <button id="closeRoomModal" class="absolute top-4 right-4 text-stone-400 hover:text-amber-200">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <h3 class="text-xl font-serif-title font-bold text-amber-200 mb-2 flex items-center gap-2">
+        <i class="fa-solid fa-tower-broadcast text-green-500"></i> Live Room Multiplayer
+      </h3>
+      <p class="text-xs text-stone-300 mb-4">
+        Share this room code with a friend. Correct letters lock automatically in green; wrong guesses incur a dynamic penalty % based on quote length!
+      </p>
+
+      <div class="bg-stone-950 p-4 rounded-xl border border-stone-800 text-center mb-4">
+        <div class="text-xs uppercase tracking-widest text-stone-400 mb-1">Your Room Code</div>
+        <div id="modalRoomCode" class="text-3xl font-mono font-bold text-amber-400 tracking-wider">------</div>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="whatsappRoomBtn" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+          <i class="fa-brands fa-whatsapp text-lg"></i> Invite via WhatsApp
+        </button>
+        <button id="copyRoomCodeBtn" class="bg-stone-800 hover:bg-stone-700 text-amber-300 font-semibold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition border border-stone-700">
+          <i class="fa-solid fa-copy"></i> Copy Code
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-amber-500 text-stone-950 px-4 py-2 rounded-xl text-xs font-bold shadow-xl opacity-0 pointer-events-none transition-all duration-300">
+    Notification
+  </div>
+
+  <footer class="border-t border-stone-800 py-3 text-center text-xs text-stone-500 bg-stone-950 mb-16">
+    BookGrid &copy; 2026 &bull; Verified Literary Puzzle
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD8kaABNgpGKwvlkd3ojuWGJ25-3eQXTj4",
+      authDomain: "bookgrid---by-daniel-del-prana.firebaseapp.com",
+      databaseURL: "https://bookgrid---by-daniel-del-prana-default-rtdb.firebaseio.com",
+      projectId: "bookgrid---by-daniel-del-prana",
+      storageBucket: "bookgrid---by-daniel-del-prana.firebasestorage.app",
+      messagingSenderId: "762276705751",
+      appId: "1:762276705751:web:da7777d97863e01f0c0792",
+      measurementId: "G-LHF7K5GJTY"
+    };
+
+    let db = null;
+    let currentRoomRef = null;
+    let isLiveRoom = false;
+    let activeRoomCode = null;
+
+    try {
+      if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.database();
+      }
+    } catch (e) {
+      console.error("Firebase init error:", e);
+    }
+
+    const VERIFIED_PUZZLES = [
+      { id: "v1", title: "George Orwell - 1984", quote: "WAR IS PEACE FREEDOM IS SLAVERY IGNORANCE IS STRENGTH" },
+      { id: "v2", title: "Jane Austen - Pride and Prejudice", quote: "IT IS A TRUTH UNIVERSALLY ACKNOWLEDGED" },
+      { id: "v3", title: "Herman Melville - Moby-Dick", quote: "CALL ME ISHMAEL" },
+      { id: "v4", title: "Charles Dickens - A Tale of Two Cities", quote: "IT WAS THE BEST OF TIMES IT WAS THE WORST OF TIMES" },
+      { id: "v5", title: "F. Scott Fitzgerald - The Great Gatsby", quote: "SO WE BEAT ON BOATS AGAINST THE CURRENT" },
+      { id: "v6", title: "Mary Shelley - Frankenstein", quote: "BEWARE FOR I AM FEARLESS AND THEREFORE POWERFUL" },
+      { id: "v7", title: "Oscar Wilde - The Picture of Dorian Gray", quote: "TO DEFINE IS TO LIMIT" },
+      { id: "v8", title: "Antoine de Saint-Exupéry - The Little Prince", quote: "WHAT IS ESSENTIAL IS INVISIBLE TO THE EYE" },
+      { id: "v9", title: "Franz Kafka - The Metamorphosis", quote: "AS GREGOR SAMSA AWOKE ONE MORNING" },
+      { id: "v10", title: "Ray Bradbury - Fahrenheit 451", quote: "IT WAS A PLEASURE TO BURN" },
+      { id: "v11", title: "Lewis Carroll - Alice's Adventures in Wonderland", quote: "WE ARE ALL MAD HERE" },
+      { id: "v12", title: "Harper Lee - To Kill a Mockingbird", quote: "YOU NEVER REALLY UNDERSTAND A PERSON UNTIL YOU CONSIDER THINGS FROM HIS POINT OF VIEW" },
+      { id: "v13", title: "J.R.R. Tolkien - The Hobbit", quote: "IN A HOLE IN THE GROUND THERE LIVED A HOBBIT" },
+      { id: "v14", title: "Charlotte Brontë - Jane Eyre", quote: "I AM NO BIRD AND NO NET ENSNARES ME" },
+      { id: "v15", title: "William Shakespeare - Hamlet", quote: "TO BE OR NOT TO BE THAT IS THE QUESTION" },
+      { id: "v16", title: "Fyodor Dostoevsky - Crime and Punishment", quote: "PAIN AND SUFFERING ARE ALWAYS INEVITABLE FOR A LARGE INTELLIGENCE" },
+      { id: "v17", title: "Alexandre Dumas - The Count of Monte Cristo", quote: "ALL HUMAN WISDOM IS CONTAINED IN THESE TWO WORDS WAIT AND HOPE" },
+      { id: "v18", title: "Victor Hugo - Les Misérables", quote: "EVEN THE DARKEST NIGHT WILL END AND THE SUN WILL RISE" },
+      { id: "v19", title: "Ernest Hemingway - The Sun Also Rises", quote: "THE WORLD BREAKS EVERYONE AND AFTERWARD MANY ARE STRONG AT THE BROKEN PLACES" },
+      { id: "v20", title: "Joseph Heller - Catch-22", quote: "THERE WAS ONLY ONE CATCH AND THAT WAS CATCH TWENTY TWO" }
+    ];
+
+    let currentPuzzle = VERIFIED_PUZZLES[0];
+    let gridState = [];
+    let selectedCellIndex = 0;
+    let isCipherMode = false;
+    let wrongAttempts = 0;
+    let score = 0;
+    let timerSeconds = 0;
+    let timerInterval = null;
+    let remainingChecks = 3;
+
+    const gridContainer = document.getElementById('gridContainer');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const penaltyDisplay = document.getElementById('penaltyDisplay');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const progressPercent = document.getElementById('progressPercent');
+    const puzzleTitle = document.getElementById('puzzleTitle');
+    const toggleCipherBtn = document.getElementById('toggleCipherBtn');
+    const cipherBtnText = document.getElementById('cipherBtnText');
+    const speakerBtn = document.getElementById('speakerBtn');
+    const nextPuzzleBtn = document.getElementById('nextPuzzleBtn');
+    const checkBtn = document.getElementById('checkBtn');
+    const revealBtn = document.getElementById('revealBtn');
+    const createRoomBtn = document.getElementById('createRoomBtn');
+    const roomBtnText = document.getElementById('roomBtnText');
+    const roomModal = document.getElementById('roomModal');
+    const closeRoomModal = document.getElementById('closeRoomModal');
+    const modalRoomCode = document.getElementById('modalRoomCode');
+    const whatsappRoomBtn = document.getElementById('whatsappRoomBtn');
+    const copyRoomCodeBtn = document.getElementById('copyRoomCodeBtn');
+    const roomBadge = document.getElementById('roomBadge');
+    const roomCodeDisplay = document.getElementById('roomCodeDisplay');
+    const liveSyncBanner = document.getElementById('liveSyncBanner');
+    const toast = document.getElementById('toast');
+    const heartsContainer = document.getElementById('heartsContainer');
+
+    function showToast(msg) {
+      toast.innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerSeconds = 0;
+      timerDisplay.innerText = "00:00";
+      timerInterval = setInterval(() => {
+        timerSeconds++;
+        const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+        const secs = String(timerSeconds % 60).padStart(2, '0');
+        timerDisplay.innerText = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function selectRandomVerifiedPuzzle(excludeId = null) {
+      const candidates = VERIFIED_PUZZLES.filter(p => p.id !== excludeId);
+      return candidates[Math.floor(Math.random() * candidates.length)];
+    }
+
+    function loadPuzzle(puzzleObj) {
+      currentPuzzle = puzzleObj;
+      puzzleTitle.innerText = currentPuzzle.title;
+      const words = currentPuzzle.quote.split(' ');
+      gridState = [];
+      wrongAttempts = 0;
+
+      words.forEach((word, wIdx) => {
+        for (let i = 0; i < word.length; i++) {
+          gridState.push({
+            type: 'letter',
+            target: word[i],
+            val: '',
+            cipher: word[i].charCodeAt(0) - 64
+          });
+        }
+        if (wIdx < words.length - 1) {
+          gridState.push({
+            type: 'spacer',
+            target: ' ',
+            val: ' ',
+            cipher: 0
+          });
+        }
+      });
+
+      selectedCellIndex = gridState.findIndex(c => c.type === 'letter');
+      remainingChecks = 3;
+      updateHeartsUI();
+      renderGrid();
+      updateProgress();
+      startTimer();
+    }
+
+    function renderGrid() {
+      gridContainer.innerHTML = '';
+      const gridEl = document.createElement('div');
+      gridEl.className = 'grid grid-cols-6 sm:grid-cols-7 md:grid-cols-8 gap-1.5 max-w-xl mx-auto';
+
+      gridState.forEach((cell, idx) => {
+        const cellEl = document.createElement('div');
+
+        if (cell.type === 'spacer') {
+          cellEl.className = 'w-9 h-11 md:w-11 md:h-13 rounded-lg cell-spacer flex items-center justify-center opacity-40';
+          cellEl.innerHTML = '<span class="text-stone-600 text-xs">&bull;</span>';
+        } else {
+          const isCorrect = (cell.val === cell.target);
+          
+          let bgStyle = 'bg-stone-900 border-stone-800';
+          if (isCorrect) {
+            bgStyle = 'bg-green-950/70 border-green-600/80 shadow-md shadow-green-900/30';
+          } else if (selectedCellIndex === idx) {
+            bgStyle = 'border-amber-500 bg-amber-950/40 shadow-md shadow-amber-500/20';
+          }
+
+          cellEl.className = `w-9 h-11 md:w-11 md:h-13 rounded-lg border-2 ${bgStyle} flex flex-col items-center justify-center ${isCorrect ? 'cursor-default' : 'cursor-pointer'} transition relative`;
+          cellEl.id = `cell-${idx}`;
+
+          const label = document.createElement('span');
+          label.className = `text-[9px] ${isCorrect ? 'text-green-400/80' : 'text-amber-500/70'} font-mono absolute top-0.5 left-1 pointer-events-none`;
+          label.innerText = isCipherMode ? cell.cipher : (idx + 1);
+
+          const valSpan = document.createElement('span');
+          valSpan.className = `font-bold text-base md:text-lg ${isCorrect ? 'text-green-300' : 'text-amber-100'} uppercase pointer-events-none mt-1`;
+          valSpan.innerText = cell.val || '';
+
+          if (!isCorrect) {
+            cellEl.addEventListener('click', () => {
+              selectedCellIndex = idx;
+              renderGrid();
+              scrollToSelectedCell(idx);
+            });
+          }
+
+          cellEl.appendChild(label);
+          cellEl.appendChild(valSpan);
+        }
+
+        gridEl.appendChild(cellEl);
+      });
+
+      gridContainer.appendChild(gridEl);
+    }
+
+    function scrollToSelectedCell(idx) {
+      const activeEl = document.getElementById(`cell-${idx}`);
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+
+    document.querySelectorAll('.key-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const letter = btn.getAttribute('data-key');
+        setCellLetter(letter);
+      });
+    });
+
+    document.getElementById('keyDel').addEventListener('click', () => {
+      setCellLetter('');
+    });
+
+    function setCellLetter(char) {
+      if (selectedCellIndex === null || gridState[selectedCellIndex].type === 'spacer') return;
+      
+      const currentCell = gridState[selectedCellIndex];
+      if (currentCell.val === currentCell.target) return; // Cell is correct and locked
+
+      if (char !== '') {
+        if (char !== currentCell.target) {
+          wrongAttempts++;
+        }
+        currentCell.val = char;
+      } else {
+        currentCell.val = '';
+      }
+
+      updateProgress();
+      syncToFirebase();
+
+      if (char !== '') {
+        for (let i = selectedCellIndex + 1; i < gridState.length; i++) {
+          if (gridState[i].type === 'letter' && gridState[i].val !== gridState[i].target) {
+            selectedCellIndex = i;
+            break;
+          }
+        }
+      }
+      renderGrid();
+      scrollToSelectedCell(selectedCellIndex);
+    }
+
+    function updateProgress() {
+      const letterCells = gridState.filter(c => c.type === 'letter');
+      const correctCells = letterCells.filter(c => c.val === c.target);
+      const solvedPercent = Math.floor((correctCells.length / letterCells.length) * 100);
+      
+      const totalLetters = letterCells.length;
+      const penaltyPerMistake = totalLetters > 0 ? (100 / totalLetters) : 5;
+      const penaltyPercent = Math.round(wrongAttempts * penaltyPerMistake);
+      const netScore = Math.max(-500, solvedPercent - penaltyPercent);
+
+      progressPercent.innerText = `${solvedPercent}%`;
+      penaltyDisplay.innerText = `-${penaltyPercent}%`;
+      scoreDisplay.innerText = netScore;
+
+      if (solvedPercent === 100) {
+        clearInterval(timerInterval);
+        if (netScore < 0) {
+          showToast(`⚠️ Quote solved, but trial penalties resulted in a negative score (${netScore})!`);
+        } else {
+          showToast(`🎉 Perfect! Quote solved with a net score of ${netScore}!`);
+        }
+      }
+    }
+
+    function syncToFirebase() {
+      if (!isLiveRoom || !currentRoomRef) return;
+      const serializedGrid = gridState.map(c => (c.type === 'letter' && c.val) ? c.val : '_').join('');
+      currentRoomRef.update({
+        puzzleId: currentPuzzle.id,
+        puzzleTitle: currentPuzzle.title,
+        puzzleQuote: currentPuzzle.quote,
+        grid: serializedGrid,
+        wrongAttempts: wrongAttempts
+      });
+    }
+
+    function createOrJoinRoom(roomCode = null) {
+      if (!db) {
+        showToast("Firebase connection not initialized.");
+        return;
+      }
+
+      const code = roomCode || "BG-" + Math.floor(1000 + Math.random() * 9000);
+      activeRoomCode = code;
+      currentRoomRef = db.ref('rooms/' + code);
+
+      currentRoomRef.once('value', (snapshot) => {
+        if (!snapshot.exists()) {
+          const initialGrid = gridState.map(c => (c.type === 'letter' && c.val) ? c.val : '_').join('');
+          currentRoomRef.set({
+            puzzleId: currentPuzzle.id,
+            puzzleTitle: currentPuzzle.title,
+            puzzleQuote: currentPuzzle.quote,
+            grid: initialGrid,
+            wrongAttempts: wrongAttempts
+          });
+        }
+
+        currentRoomRef.on('value', (snap) => {
+          const data = snap.val();
+          if (data) {
+            if (data.puzzleId && data.puzzleId !== currentPuzzle.id) {
+              const matched = VERIFIED_PUZZLES.find(p => p.id === data.puzzleId);
+              if (matched) loadPuzzle(matched);
+            }
+
+            if (data.wrongAttempts !== undefined) {
+              wrongAttempts = data.wrongAttempts;
+            }
+
+            if (data.grid) {
+              const letters = data.grid.split('');
+              let letterCounter = 0;
+              gridState.forEach(cell => {
+                if (cell.type === 'letter') {
+                  cell.val = (letters[letterCounter] && letters[letterCounter] !== '_') ? letters[letterCounter] : '';
+                  letterCounter++;
+                } else {
+                  letterCounter++;
+                }
+              });
+              renderGrid();
+              updateProgress();
+            }
+          }
+        });
+      });
+
+      isLiveRoom = true;
+      roomCodeDisplay.innerText = `ROOM: ${code}`;
+      modalRoomCode.innerText = code;
+      roomBadge.classList.remove('hidden');
+      liveSyncBanner.classList.remove('hidden');
+      roomBtnText.innerText = "Room Info";
+
+      window.location.hash = `room=${code}`;
+      roomModal.classList.remove('hidden');
+    }
+
+    nextPuzzleBtn.addEventListener('click', () => {
+      const newPuz = selectRandomVerifiedPuzzle(currentPuzzle.id);
+      loadPuzzle(newPuz);
+      syncToFirebase();
+      showToast("Loaded new authentic quote!");
+    });
+
+    checkBtn.addEventListener('click', () => {
+      let hasWrong = false;
+      let filledCount = 0;
+
+      gridState.forEach(c => {
+        if (c.type === 'letter' && c.val) {
+          filledCount++;
+          if (c.val !== c.target) hasWrong = true;
+        }
+      });
+
+      if (filledCount === 0) {
+        showToast("Fill in some letters before checking!");
+        return;
+      }
+
+      if (!hasWrong) {
+        showToast("All current entries are correct!");
+      } else {
+        remainingChecks--;
+        updateHeartsUI();
+        wrongAttempts += Math.max(1, Math.round(gridState.filter(c => c.type === 'letter').length * 0.05));
+        syncToFirebase();
+        showToast("Some letters are incorrect (penalty added)");
+      }
+    });
+
+    function updateHeartsUI() {
+      heartsContainer.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const heart = document.createElement('i');
+        heart.className = i < remainingChecks ? 'fa-solid fa-heart' : 'fa-regular fa-heart opacity-30';
+        heartsContainer.appendChild(heart);
+      }
+    }
+
+    revealBtn.addEventListener('click', () => {
+      const unrevealedIdxs = gridState
+        .map((c, idx) => (c.type === 'letter' && c.val !== c.target) ? idx : null)
+        .filter(val => val !== null);
+
+      if (unrevealedIdxs.length === 0) {
+        showToast("All cells already solved!");
+        return;
+      }
+
+      const randomIdx = unrevealedIdxs[Math.floor(Math.random() * unrevealedIdxs.length)];
+      gridState[randomIdx].val = gridState[randomIdx].target;
+      wrongAttempts += Math.max(2, Math.round(gridState.filter(c => c.type === 'letter').length * 0.1));
+
+      renderGrid();
+      updateProgress();
+      syncToFirebase();
+      showToast("Cell revealed! (penalty added)");
+    });
+
+    toggleCipherBtn.addEventListener('click', () => {
+      isCipherMode = !isCipherMode;
+      cipherBtnText.innerText = isCipherMode ? "Letters" : "Numbers";
+      renderGrid();
+    });
+
+    speakerBtn.addEventListener('click', () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(currentPuzzle.quote);
+        utterance.rate = 0.9;
+        speakerBtn.classList.add('speaking');
+        utterance.onend = () => speakerBtn.classList.remove('speaking');
+        utterance.onerror = () => speakerBtn.classList.remove('speaking');
+        window.speechSynthesis.speak(utterance);
+      }
+    });
+
+    createRoomBtn.addEventListener('click', () => {
+      if (!isLiveRoom) {
+        createOrJoinRoom();
+      } else {
+        roomModal.classList.remove('hidden');
+      }
+    });
+
+    closeRoomModal.addEventListener('click', () => roomModal.classList.add('hidden'));
+
+    whatsappRoomBtn.addEventListener('click', () => {
+      const shareUrl = window.location.href;
+      const message = `⚡ Join my live BookGrid room!\n🎯 Code: ${activeRoomCode}\n🔗 Play: ${shareUrl}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+    });
+
+    copyRoomCodeBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(activeRoomCode).then(() => {
+        showToast("Room code copied!");
+      });
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPuzzle(selectRandomVerifiedPuzzle());
+
+      const hash = window.location.hash.substring(1);
+      if (hash.startsWith('room=')) {
+        const code = hash.split('=')[1];
+        if (code) createOrJoinRoom(code);
+      }
+    });
+  </script>
+</body>
+</html>
