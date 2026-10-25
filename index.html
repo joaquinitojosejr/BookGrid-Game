@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -16,6 +16,7 @@
 
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -89,10 +90,24 @@
     .key-btn:hover { background-color: #334155; }
     .key-btn:active { background-color: #475569; }
 
+    html:not(.dark) .key-btn {
+      background-color: #e2e8f0;
+      color: #0f172a;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    html:not(.dark) .key-btn:hover { background-color: #cbd5e1; }
+    html:not(.dark) .key-btn:active { background-color: #94a3b8; }
+
     .key-btn.key-correct { background-color: #059669 !important; color: #ffffff !important; }
     .key-btn.key-same-word { background-color: #d4af37 !important; color: #0f172a !important; font-weight: 700; }
     .key-btn.key-present { background-color: #0284c7 !important; color: #ffffff !important; }
     .key-btn.key-absent { background-color: #334155 !important; color: #64748b !important; opacity: 0.5; }
+
+    html:not(.dark) .key-btn.key-absent {
+      background-color: #cbd5e1 !important;
+      color: #64748b !important;
+      opacity: 0.6;
+    }
 
     .key-count-badge {
       position: absolute;
@@ -107,6 +122,13 @@
       padding: 2px 4px;
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    html:not(.dark) .key-count-badge {
+      background-color: #ffffff;
+      color: #b58900;
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
 
     .action-btn {
@@ -139,6 +161,14 @@
       transition: all 0.2s ease;
       cursor: pointer;
     }
+
+    html:not(.dark) .tile-box {
+      border-color: #cbd5e1;
+      background-color: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
     @media (min-width: 640px) {
       .key-btn { min-width: 44px; }
       .tile-box { width: 2.5rem; height: 3rem; font-size: 1.25rem; }
@@ -150,11 +180,23 @@
       transform: scale(1.05);
       background-color: #1e293b;
     }
+
+    html:not(.dark) .tile-box.active {
+      background-color: #f8fafc;
+      border-color: #b58900;
+      box-shadow: 0 0 0 3px rgba(181, 137, 0, 0.25);
+    }
     
     .tile-box.tile-correct {
       background-color: rgba(6, 78, 59, 0.9);
       border-color: #10b981;
       color: #6ee7b7;
+    }
+
+    html:not(.dark) .tile-box.tile-correct {
+      background-color: #d1fae5;
+      border-color: #059669;
+      color: #065f46;
     }
 
     .tile-box.tile-same-word {
@@ -163,15 +205,33 @@
       color: #fef08a;
     }
 
+    html:not(.dark) .tile-box.tile-same-word {
+      background-color: #fef3c7;
+      border-color: #d97706;
+      color: #92400e;
+    }
+
     .tile-box.tile-present {
       background-color: rgba(12, 74, 110, 0.9);
       border-color: #38bdf8;
       color: #7dd3fc;
     }
 
+    html:not(.dark) .tile-box.tile-present {
+      background-color: #e0f2fe;
+      border-color: #0284c7;
+      color: #075985;
+    }
+
     .tile-box.tile-absent {
       background-color: rgba(30, 41, 59, 0.5);
       border-color: #475569;
+      color: #94a3b8;
+    }
+
+    html:not(.dark) .tile-box.tile-absent {
+      background-color: #f1f5f9;
+      border-color: #cbd5e1;
       color: #94a3b8;
     }
 
@@ -185,46 +245,57 @@
       user-select: none;
     }
 
+    html:not(.dark) .punct-symbol {
+      color: #b58900;
+    }
+
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+    html:not(.dark) ::-webkit-scrollbar-track { background: #f1f5f9; }
+    html:not(.dark) ::-webkit-scrollbar-thumb { background: #cbd5e1; }
   </style>
 </head>
-<body class="bg-brand-dark text-slate-100 font-body h-[100dvh] flex flex-col overflow-hidden no-select">
+<body class="bg-slate-100 dark:bg-brand-dark text-slate-800 dark:text-slate-100 font-body h-[100dvh] flex flex-col overflow-hidden no-select transition-colors duration-200">
 
   <!-- Hidden text input for native mobile/desktop keyboard binding -->
   <input type="text" id="hidden-keyboard-input" autocomplete="off" autocapitalize="none" spellcheck="false" class="sr-only opacity-0 absolute -z-50 pointer-events-none" aria-hidden="true" />
 
   <!-- Header -->
-  <header class="bg-brand-card border-b border-brand-border px-4 py-3 flex items-center justify-between shrink-0 z-10">
+  <header class="bg-white dark:bg-brand-card border-b border-slate-200 dark:border-brand-border px-4 py-3 flex items-center justify-between shrink-0 z-10 shadow-sm dark:shadow-none transition-colors duration-200">
     <div class="flex items-center space-x-2">
-      <i class="fa-solid fa-book-bookmark text-brand-gold text-xl"></i>
-      <h1 class="font-serif font-bold text-xl tracking-wider text-slate-100">BOOKGRID</h1>
+      <i class="fa-solid fa-book-bookmark text-amber-600 dark:text-brand-gold text-xl"></i>
+      <h1 class="font-serif font-bold text-xl tracking-wider text-slate-900 dark:text-slate-100">BOOKGRID</h1>
     </div>
     
     <div class="flex items-center space-x-2">
-      <button onclick="openQuoteInfoModal()" class="px-3 py-1.5 text-xs font-semibold bg-brand-border hover:bg-slate-700 text-brand-gold rounded-lg transition-colors flex items-center gap-1.5" title="Quote Details">
-        <i class="fa-solid fa-circle-nodes text-brand-gold"></i> Details
+      <!-- Light/Dark Mode Skin Toggle Button -->
+      <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700" title="Toggle Light/Dark Theme">
+        <i id="theme-icon" class="fa-solid fa-sun text-lg"></i>
       </button>
-      <button id="btn-custom-mode" onclick="openCustomModal()" class="px-3 py-1.5 text-xs font-semibold bg-brand-border hover:bg-slate-700 text-slate-200 rounded-lg transition-colors flex items-center gap-1.5">
-        <i class="fa-solid fa-users text-brand-accent"></i> Custom
+      <button onclick="openQuoteInfoModal()" class="px-3 py-1.5 text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 dark:hover:bg-slate-700 text-amber-700 dark:text-brand-gold rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 dark:border-transparent" title="Quote Details">
+        <i class="fa-solid fa-circle-nodes text-amber-600 dark:text-brand-gold"></i> Details
       </button>
-      <button onclick="openHelpModal()" class="p-2 text-slate-400 hover:text-brand-gold transition-colors">
+      <button id="btn-custom-mode" onclick="openCustomModal()" class="px-3 py-1.5 text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 dark:border-transparent">
+        <i class="fa-solid fa-users text-sky-600 dark:text-brand-accent"></i> Custom
+      </button>
+      <button onclick="openHelpModal()" class="p-2 text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-brand-gold transition-colors">
         <i class="fa-solid fa-circle-info text-lg"></i>
       </button>
     </div>
   </header>
 
   <!-- Sub-Header Status Bar -->
-  <div class="bg-slate-900/80 border-b border-brand-border/50 px-4 py-2 flex items-center justify-between text-xs text-slate-400 shrink-0">
+  <div class="bg-slate-200/80 dark:bg-slate-900/80 border-b border-slate-300 dark:border-brand-border/50 px-4 py-2 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 shrink-0 transition-colors duration-200">
     <div id="mode-indicator" class="flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span id="mode-text" class="font-medium text-slate-300">Daily Global Challenge</span>
+      <span id="mode-text" class="font-medium text-slate-800 dark:text-slate-300">Daily Global Challenge</span>
     </div>
     <div id="game-stats-quick" class="flex items-center gap-4">
-      <span>Mistakes: <strong id="stat-mistakes" class="text-rose-400">0</strong></span>
-      <span>Hints: <strong id="stat-hints" class="text-amber-400">0</strong></span>
-      <span>Score: <strong id="stat-score" class="text-brand-gold">100%</strong></span>
+      <span>Mistakes: <strong id="stat-mistakes" class="text-rose-600 dark:text-rose-400">0</strong></span>
+      <span>Hints: <strong id="stat-hints" class="text-amber-600 dark:text-amber-400">0</strong></span>
+      <span>Score: <strong id="stat-score" class="text-amber-600 dark:text-brand-gold">100%</strong></span>
     </div>
   </div>
 
@@ -232,29 +303,29 @@
   <main id="main-content" class="flex-1 overflow-y-auto p-4 flex flex-col items-center justify-start max-w-4xl mx-auto w-full pb-60">
     
     <!-- Daily Locked Banner -->
-    <div id="daily-locked-banner" class="hidden w-full bg-slate-800/90 border border-brand-gold/40 rounded-xl p-5 mb-6 text-center shadow-lg">
-      <div class="inline-flex p-3 bg-brand-gold/10 rounded-full text-brand-gold mb-3">
+    <div id="daily-locked-banner" class="hidden w-full bg-white dark:bg-slate-800/90 border border-amber-500/40 dark:border-brand-gold/40 rounded-xl p-5 mb-6 text-center shadow-lg transition-colors duration-200">
+      <div class="inline-flex p-3 bg-amber-500/10 dark:bg-brand-gold/10 rounded-full text-amber-600 dark:text-brand-gold mb-3">
         <i class="fa-solid fa-lock text-2xl"></i>
       </div>
-      <h2 class="font-serif text-xl text-brand-gold font-bold mb-1">Today's Puzzle Completed!</h2>
-      <p id="locked-score-summary" class="text-sm text-slate-300 mb-4">You scored 100% on today's literary quote.</p>
+      <h2 class="font-serif text-xl text-amber-600 dark:text-brand-gold font-bold mb-1">Today's Puzzle Completed!</h2>
+      <p id="locked-score-summary" class="text-sm text-slate-700 dark:text-slate-300 mb-4">You scored 100% on today's literary quote.</p>
       
       <div class="flex flex-wrap items-center justify-center gap-3">
-        <button onclick="shareResults()" class="px-5 py-2.5 bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-bold rounded-lg transition-colors flex items-center gap-2 text-sm shadow-md">
+        <button onclick="shareResults()" class="px-5 py-2.5 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold rounded-lg transition-colors flex items-center gap-2 text-sm shadow-md">
           <i class="fa-solid fa-share-nodes"></i> Share Score
         </button>
-        <div class="bg-slate-900 px-4 py-2 rounded-lg border border-brand-border text-xs text-slate-400">
-          Next Quote in: <span id="countdown-timer" class="font-mono text-brand-accent font-bold text-sm">00:00:00</span>
+        <div class="bg-slate-100 dark:bg-slate-900 px-4 py-2 rounded-lg border border-slate-300 dark:border-brand-border text-xs text-slate-600 dark:text-slate-400">
+          Next Quote in: <span id="countdown-timer" class="font-mono text-sky-600 dark:text-brand-accent font-bold text-sm">00:00:00</span>
         </div>
       </div>
     </div>
 
     <!-- Clue Legend Bar -->
-    <div class="w-full max-w-lg flex flex-wrap justify-center items-center gap-2.5 mb-3 text-[11px] text-slate-400 bg-slate-900/60 py-1.5 px-3 rounded-lg border border-brand-border/40">
+    <div class="w-full max-w-lg flex flex-wrap justify-center items-center gap-2.5 mb-3 text-[11px] text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-900/60 py-1.5 px-3 rounded-lg border border-slate-300 dark:border-brand-border/40 shadow-sm dark:shadow-none transition-colors duration-200">
       <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span>Correct Slot</span></div>
       <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span>In Same Word</span></div>
       <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span><span>In Quote</span></div>
-      <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span><span>Not in Quote</span></div>
+      <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-400 dark:bg-slate-600"></span><span>Not in Quote</span></div>
     </div>
 
     <!-- Quote Grid Container -->
@@ -263,18 +334,18 @@
   </main>
 
   <!-- Floating, Draggable & Minimizable Author & Book Reveal Card -->
-  <div id="floating-reveal-card" class="w-[90%] max-w-sm bg-slate-900/95 backdrop-blur-md border border-brand-gold/50 rounded-2xl shadow-2xl overflow-hidden hidden transition-all">
+  <div id="floating-reveal-card" class="w-[90%] max-w-sm bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-amber-500/50 dark:border-brand-gold/50 rounded-2xl shadow-2xl overflow-hidden hidden transition-all">
     <!-- Card Drag Handle Bar -->
-    <div id="reveal-card-drag-handle" class="flex items-center justify-between px-4 py-2 bg-slate-800/90 border-b border-brand-border/60 cursor-grab active:cursor-grabbing text-xs text-slate-300">
-      <div class="flex items-center gap-2 font-semibold text-brand-gold">
-        <i class="fa-solid fa-grip-lines text-slate-500"></i>
+    <div id="reveal-card-drag-handle" class="flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800/90 border-b border-slate-200 dark:border-brand-border/60 cursor-grab active:cursor-grabbing text-xs text-slate-700 dark:text-slate-300">
+      <div class="flex items-center gap-2 font-semibold text-amber-600 dark:text-brand-gold">
+        <i class="fa-solid fa-grip-lines text-slate-400 dark:text-slate-500"></i>
         <span><i class="fa-solid fa-feather-pointed"></i> SOURCE REVEALED</span>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="resetRevealCardPosition()" class="p-1 text-slate-400 hover:text-slate-100 rounded" title="Center Card">
+        <button onclick="resetRevealCardPosition()" class="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 rounded" title="Center Card">
           <i class="fa-solid fa-arrow-rotate-left"></i>
         </button>
-        <button onclick="toggleRevealCardCollapse()" id="btn-toggle-reveal-card" class="p-1 text-slate-400 hover:text-slate-100 rounded">
+        <button onclick="toggleRevealCardCollapse()" id="btn-toggle-reveal-card" class="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 rounded">
           <i class="fa-solid fa-chevron-down"></i>
         </button>
       </div>
@@ -282,24 +353,24 @@
 
     <!-- Card Content Body -->
     <div id="reveal-card-body" class="p-4 text-center">
-      <h3 id="book-title" class="font-serif text-base sm:text-lg font-bold text-brand-accent mb-1 italic">Book Title</h3>
-      <p class="text-xs sm:text-sm text-slate-300 font-quote">— <span id="author-name" class="text-slate-100 font-semibold not-italic">Author Name</span></p>
-      <p class="text-[10px] text-slate-500 mt-2 font-mono"><i class="fa-solid fa-hand-pointer text-slate-600"></i> Drag handle to reposition card</p>
+      <h3 id="book-title" class="font-serif text-base sm:text-lg font-bold text-sky-600 dark:text-brand-accent mb-1 italic">Book Title</h3>
+      <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-quote">— <span id="author-name" class="text-slate-900 dark:text-slate-100 font-semibold not-italic">Author Name</span></p>
+      <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2 font-mono"><i class="fa-solid fa-hand-pointer text-slate-400 dark:text-slate-600"></i> Drag handle to reposition card</p>
     </div>
   </div>
 
   <!-- Floating Virtual Keyboard -->
-  <div id="floating-keyboard" class="w-[95%] max-w-lg bg-brand-card/95 backdrop-blur-md border border-brand-border rounded-2xl shadow-2xl p-2 transition-all">
-    <div id="keyboard-drag-handle" class="flex items-center justify-between px-3 py-1.5 cursor-grab active:cursor-grabbing border-b border-brand-border/60 mb-2">
-      <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
-        <i class="fa-solid fa-grip-lines text-slate-500"></i>
+  <div id="floating-keyboard" class="w-[95%] max-w-lg bg-white/95 dark:bg-brand-card/95 backdrop-blur-md border border-slate-200 dark:border-brand-border rounded-2xl shadow-2xl p-2 transition-all">
+    <div id="keyboard-drag-handle" class="flex items-center justify-between px-3 py-1.5 cursor-grab active:cursor-grabbing border-b border-slate-200 dark:border-brand-border/60 mb-2">
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <i class="fa-solid fa-grip-lines text-slate-400 dark:text-slate-500"></i>
         <span>KEYBOARD (Badges = Remaining Occurrences)</span>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="resetKeyboardPosition()" class="text-xs text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded bg-slate-800" title="Center Keyboard">
+        <button onclick="resetKeyboardPosition()" class="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800" title="Center Keyboard">
           <i class="fa-solid fa-arrow-rotate-left"></i>
         </button>
-        <button onclick="toggleKeyboardCollapse()" id="btn-toggle-keyboard" class="text-xs text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded bg-slate-800">
+        <button onclick="toggleKeyboardCollapse()" id="btn-toggle-keyboard" class="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
           <i class="fa-solid fa-chevron-down"></i>
         </button>
       </div>
@@ -330,7 +401,7 @@
         <button id="key-L" onclick="handleVirtualKey('L')" class="key-btn">L<span class="key-count-badge" id="badge-L"></span></button>
       </div>
       <div class="flex justify-center gap-1">
-        <button onclick="useHint()" class="action-btn bg-amber-600/80 hover:bg-amber-600 text-slate-100" title="Hint">
+        <button onclick="useHint()" class="action-btn bg-amber-600 hover:bg-amber-700 text-white" title="Hint">
           <i class="fa-solid fa-lightbulb"></i>
         </button>
         <button id="key-Z" onclick="handleVirtualKey('Z')" class="key-btn">Z<span class="key-count-badge" id="badge-Z"></span></button>
@@ -340,7 +411,7 @@
         <button id="key-B" onclick="handleVirtualKey('B')" class="key-btn">B<span class="key-count-badge" id="badge-B"></span></button>
         <button id="key-N" onclick="handleVirtualKey('N')" class="key-btn">N<span class="key-count-badge" id="badge-N"></span></button>
         <button id="key-M" onclick="handleVirtualKey('M')" class="key-btn">M<span class="key-count-badge" id="badge-M"></span></button>
-        <button onclick="handleBackspace()" class="action-btn bg-slate-700 hover:bg-slate-600 text-slate-200">
+        <button onclick="handleBackspace()" class="action-btn bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200">
           <i class="fa-solid fa-delete-left"></i>
         </button>
       </div>
@@ -349,36 +420,36 @@
 
   <!-- Quote Metadata Info Modal -->
   <div id="modal-quote-info" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-sm w-full p-6 shadow-2xl">
-      <div class="flex items-center justify-between mb-4 pb-2 border-b border-brand-border">
-        <h3 class="font-serif font-bold text-slate-100 text-base flex items-center gap-2">
-          <i class="fa-solid fa-book-open text-brand-gold"></i> Quote Details
+    <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-brand-border">
+        <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100 text-base flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-amber-600 dark:text-brand-gold"></i> Quote Details
         </h3>
-        <button onclick="closeQuoteInfoModal()" class="text-slate-400 hover:text-slate-200">
+        <button onclick="closeQuoteInfoModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
 
       <div class="space-y-3 text-sm">
-        <div class="bg-slate-900/90 p-3 rounded-lg border border-brand-border/60">
-          <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Category</span>
-          <span id="info-category" class="text-slate-100 font-medium">Classic Literature</span>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Category</span>
+          <span id="info-category" class="text-slate-800 dark:text-slate-100 font-medium">Classic Literature</span>
         </div>
-        <div class="bg-slate-900/90 p-3 rounded-lg border border-brand-border/60">
-          <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Sub-Category</span>
-          <span id="info-subcategory" class="text-slate-100 font-medium">Fiction</span>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Sub-Category</span>
+          <span id="info-subcategory" class="text-slate-800 dark:text-slate-100 font-medium">Fiction</span>
         </div>
-        <div class="bg-slate-900/90 p-3 rounded-lg border border-brand-border/60">
-          <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Author</span>
-          <span id="info-author" class="text-brand-gold font-medium">Harper Lee</span>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Author</span>
+          <span id="info-author" class="text-amber-600 dark:text-brand-gold font-medium">Harper Lee</span>
         </div>
-        <div class="bg-slate-900/90 p-3 rounded-lg border border-brand-border/60">
-          <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Book / Source</span>
-          <span id="info-book" class="text-brand-accent font-medium italic">To Kill a Mockingbird</span>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Book / Source</span>
+          <span id="info-book" class="text-sky-600 dark:text-brand-accent font-medium italic">To Kill a Mockingbird</span>
         </div>
       </div>
 
-      <button onclick="closeQuoteInfoModal()" class="w-full mt-5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 rounded-lg text-sm transition-colors">
+      <button onclick="closeQuoteInfoModal()" class="w-full mt-5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold py-2.5 rounded-lg text-sm transition-colors">
         Close
       </button>
     </div>
@@ -386,20 +457,20 @@
 
   <!-- Custom Game Modal -->
   <div id="modal-custom" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-md w-full p-6 shadow-2xl">
+    <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-md w-full p-6 shadow-2xl">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="font-serif text-lg font-bold text-slate-100 flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-brand-accent"></i> Custom Game Setup
+        <h3 class="font-serif text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-sky-600 dark:text-brand-accent"></i> Custom Game Setup
         </h3>
-        <button onclick="closeCustomModal()" class="text-slate-400 hover:text-slate-200">
+        <button onclick="closeCustomModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
 
       <div class="space-y-4 text-sm">
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Select Genre Preset</label>
-          <select id="genre-select" onchange="onGenreSelectChange()" class="w-full bg-slate-900 border border-brand-border rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-brand-gold">
+          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Select Genre Preset</label>
+          <select id="genre-select" onchange="onGenreSelectChange()" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-amber-500 dark:focus:border-brand-gold">
             <option value="custom">-- Custom Quote Entry --</option>
             <option value="philosophy">Philosophy & Ethics</option>
             <option value="scifi">Sci-Fi & Cyberpunk</option>
@@ -408,24 +479,24 @@
         </div>
 
         <div id="custom-input-group">
-          <label class="block text-xs font-medium text-slate-400 mb-1">Enter Custom Quote</label>
-          <textarea id="custom-quote-input" rows="3" class="w-full bg-slate-900 border border-brand-border rounded-lg p-3 text-slate-200 focus:outline-none focus:border-brand-gold text-sm" placeholder="Type quote here..."></textarea>
+          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Enter Custom Quote</label>
+          <textarea id="custom-quote-input" rows="3" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg p-3 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-amber-500 dark:focus:border-brand-gold text-sm" placeholder="Type quote here..."></textarea>
           
           <div class="grid grid-cols-2 gap-2 mt-2">
-            <input type="text" id="custom-category-input" placeholder="Category (e.g., Politics)" class="bg-slate-900 border border-brand-border rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none">
-            <input type="text" id="custom-subcategory-input" placeholder="Sub-Category (e.g., Non-Fiction)" class="bg-slate-900 border border-brand-border rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-category-input" placeholder="Category (e.g., Politics)" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-subcategory-input" placeholder="Sub-Category (e.g., Non-Fiction)" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
           </div>
           <div class="grid grid-cols-2 gap-2 mt-2">
-            <input type="text" id="custom-author-input" placeholder="Author" class="bg-slate-900 border border-brand-border rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none">
-            <input type="text" id="custom-title-input" placeholder="Book Title" class="bg-slate-900 border border-brand-border rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-author-input" placeholder="Author" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-title-input" placeholder="Book Title" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
           </div>
         </div>
 
         <div class="flex gap-2 pt-2">
-          <button onclick="startCustomGame()" class="flex-1 bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-bold py-2.5 rounded-lg transition-colors text-sm">
+          <button onclick="startCustomGame()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-lg transition-colors text-sm">
             Launch Game
           </button>
-          <button onclick="switchToDailyMode()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg text-sm">
+          <button onclick="switchToDailyMode()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-lg text-sm">
             Back to Daily
           </button>
         </div>
@@ -435,43 +506,43 @@
 
   <!-- Results Modal -->
   <div id="modal-results" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-brand-card border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
-      <div class="inline-flex p-4 bg-emerald-500/10 text-emerald-400 rounded-full mb-3">
+    <div class="bg-white dark:bg-brand-card border border-amber-500/40 dark:border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
+      <div class="inline-flex p-4 bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 rounded-full mb-3">
         <i class="fa-solid fa-trophy text-3xl"></i>
       </div>
-      <h3 class="font-serif text-2xl font-bold text-slate-100 mb-1">Puzzle Solved!</h3>
-      <p id="results-author-quote" class="text-xs text-slate-400 italic mb-4 font-quote">"..."</p>
+      <h3 class="font-serif text-2xl font-bold text-slate-900 dark:text-slate-100 mb-1">Puzzle Solved!</h3>
+      <p id="results-author-quote" class="text-xs text-slate-500 dark:text-slate-400 italic mb-4 font-quote">"..."</p>
 
-      <div class="bg-slate-900 border border-brand-border rounded-xl p-4 mb-3 text-left text-xs space-y-2">
-        <div class="flex justify-between text-slate-300">
+      <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-4 mb-3 text-left text-xs space-y-2">
+        <div class="flex justify-between text-slate-700 dark:text-slate-300">
           <span>Quote Letters:</span>
-          <span class="font-bold text-brand-accent" id="res-total-letters">0</span>
+          <span class="font-bold text-sky-600 dark:text-brand-accent" id="res-total-letters">0</span>
         </div>
-        <div class="flex justify-between text-slate-400">
+        <div class="flex justify-between text-slate-500 dark:text-slate-400">
           <span>Mistakes (<span id="res-mistakes-count">0</span> × <span id="res-mistake-rate">0%</span>):</span>
-          <span class="font-bold text-rose-400" id="res-mistakes-deduct">-0%</span>
+          <span class="font-bold text-rose-500 dark:text-rose-400" id="res-mistakes-deduct">-0%</span>
         </div>
-        <div class="flex justify-between text-slate-400">
+        <div class="flex justify-between text-slate-500 dark:text-slate-400">
           <span>Hints (<span id="res-hints-count">0</span> × <span id="res-hint-rate">0%</span>):</span>
-          <span class="font-bold text-amber-400" id="res-hints-deduct">-0%</span>
+          <span class="font-bold text-amber-600 dark:text-amber-400" id="res-hints-deduct">-0%</span>
         </div>
-        <div class="border-t border-brand-border pt-2 flex justify-between text-sm font-bold text-slate-100">
+        <div class="border-t border-slate-200 dark:border-brand-border pt-2 flex justify-between text-sm font-bold text-slate-900 dark:text-slate-100">
           <span>Final Resulting Score:</span>
-          <span class="text-brand-gold text-base" id="res-final-score">100%</span>
+          <span class="text-amber-600 dark:text-brand-gold text-base" id="res-final-score">100%</span>
         </div>
       </div>
 
       <!-- Copyable Result Text Container -->
       <div class="mb-4">
-        <label class="block text-[10px] text-slate-400 uppercase tracking-wider mb-1 text-left">Shareable Score Card</label>
-        <textarea id="share-card-preview" readonly rows="4" class="w-full bg-slate-950 border border-brand-border rounded-lg p-2 text-xs font-mono text-emerald-300 focus:outline-none resize-none select-all"></textarea>
+        <label class="block text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1 text-left">Shareable Score Card</label>
+        <textarea id="share-card-preview" readonly rows="4" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-brand-border rounded-lg p-2 text-xs font-mono text-emerald-600 dark:text-emerald-300 focus:outline-none resize-none select-all"></textarea>
       </div>
 
       <div class="flex gap-2">
-        <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-bold py-2.5 rounded-lg transition-colors text-sm flex items-center justify-center gap-2">
+        <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-lg transition-colors text-sm flex items-center justify-center gap-2">
           <i class="fa-solid fa-copy"></i> Copy Share Card
         </button>
-        <button onclick="closeResultsModal()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm">
+        <button onclick="closeResultsModal()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm">
           Close
         </button>
       </div>
@@ -480,22 +551,22 @@
 
   <!-- Help Modal -->
   <div id="modal-help" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-sm w-full p-5 shadow-2xl">
+    <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-sm w-full p-5 shadow-2xl">
       <div class="flex items-center justify-between mb-3">
-        <h3 class="font-serif font-bold text-slate-100">How to Play & Logical Clues</h3>
-        <button onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-200">
+        <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100">How to Play & Logical Clues</h3>
+        <button onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div class="text-xs text-slate-300 space-y-2.5 leading-relaxed">
+      <div class="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 leading-relaxed">
         <p>• Fill in missing quote tiles using your physical keyboard or floating virtual keyboard.</p>
         <p>• Click <strong>Details</strong> at the top to inspect quote categories & author info.</p>
         <p>• <strong>Logical Clue Coloring System:</strong></p>
-        <div class="space-y-1 pl-2 border-l-2 border-brand-gold">
-          <p><strong class="text-emerald-400">Emerald Green:</strong> Correct letter in exact tile slot!</p>
-          <p><strong class="text-amber-400">Warm Gold:</strong> Letter belongs inside <em>this exact word</em>, but wrong position!</p>
-          <p><strong class="text-sky-400">Cyan Blue:</strong> Letter exists in the quote, but inside a <em>different word</em>.</p>
-          <p><strong class="text-slate-400">Dark Grey:</strong> Letter does not exist anywhere in the quote.</p>
+        <div class="space-y-1 pl-2 border-l-2 border-amber-500 dark:border-brand-gold">
+          <p><strong class="text-emerald-600 dark:text-emerald-400">Emerald Green:</strong> Correct letter in exact tile slot!</p>
+          <p><strong class="text-amber-600 dark:text-amber-400">Warm Gold:</strong> Letter belongs inside <em>this exact word</em>, but wrong position!</p>
+          <p><strong class="text-sky-600 dark:text-sky-400">Cyan Blue:</strong> Letter exists in the quote, but inside a <em>different word</em>.</p>
+          <p><strong class="text-slate-500 dark:text-slate-400">Dark Grey:</strong> Letter does not exist anywhere in the quote.</p>
         </div>
         <p>• <strong>Occurrence Badges:</strong> Virtual keys display remaining letter counts counting down to an asterisk (*) when fully found.</p>
       </div>
@@ -546,7 +617,36 @@
     let countHints = 0;
     let isGameComplete = false;
 
+    // Theme Management Logic
+    function initTheme() {
+      const savedTheme = localStorage.getItem('bookgrid_theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      } else {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('bookgrid_theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('theme-icon');
+      if (!icon) return;
+      if (isDark) {
+        icon.className = 'fa-solid fa-sun text-lg text-amber-400';
+      } else {
+        icon.className = 'fa-solid fa-moon text-lg text-slate-700';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
       initKeyboardDrag();
       initRevealCardDrag();
       initNativeKeyboardInput();
@@ -1241,13 +1341,13 @@
         if (btn) {
           const originalText = btn.innerHTML;
           btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-          btn.classList.remove('bg-brand-gold', 'hover:bg-brand-goldHover');
-          btn.classList.add('bg-emerald-500', 'text-slate-950');
+          btn.classList.remove('bg-amber-500', 'dark:bg-brand-gold', 'hover:bg-amber-600', 'dark:hover:bg-brand-goldHover');
+          btn.classList.add('bg-emerald-500', 'text-white');
 
           setTimeout(() => {
             btn.innerHTML = originalText;
-            btn.classList.remove('bg-emerald-500', 'text-slate-950');
-            btn.classList.add('bg-brand-gold', 'hover:bg-brand-goldHover');
+            btn.classList.remove('bg-emerald-500', 'text-white');
+            btn.classList.add('bg-amber-500', 'dark:bg-brand-gold', 'hover:bg-amber-600', 'dark:hover:bg-brand-goldHover');
           }, 2000);
         }
       }
