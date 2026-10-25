@@ -62,26 +62,56 @@
       touch-action: none;
     }
 
+    #floating-reveal-card {
+      position: fixed;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 45;
+      touch-action: none;
+    }
+
     .key-btn {
+      position: relative;
       background-color: #1e293b;
       color: #f8fafc;
       font-weight: 600;
       border-radius: 0.5rem;
       font-size: 0.875rem;
-      height: 2.75rem;
-      min-width: 34px;
+      height: 2.85rem;
+      min-width: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      transition: background-color 0.15s ease;
+      transition: all 0.2s ease;
     }
     .key-btn:hover { background-color: #334155; }
     .key-btn:active { background-color: #475569; }
 
+    .key-btn.key-correct { background-color: #059669 !important; color: #ffffff !important; }
+    .key-btn.key-same-word { background-color: #d4af37 !important; color: #0f172a !important; font-weight: 700; }
+    .key-btn.key-present { background-color: #0284c7 !important; color: #ffffff !important; }
+    .key-btn.key-absent { background-color: #334155 !important; color: #64748b !important; opacity: 0.5; }
+
+    .key-count-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      line-height: 1;
+      background-color: #0f172a;
+      color: #d4af37;
+      border: 1px solid #334155;
+      padding: 2px 4px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
     .action-btn {
       font-size: 0.875rem;
-      height: 2.75rem;
+      height: 2.85rem;
       padding-left: 0.75rem;
       padding-right: 0.75rem;
       display: flex;
@@ -106,11 +136,11 @@
       font-size: 1.125rem;
       font-weight: 700;
       color: #f8fafc;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
       cursor: pointer;
     }
     @media (min-width: 640px) {
-      .key-btn { min-width: 42px; }
+      .key-btn { min-width: 44px; }
       .tile-box { width: 2.5rem; height: 3rem; font-size: 1.25rem; }
     }
 
@@ -121,10 +151,28 @@
       background-color: #1e293b;
     }
     
-    .tile-box.correct {
-      background-color: rgba(6, 78, 59, 0.8);
+    .tile-box.tile-correct {
+      background-color: rgba(6, 78, 59, 0.9);
       border-color: #10b981;
       color: #6ee7b7;
+    }
+
+    .tile-box.tile-same-word {
+      background-color: rgba(180, 130, 20, 0.9);
+      border-color: #d4af37;
+      color: #fef08a;
+    }
+
+    .tile-box.tile-present {
+      background-color: rgba(12, 74, 110, 0.9);
+      border-color: #38bdf8;
+      color: #7dd3fc;
+    }
+
+    .tile-box.tile-absent {
+      background-color: rgba(30, 41, 59, 0.5);
+      border-color: #475569;
+      color: #94a3b8;
     }
 
     .punct-symbol {
@@ -144,7 +192,7 @@
 </head>
 <body class="bg-brand-dark text-slate-100 font-body h-[100dvh] flex flex-col overflow-hidden no-select">
 
-  <!-- Hidden text input to invoke native device virtual keyboard -->
+  <!-- Hidden text input for native mobile/desktop keyboard binding -->
   <input type="text" id="hidden-keyboard-input" autocomplete="off" autocapitalize="none" spellcheck="false" class="sr-only opacity-0 absolute -z-50 pointer-events-none" aria-hidden="true" />
 
   <!-- Header -->
@@ -201,22 +249,51 @@
       </div>
     </div>
 
+    <!-- Clue Legend Bar -->
+    <div class="w-full max-w-lg flex flex-wrap justify-center items-center gap-2.5 mb-3 text-[11px] text-slate-400 bg-slate-900/60 py-1.5 px-3 rounded-lg border border-brand-border/40">
+      <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span>Correct Slot</span></div>
+      <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span>In Same Word</span></div>
+      <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span><span>In Quote</span></div>
+      <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span><span>Not in Quote</span></div>
+    </div>
+
     <!-- Quote Grid Container -->
     <div id="quote-container" class="w-full flex flex-wrap justify-center items-center py-4 min-h-[160px]"></div>
 
-    <!-- Author Clue / Reveal Area -->
-    <div id="author-info" class="mt-4 text-center text-slate-400 italic font-quote text-base hidden">
-      — <span id="author-name" class="text-slate-200 font-semibold">Unknown</span>, <span id="book-title" class="text-brand-accent">Title</span>
+  </main>
+
+  <!-- Floating, Draggable & Minimizable Author & Book Reveal Card -->
+  <div id="floating-reveal-card" class="w-[90%] max-w-sm bg-slate-900/95 backdrop-blur-md border border-brand-gold/50 rounded-2xl shadow-2xl overflow-hidden hidden transition-all">
+    <!-- Card Drag Handle Bar -->
+    <div id="reveal-card-drag-handle" class="flex items-center justify-between px-4 py-2 bg-slate-800/90 border-b border-brand-border/60 cursor-grab active:cursor-grabbing text-xs text-slate-300">
+      <div class="flex items-center gap-2 font-semibold text-brand-gold">
+        <i class="fa-solid fa-grip-lines text-slate-500"></i>
+        <span><i class="fa-solid fa-feather-pointed"></i> SOURCE REVEALED</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="resetRevealCardPosition()" class="p-1 text-slate-400 hover:text-slate-100 rounded" title="Center Card">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+        </button>
+        <button onclick="toggleRevealCardCollapse()" id="btn-toggle-reveal-card" class="p-1 text-slate-400 hover:text-slate-100 rounded">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
     </div>
 
-  </main>
+    <!-- Card Content Body -->
+    <div id="reveal-card-body" class="p-4 text-center">
+      <h3 id="book-title" class="font-serif text-base sm:text-lg font-bold text-brand-accent mb-1 italic">Book Title</h3>
+      <p class="text-xs sm:text-sm text-slate-300 font-quote">— <span id="author-name" class="text-slate-100 font-semibold not-italic">Author Name</span></p>
+      <p class="text-[10px] text-slate-500 mt-2 font-mono"><i class="fa-solid fa-hand-pointer text-slate-600"></i> Drag handle to reposition card</p>
+    </div>
+  </div>
 
   <!-- Floating Virtual Keyboard -->
   <div id="floating-keyboard" class="w-[95%] max-w-lg bg-brand-card/95 backdrop-blur-md border border-brand-border rounded-2xl shadow-2xl p-2 transition-all">
     <div id="keyboard-drag-handle" class="flex items-center justify-between px-3 py-1.5 cursor-grab active:cursor-grabbing border-b border-brand-border/60 mb-2">
       <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
         <i class="fa-solid fa-grip-lines text-slate-500"></i>
-        <span>KEYBOARD</span>
+        <span>KEYBOARD (Badges = Remaining Occurrences)</span>
       </div>
       <div class="flex items-center gap-2">
         <button onclick="resetKeyboardPosition()" class="text-xs text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded bg-slate-800" title="Center Keyboard">
@@ -230,39 +307,39 @@
 
     <div id="keyboard-keys-container" class="flex flex-col gap-1.5">
       <div class="flex justify-center gap-1">
-        <button onclick="handleVirtualKey('Q')" class="key-btn">Q</button>
-        <button onclick="handleVirtualKey('W')" class="key-btn">W</button>
-        <button onclick="handleVirtualKey('E')" class="key-btn">E</button>
-        <button onclick="handleVirtualKey('R')" class="key-btn">R</button>
-        <button onclick="handleVirtualKey('T')" class="key-btn">T</button>
-        <button onclick="handleVirtualKey('Y')" class="key-btn">Y</button>
-        <button onclick="handleVirtualKey('U')" class="key-btn">U</button>
-        <button onclick="handleVirtualKey('I')" class="key-btn">I</button>
-        <button onclick="handleVirtualKey('O')" class="key-btn">O</button>
-        <button onclick="handleVirtualKey('P')" class="key-btn">P</button>
+        <button id="key-Q" onclick="handleVirtualKey('Q')" class="key-btn">Q<span class="key-count-badge" id="badge-Q"></span></button>
+        <button id="key-W" onclick="handleVirtualKey('W')" class="key-btn">W<span class="key-count-badge" id="badge-W"></span></button>
+        <button id="key-E" onclick="handleVirtualKey('E')" class="key-btn">E<span class="key-count-badge" id="badge-E"></span></button>
+        <button id="key-R" onclick="handleVirtualKey('R')" class="key-btn">R<span class="key-count-badge" id="badge-R"></span></button>
+        <button id="key-T" onclick="handleVirtualKey('T')" class="key-btn">T<span class="key-count-badge" id="badge-T"></span></button>
+        <button id="key-Y" onclick="handleVirtualKey('Y')" class="key-btn">Y<span class="key-count-badge" id="badge-Y"></span></button>
+        <button id="key-U" onclick="handleVirtualKey('U')" class="key-btn">U<span class="key-count-badge" id="badge-U"></span></button>
+        <button id="key-I" onclick="handleVirtualKey('I')" class="key-btn">I<span class="key-count-badge" id="badge-I"></span></button>
+        <button id="key-O" onclick="handleVirtualKey('O')" class="key-btn">O<span class="key-count-badge" id="badge-O"></span></button>
+        <button id="key-P" onclick="handleVirtualKey('P')" class="key-btn">P<span class="key-count-badge" id="badge-P"></span></button>
       </div>
       <div class="flex justify-center gap-1">
-        <button onclick="handleVirtualKey('A')" class="key-btn">A</button>
-        <button onclick="handleVirtualKey('S')" class="key-btn">S</button>
-        <button onclick="handleVirtualKey('D')" class="key-btn">D</button>
-        <button onclick="handleVirtualKey('F')" class="key-btn">F</button>
-        <button onclick="handleVirtualKey('G')" class="key-btn">G</button>
-        <button onclick="handleVirtualKey('H')" class="key-btn">H</button>
-        <button onclick="handleVirtualKey('J')" class="key-btn">J</button>
-        <button onclick="handleVirtualKey('K')" class="key-btn">K</button>
-        <button onclick="handleVirtualKey('L')" class="key-btn">L</button>
+        <button id="key-A" onclick="handleVirtualKey('A')" class="key-btn">A<span class="key-count-badge" id="badge-A"></span></button>
+        <button id="key-S" onclick="handleVirtualKey('S')" class="key-btn">S<span class="key-count-badge" id="badge-S"></span></button>
+        <button id="key-D" onclick="handleVirtualKey('D')" class="key-btn">D<span class="key-count-badge" id="badge-D"></span></button>
+        <button id="key-F" onclick="handleVirtualKey('F')" class="key-btn">F<span class="key-count-badge" id="badge-F"></span></button>
+        <button id="key-G" onclick="handleVirtualKey('G')" class="key-btn">G<span class="key-count-badge" id="badge-G"></span></button>
+        <button id="key-H" onclick="handleVirtualKey('H')" class="key-btn">H<span class="key-count-badge" id="badge-H"></span></button>
+        <button id="key-J" onclick="handleVirtualKey('J')" class="key-btn">J<span class="key-count-badge" id="badge-J"></span></button>
+        <button id="key-K" onclick="handleVirtualKey('K')" class="key-btn">K<span class="key-count-badge" id="badge-K"></span></button>
+        <button id="key-L" onclick="handleVirtualKey('L')" class="key-btn">L<span class="key-count-badge" id="badge-L"></span></button>
       </div>
       <div class="flex justify-center gap-1">
         <button onclick="useHint()" class="action-btn bg-amber-600/80 hover:bg-amber-600 text-slate-100" title="Hint">
           <i class="fa-solid fa-lightbulb"></i>
         </button>
-        <button onclick="handleVirtualKey('Z')" class="key-btn">Z</button>
-        <button onclick="handleVirtualKey('X')" class="key-btn">X</button>
-        <button onclick="handleVirtualKey('C')" class="key-btn">C</button>
-        <button onclick="handleVirtualKey('V')" class="key-btn">V</button>
-        <button onclick="handleVirtualKey('B')" class="key-btn">B</button>
-        <button onclick="handleVirtualKey('N')" class="key-btn">N</button>
-        <button onclick="handleVirtualKey('M')" class="key-btn">M</button>
+        <button id="key-Z" onclick="handleVirtualKey('Z')" class="key-btn">Z<span class="key-count-badge" id="badge-Z"></span></button>
+        <button id="key-X" onclick="handleVirtualKey('X')" class="key-btn">X<span class="key-count-badge" id="badge-X"></span></button>
+        <button id="key-C" onclick="handleVirtualKey('C')" class="key-btn">C<span class="key-count-badge" id="badge-C"></span></button>
+        <button id="key-V" onclick="handleVirtualKey('V')" class="key-btn">V<span class="key-count-badge" id="badge-V"></span></button>
+        <button id="key-B" onclick="handleVirtualKey('B')" class="key-btn">B<span class="key-count-badge" id="badge-B"></span></button>
+        <button id="key-N" onclick="handleVirtualKey('N')" class="key-btn">N<span class="key-count-badge" id="badge-N"></span></button>
+        <button id="key-M" onclick="handleVirtualKey('M')" class="key-btn">M<span class="key-count-badge" id="badge-M"></span></button>
         <button onclick="handleBackspace()" class="action-btn bg-slate-700 hover:bg-slate-600 text-slate-200">
           <i class="fa-solid fa-delete-left"></i>
         </button>
@@ -405,18 +482,22 @@
   <div id="modal-help" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-brand-card border border-brand-border rounded-2xl max-w-sm w-full p-5 shadow-2xl">
       <div class="flex items-center justify-between mb-3">
-        <h3 class="font-serif font-bold text-slate-100">How to Play</h3>
+        <h3 class="font-serif font-bold text-slate-100">How to Play & Logical Clues</h3>
         <button onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-200">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
-        <p>• Fill in missing quote tiles using virtual or physical keyboard.</p>
-        <p>• Click <strong>Details</strong> to view quote category & author.</p>
-        <p>• Words are wrapped separately with visible gaps.</p>
-        <p>• Punctuation (apostrophes, commas) is shown in gold.</p>
-        <p>• Correctly guessed letters turn emerald green.</p>
-        <p>• <strong>Dynamic Scoring:</strong> Penalty per mistake = 100% / Total Quote Letters.</p>
+      <div class="text-xs text-slate-300 space-y-2.5 leading-relaxed">
+        <p>• Fill in missing quote tiles using your physical keyboard or floating virtual keyboard.</p>
+        <p>• Click <strong>Details</strong> at the top to inspect quote categories & author info.</p>
+        <p>• <strong>Logical Clue Coloring System:</strong></p>
+        <div class="space-y-1 pl-2 border-l-2 border-brand-gold">
+          <p><strong class="text-emerald-400">Emerald Green:</strong> Correct letter in exact tile slot!</p>
+          <p><strong class="text-amber-400">Warm Gold:</strong> Letter belongs inside <em>this exact word</em>, but wrong position!</p>
+          <p><strong class="text-sky-400">Cyan Blue:</strong> Letter exists in the quote, but inside a <em>different word</em>.</p>
+          <p><strong class="text-slate-400">Dark Grey:</strong> Letter does not exist anywhere in the quote.</p>
+        </div>
+        <p>• <strong>Occurrence Badges:</strong> Virtual keys display remaining letter counts counting down to an asterisk (*) when fully found.</p>
       </div>
     </div>
   </div>
@@ -453,7 +534,13 @@
     let targetSubCategory = "";
 
     let cleanLetters = [];
+    let wordAssignments = [];
+    let wordsCleanLetters = [];
     let userGuesses = [];
+    let lockedTiles = [];
+    let keyStates = {};
+    let letterCountsTotal = {};
+    let letterCountsSolved = {};
     let selectedTileIndex = 0;
     let countMistakes = 0;
     let countHints = 0;
@@ -461,6 +548,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       initKeyboardDrag();
+      initRevealCardDrag();
       initNativeKeyboardInput();
       initDailyGame();
       startCountdownTimer();
@@ -546,13 +634,23 @@
 
         setupBoard();
         userGuesses = [...cleanLetters];
+        lockedTiles = cleanLetters.map(() => true);
+        
+        cleanLetters.forEach(ch => {
+          letterCountsSolved[ch] = letterCountsTotal[ch];
+          updateVirtualKeyboardState(ch, 'correct');
+        });
+
         renderBoard();
         
         document.getElementById('daily-locked-banner').classList.remove('hidden');
         document.getElementById('floating-keyboard').classList.add('hidden');
-        document.getElementById('author-info').classList.remove('hidden');
+        
+        const revealCard = document.getElementById('floating-reveal-card');
+        revealCard.classList.remove('hidden');
         document.getElementById('author-name').innerText = targetAuthor;
         document.getElementById('book-title').innerText = targetTitle;
+        
         document.getElementById('locked-score-summary').innerText = `You scored ${data.score}% on today's quote!`;
         updateStatsDisplay();
       } else {
@@ -561,7 +659,7 @@
         countHints = 0;
         document.getElementById('daily-locked-banner').classList.add('hidden');
         document.getElementById('floating-keyboard').classList.remove('hidden');
-        document.getElementById('author-info').classList.add('hidden');
+        document.getElementById('floating-reveal-card').classList.add('hidden');
         setupBoard();
         setTimeout(focusNativeInput, 300);
       }
@@ -576,26 +674,40 @@
 
     function setupBoard() {
       cleanLetters = [];
+      wordAssignments = [];
+      wordsCleanLetters = [];
       userGuesses = [];
+      lockedTiles = [];
+      keyStates = {};
+      letterCountsTotal = {};
+      letterCountsSolved = {};
       selectedTileIndex = 0;
 
-      const words = targetQuote.split(' ');
+      const rawWords = targetQuote.split(' ');
       const container = document.getElementById('quote-container');
       container.innerHTML = '';
 
       let globalLetterIndex = 0;
 
-      words.forEach((word) => {
+      rawWords.forEach((wordStr, wordIdx) => {
         const wordEl = document.createElement('div');
         wordEl.className = 'bg-word';
 
-        for (let i = 0; i < word.length; i++) {
-          const char = word[i];
+        const currentWordLetters = [];
+
+        for (let i = 0; i < wordStr.length; i++) {
+          const char = wordStr[i];
           const upperChar = char.toUpperCase();
 
           if (upperChar >= 'A' && upperChar <= 'Z') {
             cleanLetters.push(upperChar);
+            wordAssignments.push(wordIdx);
+            currentWordLetters.push(upperChar);
             userGuesses.push('');
+            lockedTiles.push(false);
+
+            letterCountsTotal[upperChar] = (letterCountsTotal[upperChar] || 0) + 1;
+            letterCountsSolved[upperChar] = 0;
 
             const tile = document.createElement('div');
             tile.id = `tile-${globalLetterIndex}`;
@@ -613,11 +725,69 @@
             wordEl.appendChild(punct);
           }
         }
+        wordsCleanLetters.push(currentWordLetters);
         container.appendChild(wordEl);
       });
 
+      resetVirtualKeyboardUI();
+      findNextAvailableTileIndex();
       renderBoard();
       updateStatsDisplay();
+    }
+
+    function resetVirtualKeyboardUI() {
+      const keys = document.querySelectorAll('.key-btn');
+      keys.forEach(k => {
+        k.classList.remove('key-correct', 'key-same-word', 'key-present', 'key-absent');
+      });
+
+      for (let i = 65; i <= 90; i++) {
+        const char = String.fromCharCode(i);
+        const badge = document.getElementById(`badge-${char}`);
+        if (badge) badge.innerText = '';
+      }
+    }
+
+    function updateVirtualKeyboardState(letter, state) {
+      const current = keyStates[letter];
+      const priority = { 'correct': 4, 'same-word': 3, 'present': 2, 'absent': 1 };
+      
+      if (!current || priority[state] > (priority[current] || 0)) {
+        keyStates[letter] = state;
+      }
+
+      const activeState = keyStates[letter];
+      const keyBtn = document.getElementById(`key-${letter}`);
+      
+      if (keyBtn) {
+        keyBtn.classList.remove('key-correct', 'key-same-word', 'key-present', 'key-absent');
+        if (activeState === 'correct') keyBtn.classList.add('key-correct');
+        else if (activeState === 'same-word') keyBtn.classList.add('key-same-word');
+        else if (activeState === 'present') keyBtn.classList.add('key-present');
+        else if (activeState === 'absent') keyBtn.classList.add('key-absent');
+      }
+
+      updateKeyboardBadge(letter);
+    }
+
+    function updateKeyboardBadge(letter) {
+      const badge = document.getElementById(`badge-${letter}`);
+      if (!badge) return;
+
+      const total = letterCountsTotal[letter] || 0;
+      const solved = letterCountsSolved[letter] || 0;
+      const remaining = total - solved;
+
+      if (total === 0) {
+        badge.innerText = '';
+        badge.style.display = 'none';
+      } else if (remaining > 0) {
+        badge.innerText = remaining;
+        badge.style.display = 'block';
+      } else {
+        badge.innerText = '∗';
+        badge.style.display = 'block';
+      }
     }
 
     function renderBoard() {
@@ -628,12 +798,23 @@
         const val = userGuesses[i] || '';
         tile.innerText = val;
 
-        tile.classList.remove('active', 'correct');
+        tile.classList.remove('active', 'tile-correct', 'tile-same-word', 'tile-present', 'tile-absent');
 
-        if (isGameComplete) {
-          tile.classList.add('correct');
-        } else if (val === cleanLetters[i] && val !== '') {
-          tile.classList.add('correct');
+        if (isGameComplete || lockedTiles[i]) {
+          tile.classList.add('tile-correct');
+        } else if (val !== '') {
+          const wordIdx = wordAssignments[i];
+          const currentWordLetters = wordsCleanLetters[wordIdx] || [];
+
+          if (val === cleanLetters[i]) {
+            tile.classList.add('tile-correct');
+          } else if (currentWordLetters.includes(val)) {
+            tile.classList.add('tile-same-word');
+          } else if (cleanLetters.includes(val)) {
+            tile.classList.add('tile-present');
+          } else {
+            tile.classList.add('tile-absent');
+          }
         } else if (i === selectedTileIndex) {
           tile.classList.add('active');
         }
@@ -641,25 +822,50 @@
     }
 
     function selectTile(index) {
-      if (isGameComplete) return;
+      if (isGameComplete || lockedTiles[index]) return;
       selectedTileIndex = index;
       renderBoard();
       focusNativeInput();
     }
 
+    function findNextAvailableTileIndex() {
+      for (let i = selectedTileIndex; i < cleanLetters.length; i++) {
+        if (!lockedTiles[i]) {
+          selectedTileIndex = i;
+          return;
+        }
+      }
+      for (let i = 0; i < selectedTileIndex; i++) {
+        if (!lockedTiles[i]) {
+          selectedTileIndex = i;
+          return;
+        }
+      }
+    }
+
     function handleVirtualKey(letter) {
-      if (isGameComplete || selectedTileIndex >= cleanLetters.length) return;
+      if (isGameComplete || lockedTiles[selectedTileIndex]) return;
 
       userGuesses[selectedTileIndex] = letter;
+      const wordIdx = wordAssignments[selectedTileIndex];
+      const currentWordLetters = wordsCleanLetters[wordIdx] || [];
 
-      if (letter !== cleanLetters[selectedTileIndex]) {
+      if (letter === cleanLetters[selectedTileIndex]) {
+        lockedTiles[selectedTileIndex] = true;
+        letterCountsSolved[letter] = (letterCountsSolved[letter] || 0) + 1;
+        updateVirtualKeyboardState(letter, 'correct');
+      } else {
         countMistakes++;
+        if (currentWordLetters.includes(letter)) {
+          updateVirtualKeyboardState(letter, 'same-word');
+        } else if (cleanLetters.includes(letter)) {
+          updateVirtualKeyboardState(letter, 'present');
+        } else {
+          updateVirtualKeyboardState(letter, 'absent');
+        }
       }
 
-      if (selectedTileIndex < cleanLetters.length - 1) {
-        selectedTileIndex++;
-      }
-
+      findNextAvailableTileIndex();
       renderBoard();
       updateStatsDisplay();
       checkWinCondition();
@@ -668,11 +874,19 @@
     function handleBackspace() {
       if (isGameComplete) return;
       
-      if (userGuesses[selectedTileIndex] !== '') {
+      if (!lockedTiles[selectedTileIndex] && userGuesses[selectedTileIndex] !== '') {
         userGuesses[selectedTileIndex] = '';
-      } else if (selectedTileIndex > 0) {
-        selectedTileIndex--;
-        userGuesses[selectedTileIndex] = '';
+      } else {
+        let prev = selectedTileIndex - 1;
+        while (prev >= 0 && lockedTiles[prev]) {
+          prev--;
+        }
+        if (prev >= 0) {
+          selectedTileIndex = prev;
+          if (!lockedTiles[selectedTileIndex]) {
+            userGuesses[selectedTileIndex] = '';
+          }
+        }
       }
       renderBoard();
     }
@@ -682,7 +896,7 @@
 
       const unrevealed = [];
       for (let i = 0; i < cleanLetters.length; i++) {
-        if (userGuesses[i] !== cleanLetters[i]) {
+        if (!lockedTiles[i]) {
           unrevealed.push(i);
         }
       }
@@ -690,10 +904,17 @@
       if (unrevealed.length === 0) return;
 
       const randomIdx = unrevealed[Math.floor(Math.random() * unrevealed.length)];
-      userGuesses[randomIdx] = cleanLetters[randomIdx];
+      const char = cleanLetters[randomIdx];
+
+      userGuesses[randomIdx] = char;
+      lockedTiles[randomIdx] = true;
+      letterCountsSolved[char] = (letterCountsSolved[char] || 0) + 1;
       countHints++;
 
+      updateVirtualKeyboardState(char, 'correct');
+
       selectedTileIndex = randomIdx;
+      findNextAvailableTileIndex();
       renderBoard();
       updateStatsDisplay();
       checkWinCondition();
@@ -701,7 +922,7 @@
     }
 
     function checkWinCondition() {
-      const isFilled = userGuesses.every((g, idx) => g === cleanLetters[idx]);
+      const isFilled = lockedTiles.every(status => status === true);
       if (isFilled) {
         isGameComplete = true;
         const finalScore = calculateScore();
@@ -716,7 +937,8 @@
         }
 
         setTimeout(() => {
-          document.getElementById('author-info').classList.remove('hidden');
+          const revealCard = document.getElementById('floating-reveal-card');
+          revealCard.classList.remove('hidden');
           document.getElementById('author-name').innerText = targetAuthor;
           document.getElementById('book-title').innerText = targetTitle;
           openResultsModal();
@@ -794,12 +1016,73 @@
       window.addEventListener('mouseup', onEnd);
     }
 
+    function initRevealCardDrag() {
+      const card = document.getElementById('floating-reveal-card');
+      const handle = document.getElementById('reveal-card-drag-handle');
+
+      let isDragging = false;
+      let startX, startY, initialLeft, initialTop;
+
+      function onStart(clientX, clientY) {
+        isDragging = true;
+        const rect = card.getBoundingClientRect();
+        startX = clientX;
+        startY = clientY;
+        initialLeft = rect.left;
+        initialTop = rect.top;
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
+
+        card.style.left = `${initialLeft + deltaX}px`;
+        card.style.top = `${initialTop + deltaY}px`;
+        card.style.transform = 'none';
+      }
+
+      function onEnd() {
+        isDragging = false;
+      }
+
+      handle.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        onStart(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        onMove(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      window.addEventListener('touchend', onEnd);
+
+      handle.addEventListener('mousedown', (e) => {
+        onStart(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        onMove(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', onEnd);
+    }
+
     function resetKeyboardPosition() {
       const keyboard = document.getElementById('floating-keyboard');
       keyboard.style.left = '50%';
       keyboard.style.top = 'auto';
       keyboard.style.bottom = 'calc(12px + env(safe-area-inset-bottom))';
       keyboard.style.transform = 'translateX(-50%)';
+    }
+
+    function resetRevealCardPosition() {
+      const card = document.getElementById('floating-reveal-card');
+      card.style.left = '50%';
+      card.style.top = '100px';
+      card.style.transform = 'translateX(-50%)';
     }
 
     function toggleKeyboardCollapse() {
@@ -811,6 +1094,19 @@
         toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
       } else {
         keysContainer.classList.add('hidden');
+        toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
+      }
+    }
+
+    function toggleRevealCardCollapse() {
+      const cardBody = document.getElementById('reveal-card-body');
+      const toggleBtn = document.getElementById('btn-toggle-reveal-card');
+
+      if (cardBody.classList.contains('hidden')) {
+        cardBody.classList.remove('hidden');
+        toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+      } else {
+        cardBody.classList.add('hidden');
         toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
       }
     }
@@ -925,7 +1221,7 @@
       document.getElementById('mode-text').innerText = "Custom Play Mode";
       document.getElementById('daily-locked-banner').classList.add('hidden');
       document.getElementById('floating-keyboard').classList.remove('hidden');
-      document.getElementById('author-info').classList.add('hidden');
+      document.getElementById('floating-reveal-card').classList.add('hidden');
       
       closeCustomModal();
       setupBoard();
