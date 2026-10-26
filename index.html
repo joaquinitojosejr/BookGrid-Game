@@ -515,6 +515,10 @@
             <input type="text" id="custom-author-input" placeholder="Author" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
             <input type="text" id="custom-title-input" placeholder="Book Title" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
           </div>
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <input type="text" id="custom-published-input" placeholder="Publication Date (e.g., Oct 1972)" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-trivia-input" placeholder="Quote Insight / Context" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+          </div>
         </div>
 
         <div class="flex gap-2 pt-2">
@@ -531,14 +535,23 @@
 
   <!-- Results Modal -->
   <div id="modal-results" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white dark:bg-brand-card border border-amber-500/40 dark:border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
-      <div class="inline-flex p-4 bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 rounded-full mb-3">
-        <i class="fa-solid fa-trophy text-3xl"></i>
+    <div class="bg-white dark:bg-brand-card border border-amber-500/40 dark:border-brand-gold/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center max-h-[90vh] overflow-y-auto">
+      <div class="inline-flex p-3 bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 rounded-full mb-2">
+        <i class="fa-solid fa-trophy text-2xl"></i>
       </div>
-      <h3 class="font-serif text-2xl font-bold text-slate-900 dark:text-slate-100 mb-1">Puzzle Solved!</h3>
-      <p id="results-author-quote" class="text-xs text-slate-500 dark:text-slate-400 italic mb-4 font-quote">"..."</p>
+      <h3 class="font-serif text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Puzzle Solved!</h3>
+      <p id="results-author-quote" class="text-xs text-slate-500 dark:text-slate-400 italic mb-3 font-quote">"..."</p>
 
-      <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-4 mb-3 text-left text-xs space-y-2">
+      <!-- Literary Insight / Trivia Container -->
+      <div id="results-trivia-container" class="hidden bg-amber-500/10 dark:bg-brand-gold/10 border border-amber-500/30 dark:border-brand-gold/30 rounded-xl p-3 mb-3 text-left text-xs space-y-1">
+        <div class="font-serif font-bold text-amber-700 dark:text-brand-gold flex items-center gap-1.5 mb-1">
+          <i class="fa-solid fa-feather-pointed"></i> Literary Insight
+        </div>
+        <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Published:</strong> <span id="res-published"></span></p>
+        <p class="text-slate-700 dark:text-slate-300 leading-relaxed"><strong class="text-slate-900 dark:text-slate-100">Context:</strong> <span id="res-trivia"></span></p>
+      </div>
+
+      <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-3 mb-3 text-left text-xs space-y-1.5">
         <div class="flex justify-between text-slate-700 dark:text-slate-300">
           <span>Quote Letters:</span>
           <span class="font-bold text-sky-600 dark:text-brand-accent" id="res-total-letters">0</span>
@@ -551,23 +564,23 @@
           <span>Hints (<span id="res-hints-count">0</span> × <span id="res-hint-rate">0%</span>):</span>
           <span class="font-bold text-amber-600 dark:text-amber-400" id="res-hints-deduct">-0%</span>
         </div>
-        <div class="border-t border-slate-200 dark:border-brand-border pt-2 flex justify-between text-sm font-bold text-slate-900 dark:text-slate-100">
+        <div class="border-t border-slate-200 dark:border-brand-border pt-1.5 flex justify-between text-xs font-bold text-slate-900 dark:text-slate-100">
           <span>Final Resulting Score:</span>
-          <span class="text-amber-600 dark:text-brand-gold text-base" id="res-final-score">100%</span>
+          <span class="text-amber-600 dark:text-brand-gold text-sm" id="res-final-score">100%</span>
         </div>
       </div>
 
       <!-- Copyable Result Text Container -->
-      <div class="mb-4">
+      <div class="mb-3">
         <label class="block text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1 text-left">Shareable Score Card</label>
-        <textarea id="share-card-preview" readonly rows="4" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-brand-border rounded-lg p-2 text-xs font-mono text-emerald-600 dark:text-emerald-300 focus:outline-none resize-none select-all"></textarea>
+        <textarea id="share-card-preview" readonly rows="3" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-brand-border rounded-lg p-2 text-xs font-mono text-emerald-600 dark:text-emerald-300 focus:outline-none resize-none select-all"></textarea>
       </div>
 
       <div class="flex gap-2">
-        <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-lg transition-colors text-sm flex items-center justify-center gap-2">
+        <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2 rounded-lg transition-colors text-xs flex items-center justify-center gap-2">
           <i class="fa-solid fa-copy"></i> Copy Share Card
         </button>
-        <button onclick="closeResultsModal()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm">
+        <button onclick="closeResultsModal()" class="px-3 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
           Close
         </button>
       </div>
@@ -600,25 +613,113 @@
 
   <script>
     const DAILY_QUOTES = [
-      { quote: "Real courage is when you know you're licked before you begin.", author: "Harper Lee", title: "To Kill a Mockingbird", category: "Classic Literature", subCategory: "Fiction" },
-      { quote: "Not all those who wander are lost.", author: "J.R.R. Tolkien", title: "The Fellowship of the Ring", category: "Fantasy", subCategory: "Fiction" },
-      { quote: "It was the best of times, it was the worst of times.", author: "Charles Dickens", title: "A Tale of Two Cities", category: "Historical Fiction", subCategory: "Fiction" },
-      { quote: "There is no charm equal to tenderness of heart.", author: "Jane Austen", title: "Emma", category: "Romance / Classic", subCategory: "Fiction" },
-      { quote: "Whatever our souls are made of, his and mine are the same.", author: "Emily Brontë", title: "Wuthering Heights", category: "Gothic Classic", subCategory: "Fiction" },
-      { quote: "I am no bird; and no net ensnares me.", author: "Charlotte Brontë", title: "Jane Eyre", category: "Classic Literature", subCategory: "Fiction" }
+      { 
+        quote: "Real courage is when you know you're licked before you begin.", 
+        author: "Harper Lee", 
+        title: "To Kill a Mockingbird", 
+        published: "July 11, 1960",
+        trivia: "Spoken by Atticus Finch in Chapter 11, defining his moral compass and preparing Jem for Mrs. Dubose's fight—establishing that true bravery is persevering even when defeat is predetermined.",
+        category: "Classic Literature", 
+        subCategory: "Fiction" 
+      },
+      { 
+        quote: "Not all those who wander are lost.", 
+        author: "J.R.R. Tolkien", 
+        title: "The Fellowship of the Ring", 
+        published: "July 29, 1954",
+        trivia: "Part of the poem about Aragorn composed by Bilbo Baggins in Chapter 10, highlighting that living an unconventional or wandering life can serve a deeper noble purpose.",
+        category: "Fantasy", 
+        subCategory: "Fiction" 
+      },
+      { 
+        quote: "It was the best of times, it was the worst of times.", 
+        author: "Charles Dickens", 
+        title: "A Tale of Two Cities", 
+        published: "1859",
+        trivia: "The opening line setting the historical backdrop of London and Paris leading up to the French Revolution, emphasizing societal duality and moral chaos.",
+        category: "Historical Fiction", 
+        subCategory: "Fiction" 
+      },
+      { 
+        quote: "There is no charm equal to tenderness of heart.", 
+        author: "Jane Austen", 
+        title: "Emma", 
+        published: "December 23, 1815",
+        trivia: "Spoken by Emma Woodhouse in Chapter 32, reflecting Austen's subtle exploration of character flaws, empathy, and personal maturation.",
+        category: "Romance / Classic", 
+        subCategory: "Fiction" 
+      },
+      { 
+        quote: "Whatever our souls are made of, his and mine are the same.", 
+        author: "Emily Brontë", 
+        title: "Wuthering Heights", 
+        published: "December 1847",
+        trivia: "Spoken by Catherine Earnshaw in Chapter 9 to Nelly Dean, encapsulating the intense, transcendent bond between Catherine and Heathcliff.",
+        category: "Gothic Classic", 
+        subCategory: "Fiction" 
+      },
+      { 
+        quote: "I am no bird; and no net ensnares me.", 
+        author: "Charlotte Brontë", 
+        title: "Jane Eyre", 
+        published: "October 16, 1847",
+        trivia: "Spoken by Jane to Mr. Rochester in Chapter 23, asserting her independence, equality, and free agency as an autonomous individual.",
+        category: "Classic Literature", 
+        subCategory: "Fiction" 
+      }
     ];
 
     const PRESET_GENRES = {
       philosophy: [
-        { quote: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", title: "Twilight of the Idols", category: "Philosophy", subCategory: "Non-Fiction" },
-        { quote: "The unexamined life is not worth living.", author: "Socrates", title: "Apology", category: "Philosophy", subCategory: "Non-Fiction" }
+        { 
+          quote: "He who has a why to live can bear almost any how.", 
+          author: "Friedrich Nietzsche", 
+          title: "Twilight of the Idols", 
+          published: "1889",
+          trivia: "Found in Maxims and Arrows (#12), capturing Nietzsche's existential philosophy regarding human purpose and resilience.",
+          category: "Philosophy", 
+          subCategory: "Non-Fiction" 
+        },
+        { 
+          quote: "The unexamined life is not worth living.", 
+          author: "Socrates", 
+          title: "Apology", 
+          published: "399 BC",
+          trivia: "Recorded by Plato during Socrates' trial defense, defending the philosophical quest for self-knowledge and moral truth.",
+          category: "Philosophy", 
+          subCategory: "Non-Fiction" 
+        }
       ],
       scifi: [
-        { quote: "I must not fear. Fear is the mind-killer.", author: "Frank Herbert", title: "Dune", category: "Sci-Fi", subCategory: "Fiction" },
-        { quote: "The sky above the port was the color of television, tuned to a dead channel.", author: "William Gibson", title: "Neuromancer", category: "Cyberpunk / Sci-Fi", subCategory: "Fiction" }
+        { 
+          quote: "I must not fear. Fear is the mind-killer.", 
+          author: "Frank Herbert", 
+          title: "Dune", 
+          published: "August 1965",
+          trivia: "The opening lines of the Litany Against Fear recited by Bene Gesserit members to maintain emotional control during extreme trials.",
+          category: "Sci-Fi", 
+          subCategory: "Fiction" 
+        },
+        { 
+          quote: "The sky above the port was the color of television, tuned to a dead channel.", 
+          author: "William Gibson", 
+          title: "Neuromancer", 
+          published: "1984",
+          trivia: "The famous opening sentence establishing the gritty cyberpunk aesthetic and technological atmosphere of Night City.",
+          category: "Cyberpunk / Sci-Fi", 
+          subCategory: "Fiction" 
+        }
       ],
       classic: [
-        { quote: "All happy families are alike; each unhappy family is unhappy in its own way.", author: "Leo Tolstoy", title: "Anna Karenina", category: "Classic Literature", subCategory: "Fiction" }
+        { 
+          quote: "All happy families are alike; each unhappy family is unhappy in its own way.", 
+          author: "Leo Tolstoy", 
+          title: "Anna Karenina", 
+          published: "1878",
+          trivia: "The famous opening sentence establishing the Anna Karenina principle, widely cited in literature and social sciences.",
+          category: "Classic Literature", 
+          subCategory: "Fiction" 
+        }
       ]
     };
 
@@ -628,6 +729,8 @@
     let targetTitle = "";
     let targetCategory = "";
     let targetSubCategory = "";
+    let targetPublished = "";
+    let targetTrivia = "";
 
     let cleanLetters = [];
     let wordAssignments = [];
@@ -786,6 +889,8 @@
       targetTitle = quoteObj.title;
       targetCategory = quoteObj.category || "General";
       targetSubCategory = quoteObj.subCategory || "Literature";
+      targetPublished = quoteObj.published || "Unknown";
+      targetTrivia = quoteObj.trivia || "A memorable excerpt from the author's renowned collection.";
 
       updateQuoteInfoModalUI();
 
@@ -1296,6 +1401,15 @@
       document.getElementById('res-final-score').innerText = `${calculateScore()}%`;
       document.getElementById('results-author-quote').innerText = `"${targetQuote}"`;
 
+      const triviaContainer = document.getElementById('results-trivia-container');
+      if (targetTrivia || targetPublished) {
+        document.getElementById('res-published').innerText = targetPublished || "Unknown";
+        document.getElementById('res-trivia').innerText = targetTrivia || "A key passage from the work.";
+        triviaContainer.classList.remove('hidden');
+      } else {
+        triviaContainer.classList.add('hidden');
+      }
+
       document.getElementById('share-card-preview').value = generateShareCardText();
       document.getElementById('modal-results').classList.remove('hidden');
     }
@@ -1351,6 +1465,8 @@
         const subCat = document.getElementById('custom-subcategory-input').value.trim() || 'Custom Sub-Category';
         const a = document.getElementById('custom-author-input').value.trim() || 'Unknown Author';
         const t = document.getElementById('custom-title-input').value.trim() || 'Custom Source';
+        const pub = document.getElementById('custom-published-input').value.trim() || 'Unspecified';
+        const triv = document.getElementById('custom-trivia-input').value.trim() || 'A featured passage from this custom entry.';
 
         if (!q) return alert("Please enter a custom quote first.");
         targetQuote = q;
@@ -1358,6 +1474,8 @@
         targetSubCategory = subCat;
         targetAuthor = a;
         targetTitle = t;
+        targetPublished = pub;
+        targetTrivia = triv;
       } else {
         const pool = PRESET_GENRES[val];
         const selected = pool[Math.floor(Math.random() * pool.length)];
@@ -1366,6 +1484,8 @@
         targetTitle = selected.title;
         targetCategory = selected.category || "Genre Preset";
         targetSubCategory = selected.subCategory || "Preset";
+        targetPublished = selected.published || "Unknown";
+        targetTrivia = selected.trivia || "A notable excerpt from the selected genre preset.";
       }
 
       currentGameMode = 'custom';
