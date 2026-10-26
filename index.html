@@ -259,7 +259,7 @@
 </head>
 <body class="bg-slate-100 dark:bg-brand-dark text-slate-800 dark:text-slate-100 font-body h-[100dvh] flex flex-col overflow-hidden no-select transition-colors duration-200">
 
-  <!-- Hidden text input for native mobile/desktop keyboard binding -->
+  <!-- Hidden text input for optional native mobile/desktop keyboard binding -->
   <input type="text" id="hidden-keyboard-input" autocomplete="off" autocapitalize="none" spellcheck="false" class="sr-only opacity-0 absolute -z-50 pointer-events-none" aria-hidden="true" />
 
   <!-- Header -->
@@ -270,6 +270,10 @@
     </div>
     
     <div class="flex items-center space-x-2">
+      <!-- Native Keyboard Toggle Button -->
+      <button id="btn-native-keyboard" onclick="toggleNativeKeyboard()" class="p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700" title="Toggle Phone Native Keyboard">
+        <i class="fa-solid fa-keyboard text-lg"></i>
+      </button>
       <!-- Light/Dark Mode Skin Toggle Button -->
       <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700" title="Toggle Light/Dark Theme">
         <i id="theme-icon" class="fa-solid fa-sun text-lg"></i>
@@ -616,6 +620,7 @@
     let countMistakes = 0;
     let countHints = 0;
     let isGameComplete = false;
+    let isNativeKeyboardActive = false;
 
     // Theme Management Logic
     function initTheme() {
@@ -645,14 +650,44 @@
       }
     }
 
+    function toggleNativeKeyboard() {
+      const input = document.getElementById('hidden-keyboard-input');
+      const btn = document.getElementById('btn-native-keyboard');
+      if (!input) return;
+
+      isNativeKeyboardActive = !isNativeKeyboardActive;
+
+      if (isNativeKeyboardActive) {
+        input.focus();
+        btn.classList.add('bg-amber-500/20', 'border-amber-500', 'text-amber-600', 'dark:text-brand-gold');
+      } else {
+        input.blur();
+        btn.classList.remove('bg-amber-500/20', 'border-amber-500', 'text-amber-600', 'dark:text-brand-gold');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initKeyboardDrag();
       initRevealCardDrag();
-      initNativeKeyboardInput();
       initDailyGame();
       startCountdownTimer();
       
+      const input = document.getElementById('hidden-keyboard-input');
+      if (input) {
+        input.addEventListener('input', (e) => {
+          if (isGameComplete) return;
+          const val = e.target.value.toUpperCase();
+          if (val.length > 0) {
+            const char = val[val.length - 1];
+            if (char >= 'A' && char <= 'Z') {
+              handleVirtualKey(char);
+            }
+          }
+          input.value = '';
+        });
+      }
+
       window.addEventListener('keydown', (e) => {
         if (isGameComplete) return;
         
@@ -668,36 +703,6 @@
         }
       });
     });
-
-    function focusNativeInput() {
-      if (isGameComplete) return;
-      const input = document.getElementById('hidden-keyboard-input');
-      if (input) {
-        input.value = '';
-        input.focus();
-      }
-    }
-
-    function initNativeKeyboardInput() {
-      const input = document.getElementById('hidden-keyboard-input');
-      if (!input) return;
-
-      input.addEventListener('input', (e) => {
-        if (isGameComplete) return;
-        const val = e.target.value.toUpperCase();
-        if (val.length > 0) {
-          const char = val[val.length - 1];
-          if (char >= 'A' && char <= 'Z') {
-            handleVirtualKey(char);
-          }
-        }
-        input.value = '';
-      });
-
-      document.getElementById('quote-container').addEventListener('click', () => {
-        focusNativeInput();
-      });
-    }
 
     function getTodayUTCString() {
       const now = new Date();
@@ -761,7 +766,6 @@
         document.getElementById('floating-keyboard').classList.remove('hidden');
         document.getElementById('floating-reveal-card').classList.add('hidden');
         setupBoard();
-        setTimeout(focusNativeInput, 300);
       }
     }
 
@@ -925,7 +929,6 @@
       if (isGameComplete || lockedTiles[index]) return;
       selectedTileIndex = index;
       renderBoard();
-      focusNativeInput();
     }
 
     function findNextAvailableTileIndex() {
@@ -1018,7 +1021,6 @@
       renderBoard();
       updateStatsDisplay();
       checkWinCondition();
-      focusNativeInput();
     }
 
     function checkWinCondition() {
@@ -1254,7 +1256,6 @@
 
     function closeQuoteInfoModal() {
       document.getElementById('modal-quote-info').classList.add('hidden');
-      focusNativeInput();
     }
 
     function openCustomModal() {
@@ -1263,7 +1264,6 @@
 
     function closeCustomModal() {
       document.getElementById('modal-custom').classList.add('hidden');
-      focusNativeInput();
     }
 
     function openHelpModal() {
@@ -1272,7 +1272,6 @@
 
     function closeHelpModal() {
       document.getElementById('modal-help').classList.add('hidden');
-      focusNativeInput();
     }
 
     function onGenreSelectChange() {
@@ -1325,7 +1324,6 @@
       
       closeCustomModal();
       setupBoard();
-      setTimeout(focusNativeInput, 300);
     }
 
     function switchToDailyMode() {
