@@ -286,8 +286,8 @@
     </div>
     
     <div class="flex items-center space-x-2">
-      <!-- Fullscreen Toggle Button -->
-      <button id="btn-fullscreen" onclick="toggleFullscreen()" class="p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hidden sm:flex items-center justify-center" title="Toggle Fullscreen Mode">
+      <!-- Fullscreen Toggle Button (Visible in both portrait and landscape) -->
+      <button id="btn-fullscreen" onclick="toggleFullscreen()" class="p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center" title="Toggle Fullscreen Mode">
         <i id="fullscreen-icon" class="fa-solid fa-expand text-lg"></i>
       </button>
       <!-- Native Keyboard Toggle Button -->
@@ -670,12 +670,12 @@
       }
     }
 
-    // Fullscreen Mode Logic
+    // Fullscreen Mode Logic & Auto-Launch
     function toggleFullscreen() {
       const icon = document.getElementById('fullscreen-icon');
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
-          console.error("Error attempting to enable fullscreen:", err);
+          console.error("Fullscreen request blocked or not supported:", err);
         });
         if (icon) icon.className = 'fa-solid fa-compress text-lg text-amber-500 dark:text-brand-gold';
       } else {
@@ -683,6 +683,28 @@
           document.exitFullscreen();
         }
         if (icon) icon.className = 'fa-solid fa-expand text-lg';
+      }
+    }
+
+    function attemptAutoFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().then(() => {
+          const icon = document.getElementById('fullscreen-icon');
+          if (icon) icon.className = 'fa-solid fa-compress text-lg text-amber-500 dark:text-brand-gold';
+        }).catch(() => {
+          // Browsers require a user gesture on initial page load; 
+          // add a one-time listener to trigger fullscreen on the very first tap/click.
+          const triggerFullscreenOnFirstInteraction = () => {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().then(() => {
+                const icon = document.getElementById('fullscreen-icon');
+                if (icon) icon.className = 'fa-solid fa-compress text-lg text-amber-500 dark:text-brand-gold';
+              }).catch(() => {});
+            }
+            window.removeEventListener('pointerdown', triggerFullscreenOnFirstInteraction);
+          };
+          window.addEventListener('pointerdown', triggerFullscreenOnFirstInteraction, { once: true });
+        });
       }
     }
 
@@ -708,6 +730,7 @@
       initRevealCardDrag();
       initDailyGame();
       startCountdownTimer();
+      attemptAutoFullscreen();
       
       const input = document.getElementById('hidden-keyboard-input');
       if (input) {
