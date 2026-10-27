@@ -283,7 +283,19 @@
   <header class="bg-white dark:bg-brand-card border-b border-slate-200 dark:border-brand-border px-2 sm:px-4 py-2 flex items-center justify-between shrink-0 z-10 shadow-sm dark:shadow-none transition-colors duration-200">
     <div class="flex items-center space-x-1.5 shrink-0">
       <i class="fa-solid fa-book-bookmark text-amber-600 dark:text-brand-gold text-lg sm:text-xl"></i>
-      <h1 class="font-serif font-bold text-sm sm:text-xl tracking-wider text-slate-900 dark:text-slate-100">BOOKGRID</h1>
+      
+      <!-- Colorful Clue-Palette Header Title with Trademark Symbol -->
+      <h1 class="font-serif font-bold text-sm sm:text-xl tracking-wider inline-flex items-baseline select-none">
+        <span class="text-emerald-500">B</span>
+        <span class="text-amber-500 dark:text-brand-gold">O</span>
+        <span class="text-sky-500 dark:text-brand-accent">O</span>
+        <span class="text-slate-400 dark:text-slate-500">K</span>
+        <span class="text-emerald-500">G</span>
+        <span class="text-amber-500 dark:text-brand-gold">R</span>
+        <span class="text-sky-500 dark:text-brand-accent">I</span>
+        <span class="text-slate-400 dark:text-slate-500">D</span>
+        <span class="text-[9px] sm:text-xs font-sans font-extrabold text-amber-600/70 dark:text-brand-gold/70 ml-0.5 relative -top-1">®</span>
+      </h1>
     </div>
     
     <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
@@ -1600,7 +1612,7 @@
             if (successful) {
               showCopiedSuccess();
             } else {
-              alert("Card selected below! Tap and hold to copy manually manually.");
+              alert("Card selected below! Tap and hold to copy manually.");
             }
           } catch (err) {
             alert("Card selected below! Tap and hold to copy manually.");
