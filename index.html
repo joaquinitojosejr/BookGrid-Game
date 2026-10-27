@@ -534,29 +534,33 @@
   </div>
 
   <!-- Results Modal -->
-  <div id="modal-results" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white dark:bg-brand-card border border-amber-500/40 dark:border-brand-gold/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center max-h-[90vh] overflow-y-auto">
-      <div class="inline-flex p-3 bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 rounded-full mb-2">
-        <i class="fa-solid fa-trophy text-2xl"></i>
+  <div id="modal-results" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-2 hidden overflow-y-auto">
+    <div class="bg-white dark:bg-brand-card border border-amber-500/40 dark:border-brand-gold/40 rounded-xl max-w-sm w-full p-3 shadow-2xl text-center my-auto">
+      <div class="inline-flex p-2 bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 rounded-full mb-1">
+        <i class="fa-solid fa-trophy text-base"></i>
       </div>
-      <h3 class="font-serif text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Puzzle Solved!</h3>
-      <p id="results-author-quote" class="text-xs text-slate-500 dark:text-slate-400 italic mb-3 font-quote">"..."</p>
+      <h3 class="font-serif text-base font-bold text-slate-900 dark:text-slate-100 mb-0.5">Puzzle Solved!</h3>
+      <p id="results-author-quote" class="text-[10px] text-slate-500 dark:text-slate-400 italic mb-2 font-quote line-clamp-1">"..."</p>
 
       <!-- Literary Insight / Trivia Container (Includes Author & Book / Work) -->
-      <div id="results-trivia-container" class="hidden bg-amber-500/10 dark:bg-brand-gold/10 border border-amber-500/30 dark:border-brand-gold/30 rounded-xl p-3 mb-3 text-left text-xs space-y-1.5">
-        <div class="font-serif font-bold text-amber-700 dark:text-brand-gold flex items-center gap-1.5 mb-1">
+      <div id="results-trivia-container" class="hidden bg-amber-500/10 dark:bg-brand-gold/10 border border-amber-500/30 dark:border-brand-gold/30 rounded-lg p-2 mb-2 text-left text-[10px] space-y-0.5">
+        <div class="font-serif font-bold text-amber-700 dark:text-brand-gold flex items-center gap-1 mb-0.5 text-[11px]">
           <i class="fa-solid fa-feather-pointed"></i> Literary Insight & Trivia
         </div>
         <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Author:</strong> <span id="res-author"></span></p>
         <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Work/Book:</strong> <span id="res-work" class="italic"></span></p>
         <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Date published:</strong> <span id="res-published"></span></p>
-        <p class="text-slate-700 dark:text-slate-300 leading-relaxed pt-1 border-t border-amber-500/20 dark:border-brand-gold/20"><strong class="text-slate-900 dark:text-slate-100">About the quote:</strong> <span id="res-trivia"></span></p>
+        <p class="text-slate-700 dark:text-slate-300 leading-snug pt-0.5 border-t border-amber-500/20 dark:border-brand-gold/20 line-clamp-2"><strong class="text-slate-900 dark:text-slate-100">About:</strong> <span id="res-trivia"></span></p>
       </div>
 
-      <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-3 mb-3 text-left text-xs space-y-1.5">
+      <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-lg p-2 mb-2 text-left text-[10px] space-y-0.5">
         <div class="flex justify-between text-slate-700 dark:text-slate-300">
           <span>Quote Letters:</span>
           <span class="font-bold text-sky-600 dark:text-brand-accent" id="res-total-letters">0</span>
+        </div>
+        <div class="flex justify-between text-slate-700 dark:text-slate-300">
+          <span>Time Taken:</span>
+          <span class="font-bold text-amber-600 dark:text-brand-gold font-mono" id="res-time-taken">00:00</span>
         </div>
         <div class="flex justify-between text-slate-500 dark:text-slate-400">
           <span>Mistakes (<span id="res-mistakes-count">0</span> × <span id="res-mistake-rate">0%</span>):</span>
@@ -566,23 +570,23 @@
           <span>Hints (<span id="res-hints-count">0</span> × <span id="res-hint-rate">0%</span>):</span>
           <span class="font-bold text-amber-600 dark:text-amber-400" id="res-hints-deduct">-0%</span>
         </div>
-        <div class="border-t border-slate-200 dark:border-brand-border pt-1.5 flex justify-between text-xs font-bold text-slate-900 dark:text-slate-100">
+        <div class="border-t border-slate-200 dark:border-brand-border pt-0.5 flex justify-between text-[11px] font-bold text-slate-900 dark:text-slate-100">
           <span>Final Resulting Score:</span>
-          <span class="text-amber-600 dark:text-brand-gold text-sm" id="res-final-score">100%</span>
+          <span class="text-amber-600 dark:text-brand-gold" id="res-final-score">100%</span>
         </div>
       </div>
 
       <!-- Copyable Result Text Container -->
-      <div class="mb-3">
-        <label class="block text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1 text-left">Shareable Score Card</label>
-        <textarea id="share-card-preview" readonly rows="3" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-brand-border rounded-lg p-2 text-xs font-mono text-emerald-600 dark:text-emerald-300 focus:outline-none resize-none select-all"></textarea>
+      <div class="mb-2">
+        <label class="block text-[9px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5 text-left">Shareable Score Card</label>
+        <textarea id="share-card-preview" readonly rows="3" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-brand-border rounded-lg p-1.5 text-[10px] font-mono text-emerald-600 dark:text-emerald-300 focus:outline-none resize-none select-all"></textarea>
       </div>
 
       <div class="flex gap-2">
-        <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2 rounded-lg transition-colors text-xs flex items-center justify-center gap-2">
+        <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-1.5 rounded-lg transition-colors text-xs flex items-center justify-center gap-1.5">
           <i class="fa-solid fa-copy"></i> Copy Share Card
         </button>
-        <button onclick="closeResultsModal()" class="px-3 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
+        <button onclick="closeResultsModal()" class="px-3 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold py-1.5">
           Close
         </button>
       </div>
@@ -748,6 +752,10 @@
     let isGameComplete = false;
     let isNativeKeyboardActive = false;
 
+    let gameStartTime = null;
+    let gameElapsedTimeSeconds = 0;
+    let gameTimerInterval = null;
+
     // Theme Management Logic
     function initTheme() {
       const savedTheme = localStorage.getItem('bookgrid_theme');
@@ -872,6 +880,22 @@
       return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
     }
 
+    function startGameTimer() {
+      gameStartTime = Date.now();
+      if (gameTimerInterval) clearInterval(gameTimerInterval);
+      gameTimerInterval = setInterval(() => {
+        if (!isGameComplete) {
+          gameElapsedTimeSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
+        }
+      }, 1000);
+    }
+
+    function formatTime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
     function initDailyGame() {
       currentGameMode = 'daily';
       document.getElementById('mode-text').innerText = "Daily Challenge";
@@ -900,6 +924,7 @@
         const data = JSON.parse(savedData);
         countMistakes = data.mistakes;
         countHints = data.hints;
+        gameElapsedTimeSeconds = data.timeSeconds || 0;
         isGameComplete = true;
 
         setupBoard();
@@ -927,10 +952,12 @@
         isGameComplete = false;
         countMistakes = 0;
         countHints = 0;
+        gameElapsedTimeSeconds = 0;
         document.getElementById('daily-locked-banner').classList.add('hidden');
         document.getElementById('floating-keyboard').classList.remove('hidden');
         document.getElementById('floating-reveal-card').classList.add('hidden');
         setupBoard();
+        startGameTimer();
       }
     }
 
@@ -1192,6 +1219,7 @@
       const isFilled = lockedTiles.every(status => status === true);
       if (isFilled) {
         isGameComplete = true;
+        if (gameTimerInterval) clearInterval(gameTimerInterval);
         const finalScore = calculateScore();
 
         if (currentGameMode === 'daily') {
@@ -1199,7 +1227,8 @@
           localStorage.setItem(`bookgrid_daily_solved_${todayStr}`, JSON.stringify({
             score: finalScore,
             mistakes: countMistakes,
-            hints: countHints
+            hints: countHints,
+            timeSeconds: gameElapsedTimeSeconds
           }));
         }
 
@@ -1380,7 +1409,8 @@
 
     function generateShareCardText() {
       const score = calculateScore();
-      return `🎉 COMPLETED! 🎉\n📚 **BOOKGRID®** #${getTodayUTCString()}\nScore: ${score}%\nMistakes: ${countMistakes} | Hints: ${countHints}\n🟩🟨📖`;
+      const timeStr = formatTime(gameElapsedTimeSeconds);
+      return `🎉 COMPLETED! 🎉\n📚 **BOOKGRID®** #${getTodayUTCString()}\nScore: ${score}% | Time: ${timeStr}\nMistakes: ${countMistakes} | Hints: ${countHints}\n🟩🟨📖`;
     }
 
     function openResultsModal() {
@@ -1392,6 +1422,7 @@
       const totalHintLoss = (countHints * (50 / totalLetters)).toFixed(1);
 
       document.getElementById('res-total-letters').innerText = totalLetters;
+      document.getElementById('res-time-taken').innerText = formatTime(gameElapsedTimeSeconds);
       document.getElementById('res-mistakes-count').innerText = countMistakes;
       document.getElementById('res-mistake-rate').innerText = `${mistakePenaltyRate}%`;
       document.getElementById('res-mistakes-deduct').innerText = `-${totalMistakeLoss}%`;
@@ -1496,6 +1527,7 @@
       isGameComplete = false;
       countMistakes = 0;
       countHints = 0;
+      gameElapsedTimeSeconds = 0;
 
       updateQuoteInfoModalUI();
 
@@ -1506,6 +1538,7 @@
       
       closeCustomModal();
       setupBoard();
+      startGameTimer();
     }
 
     function switchToDailyMode() {
