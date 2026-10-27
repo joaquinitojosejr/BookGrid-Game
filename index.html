@@ -542,13 +542,15 @@
       <h3 class="font-serif text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Puzzle Solved!</h3>
       <p id="results-author-quote" class="text-xs text-slate-500 dark:text-slate-400 italic mb-3 font-quote">"..."</p>
 
-      <!-- Literary Insight / Trivia Container -->
-      <div id="results-trivia-container" class="hidden bg-amber-500/10 dark:bg-brand-gold/10 border border-amber-500/30 dark:border-brand-gold/30 rounded-xl p-3 mb-3 text-left text-xs space-y-1">
+      <!-- Literary Insight / Trivia Container (Includes Author & Book / Work) -->
+      <div id="results-trivia-container" class="hidden bg-amber-500/10 dark:bg-brand-gold/10 border border-amber-500/30 dark:border-brand-gold/30 rounded-xl p-3 mb-3 text-left text-xs space-y-1.5">
         <div class="font-serif font-bold text-amber-700 dark:text-brand-gold flex items-center gap-1.5 mb-1">
-          <i class="fa-solid fa-feather-pointed"></i> Literary Insight
+          <i class="fa-solid fa-feather-pointed"></i> Literary Insight & Trivia
         </div>
-        <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Published:</strong> <span id="res-published"></span></p>
-        <p class="text-slate-700 dark:text-slate-300 leading-relaxed"><strong class="text-slate-900 dark:text-slate-100">Context:</strong> <span id="res-trivia"></span></p>
+        <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Author:</strong> <span id="res-author"></span></p>
+        <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Work/Book:</strong> <span id="res-work" class="italic"></span></p>
+        <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Date published:</strong> <span id="res-published"></span></p>
+        <p class="text-slate-700 dark:text-slate-300 leading-relaxed pt-1 border-t border-amber-500/20 dark:border-brand-gold/20"><strong class="text-slate-900 dark:text-slate-100">About the quote:</strong> <span id="res-trivia"></span></p>
       </div>
 
       <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-3 mb-3 text-left text-xs space-y-1.5">
@@ -1402,7 +1404,9 @@
       document.getElementById('results-author-quote').innerText = `"${targetQuote}"`;
 
       const triviaContainer = document.getElementById('results-trivia-container');
-      if (targetTrivia || targetPublished) {
+      if (targetTrivia || targetPublished || targetAuthor || targetTitle) {
+        document.getElementById('res-author').innerText = targetAuthor || "Unknown";
+        document.getElementById('res-work').innerText = targetTitle || "Unknown Work";
         document.getElementById('res-published').innerText = targetPublished || "Unknown";
         document.getElementById('res-trivia').innerText = targetTrivia || "A key passage from the work.";
         triviaContainer.classList.remove('hidden');
