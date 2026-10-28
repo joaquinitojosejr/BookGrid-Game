@@ -299,6 +299,10 @@
     </div>
     
     <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
+      <!-- Language Toggle Button -->
+      <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-2 py-1.5 text-[11px] sm:text-xs font-bold text-amber-600 dark:text-brand-gold hover:text-amber-700 dark:hover:text-brand-goldHover transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1" title="Change Language">
+        <i class="fa-solid fa-globe"></i> <span id="lang-label">ES</span>
+      </button>
       <!-- Fullscreen Toggle Button -->
       <button id="btn-fullscreen" onclick="toggleFullscreen()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center" title="Toggle Fullscreen">
         <i id="fullscreen-icon" class="fa-solid fa-expand text-sm sm:text-lg"></i>
@@ -312,10 +316,10 @@
         <i id="theme-icon" class="fa-solid fa-sun text-sm sm:text-lg"></i>
       </button>
       <button onclick="openQuoteInfoModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 dark:hover:bg-slate-700 text-amber-700 dark:text-brand-gold rounded-lg transition-colors flex items-center gap-1 border border-slate-200 dark:border-transparent" title="Quote Details">
-        <i class="fa-solid fa-circle-nodes text-amber-600 dark:text-brand-gold"></i> <span class="hidden xs:inline">Details</span>
+        <i class="fa-solid fa-circle-nodes text-amber-600 dark:text-brand-gold"></i> <span class="hidden xs:inline" data-i18n="detailsBtn">Details</span>
       </button>
       <button id="btn-custom-mode" onclick="openCustomModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg transition-colors flex items-center gap-1 border border-slate-200 dark:border-transparent" title="Custom Game">
-        <i class="fa-solid fa-users text-sky-600 dark:text-brand-accent"></i> <span class="hidden xs:inline">Custom</span>
+        <i class="fa-solid fa-users text-sky-600 dark:text-brand-accent"></i> <span class="hidden xs:inline" data-i18n="customBtn">Custom</span>
       </button>
       <button onclick="openHelpModal()" class="p-1.5 sm:p-2 text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-brand-gold transition-colors" title="How to Play">
         <i class="fa-solid fa-circle-info text-base sm:text-lg"></i>
@@ -330,9 +334,9 @@
       <span id="mode-text" class="font-medium text-slate-800 dark:text-slate-300 truncate max-w-[140px] sm:max-w-none">Daily Challenge</span>
     </div>
     <div id="game-stats-quick" class="flex items-center gap-2 sm:gap-4">
-      <span>Mistakes: <strong id="stat-mistakes" class="text-rose-600 dark:text-rose-400">0</strong></span>
-      <span>Hints: <strong id="stat-hints" class="text-amber-600 dark:text-amber-400">0</strong></span>
-      <span>Score: <strong id="stat-score" class="text-amber-600 dark:text-brand-gold">100%</strong></span>
+      <span><span data-i18n="mistakesLabel">Mistakes</span>: <strong id="stat-mistakes" class="text-rose-600 dark:text-rose-400">0</strong></span>
+      <span><span data-i18n="hintsLabel">Hints</span>: <strong id="stat-hints" class="text-amber-600 dark:text-amber-400">0</strong></span>
+      <span><span data-i18n="scoreLabel">Score</span>: <strong id="stat-score" class="text-amber-600 dark:text-brand-gold">100%</strong></span>
     </div>
   </div>
 
@@ -344,25 +348,25 @@
       <div class="inline-flex p-2.5 bg-amber-500/10 dark:bg-brand-gold/10 rounded-full text-amber-600 dark:text-brand-gold mb-2">
         <i class="fa-solid fa-lock text-xl"></i>
       </div>
-      <h2 class="font-serif text-lg text-amber-600 dark:text-brand-gold font-bold mb-1">Today's Puzzle Completed!</h2>
+      <h2 id="locked-title" class="font-serif text-lg text-amber-600 dark:text-brand-gold font-bold mb-1">Today's Puzzle Completed!</h2>
       <p id="locked-score-summary" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3">You scored 100% on today's literary quote.</p>
       
       <div class="flex flex-wrap items-center justify-center gap-2.5">
         <button onclick="shareResults()" class="px-4 py-2 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold rounded-lg transition-colors flex items-center gap-2 text-xs sm:text-sm shadow-md">
-          <i class="fa-solid fa-share-nodes"></i> Share Score
+          <i class="fa-solid fa-share-nodes"></i> <span data-i18n="shareBtn">Share Score</span>
         </button>
         <div class="bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-brand-border text-xs text-slate-600 dark:text-slate-400">
-          Next Quote in: <span id="countdown-timer" class="font-mono text-sky-600 dark:text-brand-accent font-bold">00:00:00</span>
+          <span data-i18n="nextQuoteLabel">Next Quote in</span>: <span id="countdown-timer" class="font-mono text-sky-600 dark:text-brand-accent font-bold">00:00:00</span>
         </div>
       </div>
     </div>
 
     <!-- Clue Legend Bar -->
     <div class="w-full max-w-md flex flex-wrap justify-center items-center gap-2 mb-2 text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-900/60 py-1 px-2.5 rounded-lg border border-slate-300 dark:border-brand-border/40 shadow-sm transition-colors duration-200">
-      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Correct Slot</span></div>
-      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span><span>Same Word</span></div>
-      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span><span>In Quote</span></div>
-      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-600"></span><span>Not in Quote</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span data-i18n="legendCorrect">Correct Slot</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span><span data-i18n="legendSameWord">Same Word</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span><span data-i18n="legendInQuote">In Quote</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-600"></span><span data-i18n="legendNotInQuote">Not in Quote</span></div>
     </div>
 
     <!-- Quote Grid Container -->
@@ -376,7 +380,7 @@
     <div id="reveal-card-drag-handle" class="flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800/90 border-b border-slate-200 dark:border-brand-border/60 cursor-grab active:cursor-grabbing text-xs text-slate-700 dark:text-slate-300">
       <div class="flex items-center gap-2 font-semibold text-amber-600 dark:text-brand-gold">
         <i class="fa-solid fa-grip-lines text-slate-400 dark:text-slate-500"></i>
-        <span><i class="fa-solid fa-feather-pointed"></i> SOURCE REVEALED</span>
+        <span><i class="fa-solid fa-feather-pointed"></i> <span data-i18n="sourceRevealed">SOURCE REVEALED</span></span>
       </div>
       <div class="flex items-center gap-2">
         <button onclick="resetRevealCardPosition()" class="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 rounded" title="Center Card">
@@ -392,7 +396,7 @@
     <div id="reveal-card-body" class="p-4 text-center">
       <h3 id="book-title" class="font-serif text-base sm:text-lg font-bold text-sky-600 dark:text-brand-accent mb-1 italic">Book Title</h3>
       <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-quote">— <span id="author-name" class="text-slate-900 dark:text-slate-100 font-semibold not-italic">Author Name</span></p>
-      <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2 font-mono"><i class="fa-solid fa-hand-pointer text-slate-400 dark:text-slate-600"></i> Drag handle to reposition card</p>
+      <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2 font-mono"><i class="fa-solid fa-hand-pointer text-slate-400 dark:text-slate-600"></i> <span data-i18n="dragHandleText">Drag handle to reposition card</span></p>
     </div>
   </div>
 
@@ -401,7 +405,7 @@
     <div id="keyboard-drag-handle" class="flex items-center justify-between px-3 py-1 cursor-grab active:cursor-grabbing border-b border-slate-200 dark:border-brand-border/60 mb-1.5">
       <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
         <i class="fa-solid fa-grip-lines text-slate-400 dark:text-slate-500"></i>
-        <span>KEYBOARD (Badges = Remaining)</span>
+        <span data-i18n="keyboardTitle">KEYBOARD (Badges = Remaining)</span>
       </div>
       <div class="flex items-center gap-1.5">
         <button onclick="resetKeyboardPosition()" class="text-[11px] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800" title="Center">
@@ -436,6 +440,7 @@
         <button id="key-J" onclick="handleVirtualKey('J')" class="key-btn">J<span class="key-count-badge" id="badge-J"></span></button>
         <button id="key-K" onclick="handleVirtualKey('K')" class="key-btn">K<span class="key-count-badge" id="badge-K"></span></button>
         <button id="key-L" onclick="handleVirtualKey('L')" class="key-btn">L<span class="key-count-badge" id="badge-L"></span></button>
+        <button id="key-Ñ" onclick="handleVirtualKey('Ñ')" class="key-btn hidden" id-es-key="true">Ñ<span class="key-count-badge" id="badge-Ñ"></span></button>
       </div>
       <div class="flex justify-center gap-1">
         <button onclick="useHint()" class="action-btn bg-amber-600 hover:bg-amber-700 text-white" title="Hint">
@@ -460,7 +465,7 @@
     <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-sm w-full p-6 shadow-2xl">
       <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-brand-border">
         <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100 text-base flex items-center gap-2">
-          <i class="fa-solid fa-book-open text-amber-600 dark:text-brand-gold"></i> Quote Details
+          <i class="fa-solid fa-book-open text-amber-600 dark:text-brand-gold"></i> <span data-i18n="quoteDetailsTitle">Quote Details</span>
         </h3>
         <button onclick="closeQuoteInfoModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
           <i class="fa-solid fa-xmark text-lg"></i>
@@ -469,24 +474,24 @@
 
       <div class="space-y-3 text-sm">
         <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
-          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Category</span>
-          <span id="info-category" class="text-slate-800 dark:text-slate-100 font-medium">Classic Literature</span>
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="categoryLabel">Category</span>
+          <span id="info-category" class="text-slate-800 dark:text-slate-100 font-medium">-</span>
         </div>
         <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
-          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Sub-Category</span>
-          <span id="info-subcategory" class="text-slate-800 dark:text-slate-100 font-medium">Fiction</span>
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="subcategoryLabel">Sub-Category</span>
+          <span id="info-subcategory" class="text-slate-800 dark:text-slate-100 font-medium">-</span>
         </div>
         <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
-          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Author</span>
-          <span id="info-author" class="text-amber-600 dark:text-brand-gold font-medium">Harper Lee</span>
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="authorLabel">Author</span>
+          <span id="info-author" class="text-amber-600 dark:text-brand-gold font-medium">-</span>
         </div>
         <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
-          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">Book / Source</span>
-          <span id="info-book" class="text-sky-600 dark:text-brand-accent font-medium italic">To Kill a Mockingbird</span>
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="bookLabel">Book / Source</span>
+          <span id="info-book" class="text-sky-600 dark:text-brand-accent font-medium italic">-</span>
         </div>
       </div>
 
-      <button onclick="closeQuoteInfoModal()" class="w-full mt-5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold py-2.5 rounded-lg text-sm transition-colors">
+      <button onclick="closeQuoteInfoModal()" class="w-full mt-5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold py-2.5 rounded-lg text-sm transition-colors" data-i18n="closeBtn">
         Close
       </button>
     </div>
@@ -497,7 +502,7 @@
     <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-md w-full p-6 shadow-2xl">
       <div class="flex items-center justify-between mb-4">
         <h3 class="font-serif text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-sky-600 dark:text-brand-accent"></i> Custom Game Setup
+          <i class="fa-solid fa-sliders text-sky-600 dark:text-brand-accent"></i> <span data-i18n="customSetupTitle">Custom Game Setup</span>
         </h3>
         <button onclick="closeCustomModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
           <i class="fa-solid fa-xmark text-lg"></i>
@@ -506,38 +511,41 @@
 
       <div class="space-y-4 text-sm">
         <div>
-          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Select Genre Preset</label>
+          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1" data-i18n="selectGenreLabel">Select Genre Preset</label>
           <select id="genre-select" onchange="onGenreSelectChange()" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-amber-500 dark:focus:border-brand-gold">
-            <option value="custom">-- Custom Quote Entry --</option>
-            <option value="philosophy">Philosophy & Ethics</option>
-            <option value="scifi">Sci-Fi & Cyberpunk</option>
-            <option value="classic">Classic Fiction</option>
+            <option value="custom" data-i18n="presetCustom">-- Custom Quote Entry --</option>
+            <option value="philosophy" data-i18n="presetPhil">Philosophy & Ethics</option>
+            <option value="scifi" data-i18n="presetScifi">Sci-Fi & Cyberpunk</option>
+            <option value="classic" data-i18n="presetClassic">Classic Fiction</option>
+            <option value="science" data-i18n="presetScience">Science & Physics</option>
+            <option value="scripture" data-i18n="presetScripture">Scripture & Antiquity</option>
+            <option value="speech" data-i18n="presetSpeech">Historical Speeches</option>
           </select>
         </div>
 
         <div id="custom-input-group">
-          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Enter Custom Quote</label>
+          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1" data-i18n="enterCustomLabel">Enter Custom Quote</label>
           <textarea id="custom-quote-input" rows="3" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg p-3 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-amber-500 dark:focus:border-brand-gold text-sm" placeholder="Type quote here..."></textarea>
           
           <div class="grid grid-cols-2 gap-2 mt-2">
-            <input type="text" id="custom-category-input" placeholder="Category (e.g., Politics)" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
-            <input type="text" id="custom-subcategory-input" placeholder="Sub-Category (e.g., Non-Fiction)" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-category-input" placeholder="Category" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-subcategory-input" placeholder="Sub-Category" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
           </div>
           <div class="grid grid-cols-2 gap-2 mt-2">
             <input type="text" id="custom-author-input" placeholder="Author" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
             <input type="text" id="custom-title-input" placeholder="Book Title" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
           </div>
           <div class="grid grid-cols-2 gap-2 mt-2">
-            <input type="text" id="custom-published-input" placeholder="Publication Date (e.g., Oct 1972)" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-published-input" placeholder="Publication Date" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
             <input type="text" id="custom-trivia-input" placeholder="Quote Insight / Context" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
           </div>
         </div>
 
         <div class="flex gap-2 pt-2">
-          <button onclick="startCustomGame()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-lg transition-colors text-sm">
+          <button onclick="startCustomGame()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-lg transition-colors text-sm" data-i18n="launchGameBtn">
             Launch Game
           </button>
-          <button onclick="switchToDailyMode()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-lg text-sm">
+          <button onclick="switchToDailyMode()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-lg text-sm" data-i18n="backToDailyBtn">
             Back to Daily
           </button>
         </div>
@@ -552,7 +560,7 @@
       <div class="inline-flex p-2 bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 rounded-full mb-1">
         <i class="fa-solid fa-trophy text-lg"></i>
       </div>
-      <h3 class="font-serif text-base font-bold text-slate-900 dark:text-slate-100 mb-0.5">Puzzle Solved!</h3>
+      <h3 class="font-serif text-base font-bold text-slate-900 dark:text-slate-100 mb-0.5" data-i18n="puzzleSolvedTitle">Puzzle Solved!</h3>
       <p id="results-author-quote" class="text-[11px] text-slate-500 dark:text-slate-400 italic mb-3 font-quote">"..."</p>
 
       <!-- Outer Window Container for Results (Scrolls if content exceeds available height) -->
@@ -561,45 +569,45 @@
         <!-- Literary Insight & Trivia (With internal scroll when text is long) -->
         <div id="results-trivia-container" class="hidden bg-amber-500/10 dark:bg-brand-gold/10 border border-amber-500/30 dark:border-brand-gold/30 rounded-xl p-3 text-[11px] space-y-1">
           <div class="font-serif font-bold text-amber-700 dark:text-brand-gold flex items-center gap-1.5 mb-1 text-xs">
-            <i class="fa-solid fa-feather-pointed"></i> Literary Insight & Trivia
+            <i class="fa-solid fa-feather-pointed"></i> <span data-i18n="literaryInsightTitle">Literary Insight & Trivia</span>
           </div>
-          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Author:</strong> <span id="res-author"></span></p>
-          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Work/Book:</strong> <span id="res-work" class="italic"></span></p>
-          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100">Date published:</strong> <span id="res-published"></span></p>
+          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100" data-i18n="authorResLabel">Author:</strong> <span id="res-author"></span></p>
+          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100" data-i18n="workResLabel">Work/Book:</strong> <span id="res-work" class="italic"></span></p>
+          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100" data-i18n="dateResLabel">Date published:</strong> <span id="res-published"></span></p>
           
           <!-- Scrollable description box if text is long -->
           <div class="max-h-24 overflow-y-auto pr-1 pt-1 border-t border-amber-500/20 dark:border-brand-gold/20">
-            <p class="text-slate-700 dark:text-slate-300 leading-relaxed"><strong class="text-slate-900 dark:text-slate-100">About the quote:</strong> <span id="res-trivia"></span></p>
+            <p class="text-slate-700 dark:text-slate-300 leading-relaxed"><strong class="text-slate-900 dark:text-slate-100" data-i18n="aboutResLabel">About the quote:</strong> <span id="res-trivia"></span></p>
           </div>
         </div>
 
         <!-- Final Resulting Score Block -->
         <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-3 text-[11px] space-y-1">
           <div class="flex justify-between text-slate-700 dark:text-slate-300">
-            <span>Quote Letters:</span>
+            <span data-i18n="quoteLettersLabel">Quote Letters:</span>
             <span class="font-bold text-sky-600 dark:text-brand-accent" id="res-total-letters">0</span>
           </div>
           <div class="flex justify-between text-slate-700 dark:text-slate-300">
-            <span>Time Taken:</span>
+            <span data-i18n="timeTakenLabel">Time Taken:</span>
             <span class="font-bold text-amber-600 dark:text-brand-gold font-mono" id="res-time-taken">00:00</span>
           </div>
           <div class="flex justify-between text-slate-500 dark:text-slate-400">
-            <span>Mistakes (<span id="res-mistakes-count">0</span> × <span id="res-mistake-rate">0%</span>):</span>
+            <span><span data-i18n="mistakesLabel">Mistakes</span> (<span id="res-mistakes-count">0</span> × <span id="res-mistake-rate">0%</span>):</span>
             <span class="font-bold text-rose-500 dark:text-rose-400" id="res-mistakes-deduct">-0%</span>
           </div>
           <div class="flex justify-between text-slate-500 dark:text-slate-400">
-            <span>Hints (<span id="res-hints-count">0</span> × <span id="res-hint-rate">0%</span>):</span>
+            <span><span data-i18n="hintsLabel">Hints</span> (<span id="res-hints-count">0</span> × <span id="res-hint-rate">0%</span>):</span>
             <span class="font-bold text-amber-600 dark:text-amber-400" id="res-hints-deduct">-0%</span>
           </div>
           <div class="border-t border-slate-200 dark:border-brand-border pt-1 flex justify-between text-xs font-bold text-slate-900 dark:text-slate-100">
-            <span>Final Resulting Score:</span>
+            <span data-i18n="finalScoreLabel">Final Resulting Score:</span>
             <span class="text-amber-600 dark:text-brand-gold" id="res-final-score">100%</span>
           </div>
         </div>
 
-        <!-- Shareable Score Card Section (Fully shown with fixed layout) -->
+        <!-- Shareable Score Card Section -->
         <div>
-          <label class="block text-[9px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Shareable Score Card</label>
+          <label class="block text-[9px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1" data-i18n="shareCardLabel">Shareable Score Card</label>
           <textarea id="share-card-preview" readonly rows="5" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-brand-border rounded-xl p-2.5 text-[11px] font-mono text-emerald-600 dark:text-emerald-300 focus:outline-none resize-none select-all"></textarea>
         </div>
 
@@ -608,9 +616,9 @@
       <!-- Modal Action Buttons -->
       <div class="flex gap-2">
         <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-xl transition-colors text-xs flex items-center justify-center gap-1.5 shadow-md">
-          <i class="fa-solid fa-copy"></i> Copy Share Card
+          <i class="fa-solid fa-copy"></i> <span data-i18n="copyCardBtn">Copy Share Card</span>
         </button>
-        <button onclick="closeResultsModal()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold py-2.5">
+        <button onclick="closeResultsModal()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold py-2.5" data-i18n="closeBtn">
           Close
         </button>
       </div>
@@ -622,138 +630,195 @@
   <div id="modal-help" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-sm w-full p-5 shadow-2xl">
       <div class="flex items-center justify-between mb-3">
-        <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100">How to Play & Logical Clues</h3>
+        <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100" data-i18n="helpTitle">How to Play & Logical Clues</h3>
         <button onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
       <div class="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 leading-relaxed">
-        <p>• Fill in missing quote tiles using your physical keyboard or floating virtual keyboard.</p>
-        <p>• Click <strong>Details</strong> at the top to inspect quote categories & author info.</p>
-        <p>• <strong>Logical Clue Coloring System:</strong></p>
+        <p data-i18n="helpLine1">• Fill in missing quote tiles using your physical keyboard or floating virtual keyboard.</p>
+        <p data-i18n="helpLine2">• Click <strong>Details</strong> at the top to inspect quote categories & author info.</p>
+        <p><strong data-i18n="helpLine3Title">• Logical Clue Coloring System:</strong></p>
         <div class="space-y-1 pl-2 border-l-2 border-amber-500 dark:border-brand-gold">
-          <p><strong class="text-emerald-600 dark:text-emerald-400">Emerald Green:</strong> Correct letter in exact tile slot!</p>
-          <p><strong class="text-amber-600 dark:text-amber-400">Warm Gold:</strong> Letter belongs inside <em>this exact word</em>, but wrong position!</p>
-          <p><strong class="text-sky-600 dark:text-sky-400">Cyan Blue:</strong> Letter exists in the quote, but inside a <em>different word</em>.</p>
-          <p><strong class="text-slate-500 dark:text-slate-400">Dark Grey:</strong> Letter does not exist anywhere in the quote.</p>
+          <p><strong class="text-emerald-600 dark:text-emerald-400" data-i18n="helpEmerald">Emerald Green:</strong> Correct letter in exact tile slot!</p>
+          <p><strong class="text-amber-600 dark:text-amber-400" data-i18n="helpGold">Warm Gold:</strong> Letter belongs inside <em>this exact word</em>, but wrong position!</p>
+          <p><strong class="text-sky-600 dark:text-sky-400" data-i18n="helpCyan">Cyan Blue:</strong> Letter exists in the quote, but inside a <em>different word</em>.</p>
+          <p><strong class="text-slate-500 dark:text-slate-400" data-i18n="helpGrey">Dark Grey:</strong> Letter does not exist anywhere in the quote.</p>
         </div>
-        <p>• <strong>Occurrence Badges:</strong> Virtual keys display remaining letter counts counting down to an asterisk (*) when fully found.</p>
+        <p data-i18n="helpLine4">• <strong>Occurrence Badges:</strong> Virtual keys display remaining letter counts counting down to an asterisk (*) when fully found.</p>
       </div>
     </div>
   </div>
 
   <script>
-    const DAILY_QUOTES = [
+    // Dictionary translations for UI
+    const TRANSLATIONS = {
+      en: {
+        langToggle: "ES",
+        dailyChallenge: "Daily Challenge",
+        customMode: "Custom Mode",
+        mistakesLabel: "Mistakes",
+        hintsLabel: "Hints",
+        scoreLabel: "Score",
+        detailsBtn: "Details",
+        customBtn: "Custom",
+        lockedTitle: "Today's Puzzle Completed!",
+        shareBtn: "Share Score",
+        nextQuoteLabel: "Next Quote in",
+        legendCorrect: "Correct Slot",
+        legendSameWord: "Same Word",
+        legendInQuote: "In Quote",
+        legendNotInQuote: "Not in Quote",
+        sourceRevealed: "SOURCE REVEALED",
+        dragHandleText: "Drag handle to reposition card",
+        keyboardTitle: "KEYBOARD (Badges = Remaining)",
+        quoteDetailsTitle: "Quote Details",
+        categoryLabel: "Category",
+        subcategoryLabel: "Sub-Category",
+        authorLabel: "Author",
+        bookLabel: "Book / Source",
+        closeBtn: "Close",
+        customSetupTitle: "Custom Game Setup",
+        selectGenreLabel: "Select Genre Preset",
+        presetCustom: "-- Custom Quote Entry --",
+        presetPhil: "Philosophy & Ethics",
+        presetScifi: "Sci-Fi & Cyberpunk",
+        presetClassic: "Classic Fiction",
+        presetScience: "Science & Physics",
+        presetScripture: "Scripture & Antiquity",
+        presetSpeech: "Historical Speeches",
+        enterCustomLabel: "Enter Custom Quote",
+        launchGameBtn: "Launch Game",
+        backToDailyBtn: "Back to Daily",
+        puzzleSolvedTitle: "Puzzle Solved!",
+        literaryInsightTitle: "Literary Insight & Trivia",
+        authorResLabel: "Author:",
+        workResLabel: "Work/Book:",
+        dateResLabel: "Date published:",
+        aboutResLabel: "About the quote:",
+        quoteLettersLabel: "Quote Letters:",
+        timeTakenLabel: "Time Taken:",
+        finalScoreLabel: "Final Resulting Score:",
+        shareCardLabel: "Shareable Score Card",
+        copyCardBtn: "Copy Share Card",
+        helpTitle: "How to Play & Logical Clues",
+        helpLine1: "• Fill in missing quote tiles using your physical keyboard or floating virtual keyboard.",
+        helpLine2: "• Click Details at the top to inspect quote categories & author info.",
+        helpLine3Title: "• Logical Clue Coloring System:",
+        helpEmerald: "Emerald Green: Correct letter in exact tile slot!",
+        helpGold: "Warm Gold: Letter belongs inside this exact word, but wrong position!",
+        helpCyan: "Cyan Blue: Letter exists in the quote, but inside a different word.",
+        helpGrey: "Dark Grey: Letter does not exist anywhere in the quote.",
+        helpLine4: "• Occurrence Badges: Virtual keys display remaining letter counts counting down to an asterisk (*) when fully found."
+      },
+      es: {
+        langToggle: "EN",
+        dailyChallenge: "Desafío Diario",
+        customMode: "Modo Personalizado",
+        mistakesLabel: "Errores",
+        hintsLabel: "Pistas",
+        scoreLabel: "Puntuación",
+        detailsBtn: "Detalles",
+        customBtn: "Personalizado",
+        lockedTitle: "¡Rompecabezas de Hoy Completado!",
+        shareBtn: "Compartir Puntuación",
+        nextQuoteLabel: "Siguiente Frase en",
+        legendCorrect: "Casilla Correcta",
+        legendSameWord: "Misma Palabra",
+        legendInQuote: "En la Frase",
+        legendNotInQuote: "No en la Frase",
+        sourceRevealed: "FUENTE REVELADA",
+        dragHandleText: "Arrastra el asa para mover la tarjeta",
+        keyboardTitle: "TECLADO (Insignias = Restantes)",
+        quoteDetailsTitle: "Detalles de la Frase",
+        categoryLabel: "Categoría",
+        subcategoryLabel: "Subcategoría",
+        authorLabel: "Autor",
+        bookLabel: "Libro / Fuente",
+        closeBtn: "Cerrar",
+        customSetupTitle: "Configuración de Juego Personalizado",
+        selectGenreLabel: "Seleccionar Género Preestablecido",
+        presetCustom: "-- Ingresar Frase Personalizada --",
+        presetPhil: "Filosofía y Ética",
+        presetScifi: "Ciencia Ficción y Ciberpunk",
+        presetClassic: "Ficción Clásica",
+        presetScience: "Ciencia y Física",
+        presetScripture: "Escritura y Antigüedad",
+        presetSpeech: "Discursos Históricos",
+        enterCustomLabel: "Ingresar Frase Personalizada",
+        launchGameBtn: "Iniciar Juego",
+        backToDailyBtn: "Volver al Diario",
+        puzzleSolvedTitle: "¡Rompecabezas Resuelto!",
+        literaryInsightTitle: "Perspicacia Literaria y Curiosidades",
+        authorResLabel: "Autor:",
+        workResLabel: "Obra/Libro:",
+        dateResLabel: "Fecha de publicación:",
+        aboutResLabel: "Sobre la frase:",
+        quoteLettersLabel: "Letras de la frase:",
+        timeTakenLabel: "Tiempo empleado:",
+        finalScoreLabel: "Puntuación Final Resultante:",
+        shareCardLabel: "Tarjeta de Puntuación Compartible",
+        copyCardBtn: "Copiar Tarjeta",
+        helpTitle: "Cómo Jugar y Pistas Lógicas",
+        helpLine1: "• Completa las casillas vacías usando tu teclado físico o el teclado virtual flotante.",
+        helpLine2: "• Haz clic en Detalles arriba para inspeccionar categorías e información del autor.",
+        helpLine3Title: "• Sistema de Colores de Pistas Lógicas:",
+        helpEmerald: "Verde Esmeralda: ¡Letra correcta en la casilla exacta!",
+        helpGold: "Oro Cálido: La letra pertenece a esta misma palabra, ¡pero en otra posición!",
+        helpCyan: "Azul Cian: La letra existe en la frase, pero en otra palabra.",
+        helpGrey: "Gris Oscuro: La letra no existe en ninguna parte de la frase.",
+        helpLine4: "• Insignias de Recuento: Las teclas muestran los recuentos restantes de letras hasta llegar a un asterisco (*)."
+      }
+    };
+
+    // Universal Master Pool: Quotes available in both English and Spanish
+    const DAILY_MASTER_QUOTES = [
       { 
-        quote: "Real courage is when you know you're licked before you begin.", 
-        author: "Harper Lee", 
-        title: "To Kill a Mockingbird", 
-        published: "July 11, 1960",
-        trivia: "Spoken by Atticus Finch in Chapter 11, defining his moral compass and preparing Jem for Mrs. Dubose's fight—establishing that true bravery is persevering even when defeat is predetermined.",
-        category: "Classic Literature", 
-        subCategory: "Fiction" 
+        en: { quote: "Real courage is when you know you're licked before you begin.", author: "Harper Lee", title: "To Kill a Mockingbird", published: "July 11, 1960", trivia: "Spoken by Atticus Finch in Chapter 11, defining his moral compass.", category: "Classic Literature", subCategory: "Fiction" },
+        es: { quote: "El verdadero valor es cuando sabes que estás vencido antes de empezar.", author: "Harper Lee", title: "Matar a un ruiseñor", published: "11 de julio de 1960", trivia: "Dicho por Atticus Finch en el capítulo 11, definiendo su brújula moral.", category: "Literatura Clásica", subCategory: "Ficción" }
       },
       { 
-        quote: "Not all those who wander are lost.", 
-        author: "J.R.R. Tolkien", 
-        title: "The Fellowship of the Ring", 
-        published: "July 29, 1954",
-        trivia: "Part of the poem about Aragorn composed by Bilbo Baggins in Chapter 10, highlighting that living an unconventional or wandering life can serve a deeper noble purpose.",
-        category: "Fantasy", 
-        subCategory: "Fiction" 
+        en: { quote: "Not all those who wander are lost.", author: "J.R.R. Tolkien", title: "The Fellowship of the Ring", published: "July 29, 1954", trivia: "Part of the poem about Aragorn composed by Bilbo Baggins.", category: "Fantasy", subCategory: "Fiction" },
+        es: { quote: "No todos los que vagan están perdidos.", author: "J.R.R. Tolkien", title: "La Comunidad del Anillo", published: "29 de julio de 1954", trivia: "Parte del poema sobre Aragorn compuesto por Bilbo Bolsón.", category: "Fantasía", subCategory: "Ficción" }
       },
       { 
-        quote: "It was the best of times, it was the worst of times.", 
-        author: "Charles Dickens", 
-        title: "A Tale of Two Cities", 
-        published: "1859",
-        trivia: "The opening line setting the historical backdrop of London and Paris leading up to the French Revolution, emphasizing societal duality and moral chaos.",
-        category: "Historical Fiction", 
-        subCategory: "Fiction" 
+        en: { quote: "In a village of La Mancha, the name of which I have no desire to call to mind.", author: "Miguel de Cervantes", title: "Don Quixote", published: "1605", trivia: "The famous opening line of one of the greatest masterpieces in universal literature.", category: "Classic Literature", subCategory: "Fiction" },
+        es: { quote: "En un lugar de la Mancha, de cuyo nombre no quiero acordarme.", author: "Miguel de Cervantes", title: "Don Quijote de la Mancha", published: "1605", trivia: "La famosísima frase inicial de una de las obras cumbres de la literatura universal.", category: "Literatura Clásica", subCategory: "Ficción" }
       },
       { 
-        quote: "There is no charm equal to tenderness of heart.", 
-        author: "Jane Austen", 
-        title: "Emma", 
-        published: "December 23, 1815",
-        trivia: "Spoken by Emma Woodhouse in Chapter 32, reflecting Austen's subtle exploration of character flaws, empathy, and personal maturation.",
-        category: "Romance / Classic", 
-        subCategory: "Fiction" 
-      },
-      { 
-        quote: "Whatever our souls are made of, his and mine are the same.", 
-        author: "Emily Brontë", 
-        title: "Wuthering Heights", 
-        published: "December 1847",
-        trivia: "Spoken by Catherine Earnshaw in Chapter 9 to Nelly Dean, encapsulating the intense, transcendent bond between Catherine and Heathcliff.",
-        category: "Gothic Classic", 
-        subCategory: "Fiction" 
-      },
-      { 
-        quote: "I am no bird; and no net ensnares me.", 
-        author: "Charlotte Brontë", 
-        title: "Jane Eyre", 
-        published: "October 16, 1847",
-        trivia: "Spoken by Jane to Mr. Rochester in Chapter 23, asserting her independence, equality, and free agency as an autonomous individual.",
-        category: "Classic Literature", 
-        subCategory: "Fiction" 
+        en: { quote: "Many years later, as he faced the firing squad, Colonel Aureliano Buendía was to remember that distant afternoon.", author: "Gabriel García Márquez", title: "One Hundred Years of Solitude", published: "1967", trivia: "The iconic opening sentence of the magical realism masterpiece.", category: "Magical Realism", subCategory: "Fiction" },
+        es: { quote: "Muchos años después, frente al pelotón de fusilamiento, el coronel Aureliano Buendía había de recordar aquella tarde remota...", author: "Gabriel García Márquez", title: "Cien años de soledad", published: "1967", trivia: "El icónico comienzo de la obra maestra del realismo mágico.", category: "Realismo Mágico", subCategory: "Ficción" }
       }
     ];
 
-    const PRESET_GENRES = {
-      philosophy: [
-        { 
-          quote: "He who has a why to live can bear almost any how.", 
-          author: "Friedrich Nietzsche", 
-          title: "Twilight of the Idols", 
-          published: "1889",
-          trivia: "Found in Maxims and Arrows (#12), capturing Nietzsche's existential philosophy regarding human purpose and resilience.",
-          category: "Philosophy", 
-          subCategory: "Non-Fiction" 
-        },
-        { 
-          quote: "The unexamined life is not worth living.", 
-          author: "Socrates", 
-          title: "Apology", 
-          published: "399 BC",
-          trivia: "Recorded by Plato during Socrates' trial defense, defending the philosophical quest for self-knowledge and moral truth.",
-          category: "Philosophy", 
-          subCategory: "Non-Fiction" 
-        }
-      ],
-      scifi: [
-        { 
-          quote: "I must not fear. Fear is the mind-killer.", 
-          author: "Frank Herbert", 
-          title: "Dune", 
-          published: "August 1965",
-          trivia: "The opening lines of the Litany Against Fear recited by Bene Gesserit members to maintain emotional control during extreme trials.",
-          category: "Sci-Fi", 
-          subCategory: "Fiction" 
-        },
-        { 
-          quote: "The sky above the port was the color of television, tuned to a dead channel.", 
-          author: "William Gibson", 
-          title: "Neuromancer", 
-          published: "1984",
-          trivia: "The famous opening sentence establishing the gritty cyberpunk aesthetic and technological atmosphere of Night City.",
-          category: "Cyberpunk / Sci-Fi", 
-          subCategory: "Fiction" 
-        }
-      ],
-      classic: [
-        { 
-          quote: "All happy families are alike; each unhappy family is unhappy in its own way.", 
-          author: "Leo Tolstoy", 
-          title: "Anna Karenina", 
-          published: "1878",
-          trivia: "The famous opening sentence establishing the Anna Karenina principle, widely cited in literature and social sciences.",
-          category: "Classic Literature", 
-          subCategory: "Fiction" 
-        }
-      ]
+    const PRESET_GENRES_MASTER = {
+      philosophy: {
+        en: { quote: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", title: "Twilight of the Idols", published: "1889", trivia: "Found in Maxims and Arrows (#12).", category: "Philosophy", subCategory: "Non-Fiction" },
+        es: { quote: "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", author: "Friedrich Nietzsche", title: "El crepúsculo de los ídolos", published: "1889", trivia: "Encontrado en Máximas y flechas.", category: "Filosofía", subCategory: "No Ficción" }
+      },
+      scifi: {
+        en: { quote: "I must not fear. Fear is the mind-killer.", author: "Frank Herbert", title: "Dune", published: "August 1965", trivia: "The Litany Against Fear.", category: "Sci-Fi", subCategory: "Fiction" },
+        es: { quote: "No debo tener miedo. El miedo mata la mente.", author: "Frank Herbert", title: "Dune", published: "Agosto de 1965", trivia: "La letanía contra el miedo.", category: "Ciencia Ficción", subCategory: "Ficción" }
+      },
+      classic: {
+        en: { quote: "All happy families are alike; each unhappy family is unhappy in its own way.", author: "Leo Tolstoy", title: "Anna Karenina", published: "1878", trivia: "The famous opening sentence.", category: "Classic Literature", subCategory: "Fiction" },
+        es: { quote: "Todas las familias felices se asemejan; cada familia infeliz lo es a su manera.", author: "León Tolstói", title: "Ana Karenina", published: "1878", trivia: "La famosa frase inicial.", category: "Ficción Clásica", subCategory: "Ficción" }
+      },
+      science: {
+        en: { quote: "God does not play dice with the universe.", author: "Albert Einstein", title: "Letter to Max Born", published: "1926", trivia: "Einstein's philosophical view on quantum mechanics.", category: "Science", subCategory: "Physics" },
+        es: { quote: "Dios no juega a los dados con el universo.", author: "Albert Einstein", title: "Carta a Max Born", published: "1926", trivia: "La visión filosófica de Einstein sobre la mecánica cuántica.", category: "Ciencia", subCategory: "Física" }
+      },
+      scripture: {
+        en: { quote: "Let us cut the living child in two, and give half to the one, and half to the other.", author: "King Solomon", title: "First Book of Kings", published: "c. 950 BC", trivia: "Solomon's famous test of maternal wisdom.", category: "Scripture", subCategory: "Ancient History" },
+        es: { quote: "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.", author: "Rey Salomón", title: "Primer Libro de los Reyes", published: "c. 950 a. C.", trivia: "La célebre prueba de sabiduría maternal de Salomón.", category: "Escritura", subCategory: "Historia Antigua" }
+      },
+      speech: {
+        en: { quote: "Ask not what your country can do for you – ask what you can do for your country.", author: "John F. Kennedy", title: "Inaugural Address", published: "January 20, 1961", trivia: "One of the most memorable calls to civic action in modern history.", category: "Speeches", subCategory: "Political Oratory" },
+        es: { quote: "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.", author: "John F. Kennedy", title: "Discurso Inaugural", published: "20 de enero de 1961", trivia: "Uno de los llamados a la acción cívica más memorables.", category: "Discursos", subCategory: "Oratoria Política" }
+      }
     };
 
+    let currentLang = localStorage.getItem('bookgrid_lang') || 'en';
     let currentGameMode = 'daily';
     let targetQuote = "";
     let targetAuthor = "";
@@ -780,6 +845,40 @@
     let gameStartTime = null;
     let gameElapsedTimeSeconds = 0;
     let gameTimerInterval = null;
+
+    // Language Management
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+      localStorage.setItem('bookgrid_lang', currentLang);
+      updateLanguageUI();
+      initDailyGame();
+    }
+
+    function updateLanguageUI() {
+      const dict = TRANSLATIONS[currentLang];
+      document.getElementById('lang-label').innerText = currentLang === 'en' ? 'ES' : 'EN';
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      // Toggle Ñ key visibility for Spanish keyboard mode
+      const nKey = document.querySelector('[id-es-key="true"]');
+      if (nKey) {
+        if (currentLang === 'es') {
+          nKey.classList.remove('hidden');
+        } else {
+          nKey.classList.add('hidden');
+        }
+      }
+    }
+
+    function t(key) {
+      return TRANSLATIONS[currentLang][key] || key;
+    }
 
     // Theme Management Logic
     function initTheme() {
@@ -863,6 +962,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
+      updateLanguageUI();
       initKeyboardDrag();
       initRevealCardDrag();
       initDailyGame();
@@ -876,7 +976,7 @@
           const val = e.target.value.toUpperCase();
           if (val.length > 0) {
             const char = val[val.length - 1];
-            if (char >= 'A' && char <= 'Z') {
+            if ((char >= 'A' && char <= 'Z') || char === 'Ñ') {
               handleVirtualKey(char);
             }
           }
@@ -892,7 +992,7 @@
         }
 
         const key = e.key.toUpperCase();
-        if (key >= 'A' && key <= 'Z' && key.length === 1) {
+        if (((key >= 'A' && key <= 'Z') || key === 'Ñ') && key.length === 1) {
           handleVirtualKey(key);
         } else if (e.key === 'Backspace') {
           handleBackspace();
@@ -923,17 +1023,19 @@
 
     function initDailyGame() {
       currentGameMode = 'daily';
-      document.getElementById('mode-text').innerText = "Daily Challenge";
+      document.getElementById('mode-text').innerText = t('dailyChallenge');
 
       const todayStr = getTodayUTCString();
-      const lockKey = `bookgrid_daily_solved_${todayStr}`;
+      const lockKey = `bookgrid_daily_solved_${currentLang}_${todayStr}`;
       const savedData = localStorage.getItem(lockKey);
 
       let dateHash = 0;
       for (let i = 0; i < todayStr.length; i++) {
         dateHash += todayStr.charCodeAt(i);
       }
-      const quoteObj = DAILY_QUOTES[dateHash % DAILY_QUOTES.length];
+      
+      const masterObj = DAILY_MASTER_QUOTES[dateHash % DAILY_MASTER_QUOTES.length];
+      const quoteObj = masterObj[currentLang];
 
       targetQuote = quoteObj.quote;
       targetAuthor = quoteObj.author;
@@ -941,7 +1043,7 @@
       targetCategory = quoteObj.category || "General";
       targetSubCategory = quoteObj.subCategory || "Literature";
       targetPublished = quoteObj.published || "Unknown";
-      targetTrivia = quoteObj.trivia || "A memorable excerpt from the author's renowned collection.";
+      targetTrivia = quoteObj.trivia || "A memorable excerpt.";
 
       updateQuoteInfoModalUI();
 
@@ -971,7 +1073,7 @@
         document.getElementById('author-name').innerText = targetAuthor;
         document.getElementById('book-title').innerText = targetTitle;
         
-        document.getElementById('locked-score-summary').innerText = `You scored ${data.score}% on today's quote!`;
+        document.getElementById('locked-score-summary').innerText = `${t('lockedTitle').replace('!', '')} (${data.score}%)`;
         updateStatsDisplay();
       } else {
         isGameComplete = false;
@@ -1020,7 +1122,7 @@
           const char = wordStr[i];
           const upperChar = char.toUpperCase();
 
-          if (upperChar >= 'A' && upperChar <= 'Z') {
+          if ((upperChar >= 'A' && upperChar <= 'Z') || upperChar === 'Ñ') {
             cleanLetters.push(upperChar);
             wordAssignments.push(wordIdx);
             currentWordLetters.push(upperChar);
@@ -1067,6 +1169,8 @@
         const badge = document.getElementById(`badge-${char}`);
         if (badge) badge.innerText = '';
       }
+      const nBadge = document.getElementById('badge-Ñ');
+      if (nBadge) nBadge.innerText = '';
     }
 
     function updateVirtualKeyboardState(letter, state) {
@@ -1078,7 +1182,7 @@
       }
 
       const activeState = keyStates[letter];
-      const keyBtn = document.getElementById(`key-${letter}`);
+      const keyBtn = letter === 'Ñ' ? document.getElementById('key-Ñ') : document.getElementById(`key-${letter}`);
       
       if (keyBtn) {
         keyBtn.classList.remove('key-correct', 'key-same-word', 'key-present', 'key-absent');
@@ -1092,7 +1196,7 @@
     }
 
     function updateKeyboardBadge(letter) {
-      const badge = document.getElementById(`badge-${letter}`);
+      const badge = letter === 'Ñ' ? document.getElementById('badge-Ñ') : document.getElementById(`badge-${letter}`);
       if (!badge) return;
 
       const total = letterCountsTotal[letter] || 0;
@@ -1249,7 +1353,7 @@
 
         if (currentGameMode === 'daily') {
           const todayStr = getTodayUTCString();
-          localStorage.setItem(`bookgrid_daily_solved_${todayStr}`, JSON.stringify({
+          localStorage.setItem(`bookgrid_daily_solved_${currentLang}_${todayStr}`, JSON.stringify({
             score: finalScore,
             mistakes: countMistakes,
             hints: countHints,
@@ -1435,7 +1539,8 @@
     function generateShareCardText() {
       const score = calculateScore();
       const timeStr = formatTime(gameElapsedTimeSeconds);
-      return `🎉 COMPLETED! 🎉\n📚 **BOOKGRID®** #${getTodayUTCString()}\nScore: ${score}% | Time: ${timeStr}\nMistakes: ${countMistakes} | Hints: ${countHints}\n🟩🟨📖`;
+      const headerTitle = currentLang === 'es' ? '🎉 ¡COMPLETADO! 🎉' : '🎉 COMPLETED! 🎉';
+      return `${headerTitle}\n📚 **BOOKGRID®** (${currentLang.toUpperCase()}) #${getTodayUTCString()}\nScore: ${score}% | Time: ${timeStr}\nMistakes: ${countMistakes} | Hints: ${countHints}\n🟩🟨📖`;
     }
 
     function openResultsModal() {
@@ -1464,7 +1569,7 @@
         document.getElementById('res-author').innerText = targetAuthor || "Unknown";
         document.getElementById('res-work').innerText = targetTitle || "Unknown Work";
         document.getElementById('res-published').innerText = targetPublished || "Unknown";
-        document.getElementById('res-trivia').innerText = targetTrivia || "A key passage from the work.";
+        document.getElementById('res-trivia').innerText = targetTrivia || "A key passage.";
         triviaContainer.classList.remove('hidden');
       } else {
         triviaContainer.classList.add('hidden');
@@ -1521,14 +1626,14 @@
       
       if (val === 'custom') {
         const q = document.getElementById('custom-quote-input').value.trim();
-        const cat = document.getElementById('custom-category-input').value.trim() || 'Custom Category';
-        const subCat = document.getElementById('custom-subcategory-input').value.trim() || 'Custom Sub-Category';
-        const a = document.getElementById('custom-author-input').value.trim() || 'Unknown Author';
-        const t = document.getElementById('custom-title-input').value.trim() || 'Custom Source';
+        const cat = document.getElementById('custom-category-input').value.trim() || 'Custom';
+        const subCat = document.getElementById('custom-subcategory-input').value.trim() || 'Custom';
+        const a = document.getElementById('custom-author-input').value.trim() || 'Unknown';
+        const t = document.getElementById('custom-title-input').value.trim() || 'Custom';
         const pub = document.getElementById('custom-published-input').value.trim() || 'Unspecified';
-        const triv = document.getElementById('custom-trivia-input').value.trim() || 'A featured passage from this custom entry.';
+        const triv = document.getElementById('custom-trivia-input').value.trim() || 'Custom entry.';
 
-        if (!q) return alert("Please enter a custom quote first.");
+        if (!q) return alert(currentLang === 'es' ? "Por favor ingresa una frase primero." : "Please enter a custom quote first.");
         targetQuote = q;
         targetCategory = cat;
         targetSubCategory = subCat;
@@ -1537,15 +1642,15 @@
         targetPublished = pub;
         targetTrivia = triv;
       } else {
-        const pool = PRESET_GENRES[val];
-        const selected = pool[Math.floor(Math.random() * pool.length)];
+        const presetMaster = PRESET_GENRES_MASTER[val];
+        const selected = presetMaster[currentLang];
         targetQuote = selected.quote;
         targetAuthor = selected.author;
         targetTitle = selected.title;
-        targetCategory = selected.category || "Genre Preset";
+        targetCategory = selected.category || "Preset";
         targetSubCategory = selected.subCategory || "Preset";
         targetPublished = selected.published || "Unknown";
-        targetTrivia = selected.trivia || "A notable excerpt from the selected genre preset.";
+        targetTrivia = selected.trivia || "Notable excerpt.";
       }
 
       currentGameMode = 'custom';
@@ -1556,7 +1661,7 @@
 
       updateQuoteInfoModalUI();
 
-      document.getElementById('mode-text').innerText = "Custom Mode";
+      document.getElementById('mode-text').innerText = t('customMode');
       document.getElementById('daily-locked-banner').classList.add('hidden');
       document.getElementById('floating-keyboard').classList.remove('hidden');
       document.getElementById('floating-reveal-card').classList.add('hidden');
@@ -1578,7 +1683,7 @@
       function showCopiedSuccess() {
         if (btn) {
           const originalText = btn.innerHTML;
-          btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (currentLang === 'es' ? '¡Copiado!' : 'Copied!');
           btn.classList.remove('bg-amber-500', 'dark:bg-brand-gold', 'hover:bg-amber-600', 'dark:hover:bg-brand-goldHover');
           btn.classList.add('bg-emerald-500', 'text-white');
 
@@ -1612,10 +1717,10 @@
             if (successful) {
               showCopiedSuccess();
             } else {
-              alert("Card selected below! Tap and hold to copy manually.");
+              alert(currentLang === 'es' ? "¡Tarjeta seleccionada! Mantén presionado para copiar." : "Card selected below! Tap and hold to copy manually.");
             }
           } catch (err) {
-            alert("Card selected below! Tap and hold to copy manually.");
+            alert(currentLang === 'es' ? "¡Tarjeta seleccionada! Mantén presionado para copiar." : "Card selected below! Tap and hold to copy manually.");
           }
         }
       }
