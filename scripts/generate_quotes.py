@@ -30,7 +30,7 @@ SAMPLE_MASTER_LIBRARY = [
     },
     {
         "en": { "quote": "He who has a why to live can bear almost any how.", "author": "Friedrich Nietzsche", "title": "Twilight of the Idols", "published": "1889", "trivia": "Found in Maxims and Arrows (#12).", "category": "Philosophy", "subCategory": "Non-Fiction" },
-        "es": { "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", "author": "Friedrich Nietzsche", "title": "El crepúsculo de los ídolos", "published": "1889", trivia: "Encontrado en Máximas y flechas.", "category": "Filosofía", "subCategory": "No Ficción" }
+        "es": { "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", "author": "Friedrich Nietzsche", "title": "El crepúsculo de los ídolos", "published": "1889", "trivia": "Encontrado en Máximas y flechas.", "category": "Filosofía", "subCategory": "No Ficción" }
     }
 ]
 
@@ -82,7 +82,6 @@ PRESET_SEED_POOLS = {
 }
 
 def generate_weekly_payload():
-    # Pick 7 random non-repeating items from master pool for the daily schedule
     daily_selection = random.sample(SAMPLE_MASTER_LIBRARY, min(7, len(SAMPLE_MASTER_LIBRARY)))
     
     payload = {
@@ -90,7 +89,6 @@ def generate_weekly_payload():
         "presets": PRESET_SEED_POOLS
     }
     
-    # Write to root quotes.json
     output_path = os.path.join(os.path.dirname(__file__), '..', 'quotes.json')
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
@@ -99,5 +97,3 @@ def generate_weekly_payload():
 
 if __name__ == "__main__":
     generate_weekly_payload()
-
-
