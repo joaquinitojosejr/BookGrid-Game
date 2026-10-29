@@ -1,1 +1,38 @@
+name: Automated Weekly Quotes Pipeline
 
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  build-and-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run Python Content Pipeline
+        run: python scripts/generate_quotes.py
+
+      - name: Commit and Push Fresh Payload
+        run: |
+          git config --global user.name "BookGrid Bot"
+          git config --global user.email "bot@bookgrid.app"
+          git status
+          git add quotes.json
+          # Check if there are actual changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to quotes.json to commit."
+          else
+            git commit -m "Automated weekly quote payload update [skip ci]"
+            git push
+          fi
