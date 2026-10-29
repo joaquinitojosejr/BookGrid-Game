@@ -374,9 +374,8 @@
 
   </main>
 
-  <!-- Floating, Draggable & Minimizable Author & Book Reveal Card -->
+  <!-- Floating Reveal Card -->
   <div id="floating-reveal-card" class="w-[90%] max-w-sm bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-amber-500/50 dark:border-brand-gold/50 rounded-2xl shadow-2xl overflow-hidden hidden transition-all">
-    <!-- Card Drag Handle Bar -->
     <div id="reveal-card-drag-handle" class="flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800/90 border-b border-slate-200 dark:border-brand-border/60 cursor-grab active:cursor-grabbing text-xs text-slate-700 dark:text-slate-300">
       <div class="flex items-center gap-2 font-semibold text-amber-600 dark:text-brand-gold">
         <i class="fa-solid fa-grip-lines text-slate-400 dark:text-slate-500"></i>
@@ -392,7 +391,6 @@
       </div>
     </div>
 
-    <!-- Card Content Body -->
     <div id="reveal-card-body" class="p-4 text-center">
       <h3 id="book-title" class="font-serif text-base sm:text-lg font-bold text-sky-600 dark:text-brand-accent mb-1 italic">Book Title</h3>
       <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-quote">— <span id="author-name" class="text-slate-900 dark:text-slate-100 font-semibold not-italic">Author Name</span></p>
@@ -563,10 +561,7 @@
       <h3 class="font-serif text-base font-bold text-slate-900 dark:text-slate-100 mb-0.5" data-i18n="puzzleSolvedTitle">Puzzle Solved!</h3>
       <p id="results-author-quote" class="text-[11px] text-slate-500 dark:text-slate-400 italic mb-3 font-quote">"..."</p>
 
-      <!-- Outer Window Container for Results (Scrolls if content exceeds available height) -->
       <div class="max-h-[55vh] overflow-y-auto pr-1 space-y-3 mb-3 text-left">
-        
-        <!-- Literary Insight & Trivia (With internal scroll when text is long) -->
         <div id="results-trivia-container" class="hidden bg-amber-500/10 dark:bg-brand-gold/10 border border-amber-500/30 dark:border-brand-gold/30 rounded-xl p-3 text-[11px] space-y-1">
           <div class="font-serif font-bold text-amber-700 dark:text-brand-gold flex items-center gap-1.5 mb-1 text-xs">
             <i class="fa-solid fa-feather-pointed"></i> <span data-i18n="literaryInsightTitle">Literary Insight & Trivia</span>
@@ -575,13 +570,11 @@
           <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100" data-i18n="workResLabel">Work/Book:</strong> <span id="res-work" class="italic"></span></p>
           <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100" data-i18n="dateResLabel">Date published:</strong> <span id="res-published"></span></p>
           
-          <!-- Scrollable description box if text is long -->
           <div class="max-h-24 overflow-y-auto pr-1 pt-1 border-t border-amber-500/20 dark:border-brand-gold/20">
             <p class="text-slate-700 dark:text-slate-300 leading-relaxed"><strong class="text-slate-900 dark:text-slate-100" data-i18n="aboutResLabel">About the quote:</strong> <span id="res-trivia"></span></p>
           </div>
         </div>
 
-        <!-- Final Resulting Score Block -->
         <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-3 text-[11px] space-y-1">
           <div class="flex justify-between text-slate-700 dark:text-slate-300">
             <span data-i18n="quoteLettersLabel">Quote Letters:</span>
@@ -605,15 +598,12 @@
           </div>
         </div>
 
-        <!-- Shareable Score Card Section -->
         <div>
           <label class="block text-[9px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1" data-i18n="shareCardLabel">Shareable Score Card</label>
           <textarea id="share-card-preview" readonly rows="5" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-brand-border rounded-xl p-2.5 text-[11px] font-mono text-emerald-600 dark:text-emerald-300 focus:outline-none resize-none select-all"></textarea>
         </div>
-
       </div>
 
-      <!-- Modal Action Buttons -->
       <div class="flex gap-2">
         <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-xl transition-colors text-xs flex items-center justify-center gap-1.5 shadow-md">
           <i class="fa-solid fa-copy"></i> <span data-i18n="copyCardBtn">Copy Share Card</span>
@@ -622,7 +612,6 @@
           Close
         </button>
       </div>
-
     </div>
   </div>
 
@@ -637,12 +626,12 @@
       </div>
       <div class="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 leading-relaxed">
         <p data-i18n="helpLine1">• Fill in missing quote tiles using your physical keyboard or floating virtual keyboard.</p>
-        <p data-i18n="helpLine2">• Click <strong>Details</strong> at the top to inspect quote categories & author info.</p>
+        <p data-i18n="helpLine2">• Click Details at the top to inspect quote categories & author info.</p>
         <p><strong data-i18n="helpLine3Title">• Logical Clue Coloring System:</strong></p>
         <div class="space-y-1 pl-2 border-l-2 border-amber-500 dark:border-brand-gold">
           <p><strong class="text-emerald-600 dark:text-emerald-400" data-i18n="helpEmerald">Emerald Green:</strong> Correct letter in exact tile slot!</p>
-          <p><strong class="text-amber-600 dark:text-amber-400" data-i18n="helpGold">Warm Gold:</strong> Letter belongs inside <em>this exact word</em>, but wrong position!</p>
-          <p><strong class="text-sky-600 dark:text-sky-400" data-i18n="helpCyan">Cyan Blue:</strong> Letter exists in the quote, but inside a <em>different word</em>.</p>
+          <p><strong class="text-amber-600 dark:text-amber-400" data-i18n="helpGold">Warm Gold:</strong> Letter belongs inside this exact word, but wrong position!</p>
+          <p><strong class="text-sky-600 dark:text-sky-400" data-i18n="helpCyan">Cyan Blue:</strong> Letter exists in the quote, but inside a different word.</p>
           <p><strong class="text-slate-500 dark:text-slate-400" data-i18n="helpGrey">Dark Grey:</strong> Letter does not exist anywhere in the quote.</p>
         </div>
         <p data-i18n="helpLine4">• <strong>Occurrence Badges:</strong> Virtual keys display remaining letter counts counting down to an asterisk (*) when fully found.</p>
@@ -771,53 +760,63 @@
       }
     };
 
-    // Universal Master Pool: Quotes available in both English and Spanish
-    const DAILY_MASTER_QUOTES = [
-      { 
-        en: { quote: "Real courage is when you know you're licked before you begin.", author: "Harper Lee", title: "To Kill a Mockingbird", published: "July 11, 1960", trivia: "Spoken by Atticus Finch in Chapter 11, defining his moral compass.", category: "Classic Literature", subCategory: "Fiction" },
-        es: { quote: "El verdadero valor es cuando sabes que estás vencido antes de empezar.", author: "Harper Lee", title: "Matar a un ruiseñor", published: "11 de julio de 1960", trivia: "Dicho por Atticus Finch en el capítulo 11, definiendo su brújula moral.", category: "Literatura Clásica", subCategory: "Ficción" }
-      },
-      { 
-        en: { quote: "Not all those who wander are lost.", author: "J.R.R. Tolkien", title: "The Fellowship of the Ring", published: "July 29, 1954", trivia: "Part of the poem about Aragorn composed by Bilbo Baggins.", category: "Fantasy", subCategory: "Fiction" },
-        es: { quote: "No todos los que vagan están perdidos.", author: "J.R.R. Tolkien", title: "La Comunidad del Anillo", published: "29 de julio de 1954", trivia: "Parte del poema sobre Aragorn compuesto por Bilbo Bolsón.", category: "Fantasía", subCategory: "Ficción" }
-      },
-      { 
-        en: { quote: "In a village of La Mancha, the name of which I have no desire to call to mind.", author: "Miguel de Cervantes", title: "Don Quixote", published: "1605", trivia: "The famous opening line of one of the greatest masterpieces in universal literature.", category: "Classic Literature", subCategory: "Fiction" },
-        es: { quote: "En un lugar de la Mancha, de cuyo nombre no quiero acordarme.", author: "Miguel de Cervantes", title: "Don Quijote de la Mancha", published: "1605", trivia: "La famosísima frase inicial de una de las obras cumbres de la literatura universal.", category: "Literatura Clásica", subCategory: "Ficción" }
-      },
-      { 
-        en: { quote: "Many years later, as he faced the firing squad, Colonel Aureliano Buendía was to remember that distant afternoon.", author: "Gabriel García Márquez", title: "One Hundred Years of Solitude", published: "1967", trivia: "The iconic opening sentence of the magical realism masterpiece.", category: "Magical Realism", subCategory: "Fiction" },
-        es: { quote: "Muchos años después, frente al pelotón de fusilamiento, el coronel Aureliano Buendía había de recordar aquella tarde remota...", author: "Gabriel García Márquez", title: "Cien años de soledad", published: "1967", trivia: "El icónico comienzo de la obra maestra del realismo mágico.", category: "Realismo Mágico", subCategory: "Ficción" }
-      }
-    ];
-
-    const PRESET_GENRES_MASTER = {
-      philosophy: {
-        en: { quote: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", title: "Twilight of the Idols", published: "1889", trivia: "Found in Maxims and Arrows (#12).", category: "Philosophy", subCategory: "Non-Fiction" },
-        es: { quote: "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", author: "Friedrich Nietzsche", title: "El crepúsculo de los ídolos", published: "1889", trivia: "Encontrado en Máximas y flechas.", category: "Filosofía", subCategory: "No Ficción" }
-      },
-      scifi: {
-        en: { quote: "I must not fear. Fear is the mind-killer.", author: "Frank Herbert", title: "Dune", published: "August 1965", trivia: "The Litany Against Fear.", category: "Sci-Fi", subCategory: "Fiction" },
-        es: { quote: "No debo tener miedo. El miedo mata la mente.", author: "Frank Herbert", title: "Dune", published: "Agosto de 1965", trivia: "La letanía contra el miedo.", category: "Ciencia Ficción", subCategory: "Ficción" }
-      },
-      classic: {
-        en: { quote: "All happy families are alike; each unhappy family is unhappy in its own way.", author: "Leo Tolstoy", title: "Anna Karenina", published: "1878", trivia: "The famous opening sentence.", category: "Classic Literature", subCategory: "Fiction" },
-        es: { quote: "Todas las familias felices se asemejan; cada familia infeliz lo es a su manera.", author: "León Tolstói", title: "Ana Karenina", published: "1878", trivia: "La famosa frase inicial.", category: "Ficción Clásica", subCategory: "Ficción" }
-      },
-      science: {
-        en: { quote: "God does not play dice with the universe.", author: "Albert Einstein", title: "Letter to Max Born", published: "1926", trivia: "Einstein's philosophical view on quantum mechanics.", category: "Science", subCategory: "Physics" },
-        es: { quote: "Dios no juega a los dados con el universo.", author: "Albert Einstein", title: "Carta a Max Born", published: "1926", trivia: "La visión filosófica de Einstein sobre la mecánica cuántica.", category: "Ciencia", subCategory: "Física" }
-      },
-      scripture: {
-        en: { quote: "Let us cut the living child in two, and give half to the one, and half to the other.", author: "King Solomon", title: "First Book of Kings", published: "c. 950 BC", trivia: "Solomon's famous test of maternal wisdom.", category: "Scripture", subCategory: "Ancient History" },
-        es: { quote: "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.", author: "Rey Salomón", title: "Primer Libro de los Reyes", published: "c. 950 a. C.", trivia: "La célebre prueba de sabiduría maternal de Salomón.", category: "Escritura", subCategory: "Historia Antigua" }
-      },
-      speech: {
-        en: { quote: "Ask not what your country can do for you – ask what you can do for your country.", author: "John F. Kennedy", title: "Inaugural Address", published: "January 20, 1961", trivia: "One of the most memorable calls to civic action in modern history.", category: "Speeches", subCategory: "Political Oratory" },
-        es: { quote: "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.", author: "John F. Kennedy", title: "Discurso Inaugural", published: "20 de enero de 1961", trivia: "Uno de los llamados a la acción cívica más memorables.", category: "Discursos", subCategory: "Oratoria Política" }
+    // Hardcoded Fallback Payload (Ensures bulletproof offline execution if quotes.json is missing)
+    const FALLBACK_PAYLOAD = {
+      daily: [
+        { 
+          en: { quote: "Real courage is when you know you're licked before you begin.", author: "Harper Lee", title: "To Kill a Mockingbird", published: "July 11, 1960", trivia: "Spoken by Atticus Finch in Chapter 11.", category: "Classic Literature", subCategory: "Fiction" },
+          es: { quote: "El verdadero valor es cuando sabes que estás vencido antes de empezar.", author: "Harper Lee", title: "Matar a un ruiseñor", published: "11 de julio de 1960", trivia: "Dicho por Atticus Finch en el capítulo 11.", category: "Literatura Clásica", subCategory: "Ficción" }
+        },
+        { 
+          en: { quote: "Not all those who wander are lost.", author: "J.R.R. Tolkien", title: "The Fellowship of the Ring", published: "July 29, 1954", trivia: "Part of Bilbo's poem about Aragorn.", category: "Fantasy", subCategory: "Fiction" },
+          es: { quote: "No todos los que vagan están perdidos.", author: "J.R.R. Tolkien", title: "La Comunidad del Anillo", published: "29 de julio de 1954", trivia: "Parte del poema de Bilbo sobre Aragorn.", category: "Fantasía", subCategory: "Ficción" }
+        },
+        { 
+          en: { quote: "In a village of La Mancha, the name of which I have no desire to call to mind.", author: "Miguel de Cervantes", title: "Don Quixote", published: "1605", trivia: "Famous opening sentence of Cervantes' masterwork.", category: "Classic Literature", subCategory: "Fiction" },
+          es: { quote: "En un lugar de la Mancha, de cuyo nombre no quiero acordarme.", author: "Miguel de Cervantes", title: "Don Quijote de la Mancha", published: "1605", trivia: "La famosísima frase inicial de Cervantes.", category: "Literatura Clásica", subCategory: "Ficción" }
+        }
+      ],
+      presets: {
+        philosophy: [
+          {
+            en: { quote: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", title: "Twilight of the Idols", published: "1889", trivia: "Found in Maxims and Arrows.", category: "Philosophy", subCategory: "Non-Fiction" },
+            es: { quote: "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", author: "Friedrich Nietzsche", title: "El crepúsculo de los ídolos", published: "1889", trivia: "Encontrado en Máximas y flechas.", category: "Filosofía", subCategory: "No Ficción" }
+          }
+        ],
+        science: [
+          {
+            en: { quote: "God does not play dice with the universe.", author: "Albert Einstein", title: "Letter to Max Born", published: "1926", trivia: "Einstein's view on quantum mechanics.", category: "Science", subCategory: "Physics" },
+            es: { quote: "Dios no juega a los dados con el universo.", author: "Albert Einstein", title: "Carta a Max Born", published: "1926", trivia: "La visión de Einstein sobre la mecánica cuántica.", category: "Ciencia", subCategory: "Física" }
+          }
+        ],
+        scripture: [
+          {
+            en: { quote: "Let us cut the living child in two, and give half to the one, and half to the other.", author: "King Solomon", title: "First Book of Kings", published: "c. 950 BC", trivia: "Solomon's test of maternal wisdom.", category: "Scripture", subCategory: "Ancient History" },
+            es: { quote: "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.", author: "Rey Salomón", title: "Primer Libro de los Reyes", published: "c. 950 a. C.", trivia: "La célebre prueba de sabiduría maternal.", category: "Escritura", subCategory: "Historia Antigua" }
+          }
+        ],
+        speech: [
+          {
+            en: { quote: "Ask not what your country can do for you – ask what you can do for your country.", author: "John F. Kennedy", title: "Inaugural Address", published: "January 20, 1961", trivia: "Call to civic action.", category: "Speeches", subCategory: "Political Oratory" },
+            es: { quote: "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.", author: "John F. Kennedy", title: "Discurso Inaugural", published: "20 de enero de 1961", trivia: "Llamado a la acción cívica.", category: "Discursos", subCategory: "Oratoria Política" }
+          }
+        ],
+        scifi: [
+          {
+            en: { quote: "I must not fear. Fear is the mind-killer.", author: "Frank Herbert", title: "Dune", published: "August 1965", trivia: "Litany Against Fear.", category: "Sci-Fi", subCategory: "Fiction" },
+            es: { quote: "No debo tener miedo. El miedo mata la mente.", author: "Frank Herbert", title: "Dune", published: "Agosto de 1965", trivia: "La letanía contra el miedo.", category: "Ciencia Ficción", subCategory: "Ficción" }
+          }
+        ],
+        classic: [
+          {
+            en: { quote: "All happy families are alike; each unhappy family is unhappy in its own way.", author: "Leo Tolstoy", title: "Anna Karenina", published: "1878", trivia: "Famous opening sentence.", category: "Classic Literature", subCategory: "Fiction" },
+            es: { quote: "Todas las familias felices se asemejan; cada familia infeliz lo es a su manera.", author: "León Tolstói", title: "Ana Karenina", published: "1878", trivia: "La famosa frase inicial.", category: "Ficción Clásica", subCategory: "Ficción" }
+          }
+        ]
       }
     };
 
+    let GAME_DATA = FALLBACK_PAYLOAD;
     let currentLang = localStorage.getItem('bookgrid_lang') || 'en';
     let currentGameMode = 'daily';
     let targetQuote = "";
@@ -846,12 +845,29 @@
     let gameElapsedTimeSeconds = 0;
     let gameTimerInterval = null;
 
-    // Language Management
+    // Asynchronously fetch JSON pipeline data, fall back smoothly if unreachable
+    async function loadGameData() {
+      try {
+        const res = await fetch('quotes.json?v=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.daily && data.presets) {
+            GAME_DATA = data;
+          }
+        }
+      } catch (err) {
+        console.warn("Using offline fallback quote payload:", err);
+      }
+      initDailyGame();
+    }
+
     function toggleLanguage() {
       currentLang = currentLang === 'en' ? 'es' : 'en';
       localStorage.setItem('bookgrid_lang', currentLang);
       updateLanguageUI();
-      initDailyGame();
+      if (currentGameMode === 'daily') {
+        initDailyGame();
+      }
     }
 
     function updateLanguageUI() {
@@ -865,7 +881,6 @@
         }
       });
 
-      // Toggle Ñ key visibility for Spanish keyboard mode
       const nKey = document.querySelector('[id-es-key="true"]');
       if (nKey) {
         if (currentLang === 'es') {
@@ -880,7 +895,6 @@
       return TRANSLATIONS[currentLang][key] || key;
     }
 
-    // Theme Management Logic
     function initTheme() {
       const savedTheme = localStorage.getItem('bookgrid_theme');
       if (savedTheme === 'light') {
@@ -908,13 +922,10 @@
       }
     }
 
-    // Fullscreen Mode Logic & Auto-Launch
     function toggleFullscreen() {
       const icon = document.getElementById('fullscreen-icon');
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          console.error("Fullscreen request blocked or not supported:", err);
-        });
+        document.documentElement.requestFullscreen().catch(() => {});
         if (icon) icon.className = 'fa-solid fa-compress text-sm sm:text-lg text-amber-500 dark:text-brand-gold';
       } else {
         if (document.exitFullscreen) {
@@ -965,9 +976,10 @@
       updateLanguageUI();
       initKeyboardDrag();
       initRevealCardDrag();
-      initDailyGame();
       startCountdownTimer();
       attemptAutoFullscreen();
+      
+      loadGameData(); // Loads JSON data asynchronously
       
       const input = document.getElementById('hidden-keyboard-input');
       if (input) {
@@ -986,7 +998,6 @@
 
       window.addEventListener('keydown', (e) => {
         if (isGameComplete) return;
-        
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
           if (e.target.id !== 'hidden-keyboard-input') return;
         }
@@ -1034,8 +1045,9 @@
         dateHash += todayStr.charCodeAt(i);
       }
       
-      const masterObj = DAILY_MASTER_QUOTES[dateHash % DAILY_MASTER_QUOTES.length];
-      const quoteObj = masterObj[currentLang];
+      const dailyPool = GAME_DATA.daily || FALLBACK_PAYLOAD.daily;
+      const masterObj = dailyPool[dateHash % dailyPool.length];
+      const quoteObj = masterObj[currentLang] || masterObj['en'];
 
       targetQuote = quoteObj.quote;
       targetAuthor = quoteObj.author;
@@ -1642,8 +1654,13 @@
         targetPublished = pub;
         targetTrivia = triv;
       } else {
-        const presetMaster = PRESET_GENRES_MASTER[val];
-        const selected = presetMaster[currentLang];
+        const presetPools = GAME_DATA.presets || FALLBACK_PAYLOAD.presets;
+        const categoryArray = presetPools[val] || FALLBACK_PAYLOAD.presets[val] || FALLBACK_PAYLOAD.presets['classic'];
+        
+        // Pick a random entry from the selected preset category
+        const randomItem = categoryArray[Math.floor(Math.random() * categoryArray.length)];
+        const selected = randomItem[currentLang] || randomItem['en'];
+
         targetQuote = selected.quote;
         targetAuthor = selected.author;
         targetTitle = selected.title;
