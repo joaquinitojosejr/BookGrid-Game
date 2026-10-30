@@ -1,176 +1,1758 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOKGRID® - Universal Library Word Puzzle</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #38bdf8;
-            --border-color: #334155;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BOOKGRID® - Universal Library Word Puzzle</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              border: '#334155',
+              gold: '#d4af37',
+              goldHover: '#b59226',
+              accent: '#38bdf8'
+            }
+          },
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            body: ['Inter', 'sans-serif'],
+            quote: ['Lora', 'serif']
+          }
         }
+      }
+    }
+  </script>
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+  <style>
+    .no-select {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
 
-        h1 {
-            font-size: 2.2rem;
-            letter-spacing: 2px;
-            margin: 0;
-            color: var(--accent-color);
-        }
+    /* Prevent elastic scrolling and address bar jumps on mobile */
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
 
-        .subtitle {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-top: 5px;
-        }
+    .bg-word {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 3px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
 
-        .quote-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 600px;
-            width: 100%;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
-        }
+    #floating-keyboard {
+      position: fixed;
+      bottom: calc(8px + env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      touch-action: none;
+    }
 
-        .quote-text {
-            font-size: 1.25rem;
-            line-height: 1.6;
-            font-style: italic;
-            margin-bottom: 16px;
-        }
+    #floating-reveal-card {
+      position: fixed;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 45;
+      touch-action: none;
+    }
 
-        .quote-meta {
-            font-size: 0.95rem;
-            color: var(--accent-color);
-            font-weight: 600;
-        }
+    .key-btn {
+      position: relative;
+      background-color: #1e293b;
+      color: #f8fafc;
+      font-weight: 600;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      height: 2.35rem;
+      min-width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
+    .key-btn:hover { background-color: #334155; }
+    .key-btn:active { background-color: #475569; }
 
-        .quote-source {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-top: 4px;
-        }
+    html:not(.dark) .key-btn {
+      background-color: #e2e8f0;
+      color: #0f172a;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    html:not(.dark) .key-btn:hover { background-color: #cbd5e1; }
+    html:not(.dark) .key-btn:active { background-color: #94a3b8; }
 
-        .trivia-box {
-            margin-top: 16px;
-            padding-top: 12px;
-            border-top: 1px dashed var(--border-color);
-            font-size: 0.85rem;
-            color: #cbd5e1;
-        }
+    .key-btn.key-correct { background-color: #059669 !important; color: #ffffff !important; }
+    .key-btn.key-same-word { background-color: #d4af37 !important; color: #0f172a !important; font-weight: 700; }
+    .key-btn.key-present { background-color: #0284c7 !important; color: #ffffff !important; }
+    .key-btn.key-absent { background-color: #334155 !important; color: #64748b !important; opacity: 0.5; }
 
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
+    html:not(.dark) .key-btn.key-absent {
+      background-color: #cbd5e1 !important;
+      color: #64748b !important;
+      opacity: 0.6;
+    }
 
-        button {
-            background-color: var(--accent-color);
-            color: #0f172a;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
+    .key-count-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      line-height: 1;
+      background-color: #0f172a;
+      color: #d4af37;
+      border: 1px solid #334155;
+      padding: 1px 3px;
+      border-radius: 3px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
 
-        button:hover {
-            opacity: 0.9;
-        }
-    </style>
+    html:not(.dark) .key-count-badge {
+      background-color: #ffffff;
+      color: #b58900;
+      border-color: #cbd5e1;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    .action-btn {
+      font-size: 0.75rem;
+      height: 2.35rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.375rem;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: background-color 0.15s ease;
+    }
+
+    .tile-box {
+      width: 1.65rem;
+      height: 2.1rem;
+      border-width: 1.5px;
+      border-color: #334155;
+      background-color: rgba(30, 41, 59, 0.9);
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8fafc;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    html:not(.dark) .tile-box {
+      border-color: #cbd5e1;
+      background-color: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    @media (min-width: 640px) {
+      .key-btn { min-width: 40px; font-size: 0.875rem; height: 2.85rem; }
+      .tile-box { width: 2.3rem; height: 2.8rem; font-size: 1.15rem; }
+      .bg-word { gap: 4px; margin-right: 14px; margin-bottom: 12px; }
+    }
+
+    .tile-box.active {
+      border-color: #d4af37;
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3);
+      transform: scale(1.05);
+      background-color: #1e293b;
+    }
+
+    html:not(.dark) .tile-box.active {
+      background-color: #f8fafc;
+      border-color: #b58900;
+      box-shadow: 0 0 0 3px rgba(181, 137, 0, 0.25);
+    }
+    
+    .tile-box.tile-correct {
+      background-color: rgba(6, 78, 59, 0.9);
+      border-color: #10b981;
+      color: #6ee7b7;
+    }
+
+    html:not(.dark) .tile-box.tile-correct {
+      background-color: #d1fae5;
+      border-color: #059669;
+      color: #065f46;
+    }
+
+    .tile-box.tile-same-word {
+      background-color: rgba(180, 130, 20, 0.9);
+      border-color: #d4af37;
+      color: #fef08a;
+    }
+
+    html:not(.dark) .tile-box.tile-same-word {
+      background-color: #fef3c7;
+      border-color: #d97706;
+      color: #92400e;
+    }
+
+    .tile-box.tile-present {
+      background-color: rgba(12, 74, 110, 0.9);
+      border-color: #38bdf8;
+      color: #7dd3fc;
+    }
+
+    html:not(.dark) .tile-box.tile-present {
+      background-color: #e0f2fe;
+      border-color: #0284c7;
+      color: #075985;
+    }
+
+    .tile-box.tile-absent {
+      background-color: rgba(30, 41, 59, 0.5);
+      border-color: #475569;
+      color: #94a3b8;
+    }
+
+    html:not(.dark) .tile-box.tile-absent {
+      background-color: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #94a3b8;
+    }
+
+    .punct-symbol {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #d4af37;
+      padding-left: 0.05rem;
+      padding-right: 0.05rem;
+      user-select: none;
+    }
+
+    html:not(.dark) .punct-symbol {
+      color: #b58900;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+
+    html:not(.dark) ::-webkit-scrollbar-track { background: #f1f5f9; }
+    html:not(.dark) ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+  </style>
 </head>
-<body>
+<body class="bg-slate-100 dark:bg-brand-dark text-slate-800 dark:text-slate-100 font-body h-[100dvh] flex flex-col overflow-hidden no-select transition-colors duration-200">
 
-    <header>
-        <h1>BOOKGRID®</h1>
-        <div class="subtitle">Universal Library of Human Thought</div>
-    </header>
+  <!-- Hidden text input for optional native mobile/desktop keyboard binding -->
+  <input type="text" id="hidden-keyboard-input" autocomplete="off" autocapitalize="none" spellcheck="false" class="sr-only opacity-0 absolute -z-50 pointer-events-none" aria-hidden="true" />
 
-    <main class="quote-card" id="quoteCard">
-        <div class="quote-text" id="quoteDisplay">Loading today's quote...</div>
-        <div class="quote-meta" id="authorDisplay"></div>
-        <div class="quote-source" id="sourceDisplay"></div>
-        <div class="trivia-box" id="triviaDisplay"></div>
-    </main>
+  <!-- Header -->
+  <header class="bg-white dark:bg-brand-card border-b border-slate-200 dark:border-brand-border px-2 sm:px-4 py-2 flex items-center justify-between shrink-0 z-10 shadow-sm dark:shadow-none transition-colors duration-200">
+    <div class="flex items-center space-x-1.5 shrink-0">
+      <i class="fa-solid fa-book-bookmark text-amber-600 dark:text-brand-gold text-lg sm:text-xl"></i>
+      
+      <!-- Colorful Clue-Palette Header Title with Trademark Symbol -->
+      <h1 class="font-serif font-bold text-sm sm:text-xl tracking-wider inline-flex items-baseline select-none">
+        <span class="text-emerald-500">B</span>
+        <span class="text-amber-500 dark:text-brand-gold">O</span>
+        <span class="text-sky-500 dark:text-brand-accent">O</span>
+        <span class="text-slate-400 dark:text-slate-500">K</span>
+        <span class="text-emerald-500">G</span>
+        <span class="text-amber-500 dark:text-brand-gold">R</span>
+        <span class="text-sky-500 dark:text-brand-accent">I</span>
+        <span class="text-slate-400 dark:text-slate-500">D</span>
+        <span class="text-[9px] sm:text-xs font-sans font-extrabold text-amber-600/70 dark:text-brand-gold/70 ml-0.5 relative -top-1">®</span>
+      </h1>
+    </div>
+    
+    <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
+      <!-- Language Toggle Button -->
+      <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-2 py-1.5 text-[11px] sm:text-xs font-bold text-amber-600 dark:text-brand-gold hover:text-amber-700 dark:hover:text-brand-goldHover transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1" title="Change Language">
+        <i class="fa-solid fa-globe"></i> <span id="lang-label">ES</span>
+      </button>
+      <!-- Fullscreen Toggle Button -->
+      <button id="btn-fullscreen" onclick="toggleFullscreen()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center" title="Toggle Fullscreen">
+        <i id="fullscreen-icon" class="fa-solid fa-expand text-sm sm:text-lg"></i>
+      </button>
+      <!-- Native Keyboard Toggle Button -->
+      <button id="btn-native-keyboard" onclick="toggleNativeKeyboard()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700" title="Toggle Phone Keyboard">
+        <i class="fa-solid fa-keyboard text-sm sm:text-lg"></i>
+      </button>
+      <!-- Light/Dark Mode Skin Toggle Button -->
+      <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700" title="Toggle Theme">
+        <i id="theme-icon" class="fa-solid fa-sun text-sm sm:text-lg"></i>
+      </button>
+      <button onclick="openQuoteInfoModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 dark:hover:bg-slate-700 text-amber-700 dark:text-brand-gold rounded-lg transition-colors flex items-center gap-1 border border-slate-200 dark:border-transparent" title="Quote Details">
+        <i class="fa-solid fa-circle-nodes text-amber-600 dark:text-brand-gold"></i> <span class="hidden xs:inline" data-i18n="detailsBtn">Details</span>
+      </button>
+      <button id="btn-custom-mode" onclick="openCustomModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg transition-colors flex items-center gap-1 border border-slate-200 dark:border-transparent" title="Custom Game">
+        <i class="fa-solid fa-users text-sky-600 dark:text-brand-accent"></i> <span class="hidden xs:inline" data-i18n="customBtn">Custom</span>
+      </button>
+      <button onclick="openHelpModal()" class="p-1.5 sm:p-2 text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-brand-gold transition-colors" title="How to Play">
+        <i class="fa-solid fa-circle-info text-base sm:text-lg"></i>
+      </button>
+    </div>
+  </header>
 
-    <div class="controls">
-        <button onclick="toggleLanguage()">Switch Language (EN/ES)</button>
-        <button onclick="loadRandomQuote()">Next Quote</button>
+  <!-- Sub-Header Status Bar -->
+  <div class="bg-slate-200/80 dark:bg-slate-900/80 border-b border-slate-300 dark:border-brand-border/50 px-3 py-1.5 flex items-center justify-between text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 shrink-0 transition-colors duration-200">
+    <div id="mode-indicator" class="flex items-center gap-1.5">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span id="mode-text" class="font-medium text-slate-800 dark:text-slate-300 truncate max-w-[140px] sm:max-w-none">Daily Challenge</span>
+    </div>
+    <div id="game-stats-quick" class="flex items-center gap-2 sm:gap-4">
+      <span><span data-i18n="mistakesLabel">Mistakes</span>: <strong id="stat-mistakes" class="text-rose-600 dark:text-rose-400">0</strong></span>
+      <span><span data-i18n="hintsLabel">Hints</span>: <strong id="stat-hints" class="text-amber-600 dark:text-amber-400">0</strong></span>
+      <span><span data-i18n="scoreLabel">Score</span>: <strong id="stat-score" class="text-amber-600 dark:text-brand-gold">100%</strong></span>
+    </div>
+  </div>
+
+  <!-- Main Game Container -->
+  <main id="main-content" class="flex-1 overflow-y-auto p-3 sm:p-4 flex flex-col items-center justify-start max-w-4xl mx-auto w-full pb-56">
+    
+    <!-- Daily Locked Banner -->
+    <div id="daily-locked-banner" class="hidden w-full bg-white dark:bg-slate-800/90 border border-amber-500/40 dark:border-brand-gold/40 rounded-xl p-4 mb-4 text-center shadow-lg transition-colors duration-200">
+      <div class="inline-flex p-2.5 bg-amber-500/10 dark:bg-brand-gold/10 rounded-full text-amber-600 dark:text-brand-gold mb-2">
+        <i class="fa-solid fa-lock text-xl"></i>
+      </div>
+      <h2 id="locked-title" class="font-serif text-lg text-amber-600 dark:text-brand-gold font-bold mb-1">Today's Puzzle Completed!</h2>
+      <p id="locked-score-summary" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3">You scored 100% on today's literary quote.</p>
+      
+      <div class="flex flex-wrap items-center justify-center gap-2.5">
+        <button onclick="shareResults()" class="px-4 py-2 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold rounded-lg transition-colors flex items-center gap-2 text-xs sm:text-sm shadow-md">
+          <i class="fa-solid fa-share-nodes"></i> <span data-i18n="shareBtn">Share Score</span>
+        </button>
+        <div class="bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-brand-border text-xs text-slate-600 dark:text-slate-400">
+          <span data-i18n="nextQuoteLabel">Next Quote in</span>: <span id="countdown-timer" class="font-mono text-sky-600 dark:text-brand-accent font-bold">00:00:00</span>
+        </div>
+      </div>
     </div>
 
-    <script>
-        // Guaranteed In-Memory Fallback Payload
-        const FALLBACK_PAYLOAD = {
-            "daily": [
-                {
-                    "en": { "quote": "Real courage is when you know you're licked before you begin.", "author": "Harper Lee", "title": "To Kill a Mockingbird", "published": "1960", "trivia": "Spoken by Atticus Finch in Chapter 11.", "category": "Classic Literature", "subCategory": "Fiction" },
-                    "es": { "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar.", "author": "Harper Lee", "title": "Matar a un ruiseñor", "published": "1960", "trivia": "Dicho por Atticus Finch en el capítulo 11.", "category": "Literatura Clásica", "subCategory": "Ficción" }
-                }
-            ]
-        };
+    <!-- Clue Legend Bar -->
+    <div class="w-full max-w-md flex flex-wrap justify-center items-center gap-2 mb-2 text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-900/60 py-1 px-2.5 rounded-lg border border-slate-300 dark:border-brand-border/40 shadow-sm transition-colors duration-200">
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span data-i18n="legendCorrect">Correct Slot</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span><span data-i18n="legendSameWord">Same Word</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span><span data-i18n="legendInQuote">In Quote</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-600"></span><span data-i18n="legendNotInQuote">Not in Quote</span></div>
+    </div>
 
-        let activePayload = FALLBACK_PAYLOAD;
-        let currentLang = 'en';
-        let currentIndex = 0;
+    <!-- Quote Grid Container -->
+    <div id="quote-container" class="w-full flex flex-wrap justify-center items-center py-2 sm:py-4 min-h-[140px]"></div>
 
-        async function initGame() {
-            try {
-                const response = await fetch('./quotes.json');
-                if (response.ok) {
-                    activePayload = await response.json();
-                }
-            } catch (err) {
-                console.warn('Could not load dynamic quotes.json, using static fallback.', err);
+  </main>
+
+  <!-- Floating Reveal Card -->
+  <div id="floating-reveal-card" class="w-[90%] max-w-sm bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-amber-500/50 dark:border-brand-gold/50 rounded-2xl shadow-2xl overflow-hidden hidden transition-all">
+    <div id="reveal-card-drag-handle" class="flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800/90 border-b border-slate-200 dark:border-brand-border/60 cursor-grab active:cursor-grabbing text-xs text-slate-700 dark:text-slate-300">
+      <div class="flex items-center gap-2 font-semibold text-amber-600 dark:text-brand-gold">
+        <i class="fa-solid fa-grip-lines text-slate-400 dark:text-slate-500"></i>
+        <span><i class="fa-solid fa-feather-pointed"></i> <span data-i18n="sourceRevealed">SOURCE REVEALED</span></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="resetRevealCardPosition()" class="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 rounded" title="Center Card">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+        </button>
+        <button onclick="toggleRevealCardCollapse()" id="btn-toggle-reveal-card" class="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 rounded">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="reveal-card-body" class="p-4 text-center">
+      <h3 id="book-title" class="font-serif text-base sm:text-lg font-bold text-sky-600 dark:text-brand-accent mb-1 italic">Book Title</h3>
+      <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-quote">— <span id="author-name" class="text-slate-900 dark:text-slate-100 font-semibold not-italic">Author Name</span></p>
+      <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2 font-mono"><i class="fa-solid fa-hand-pointer text-slate-400 dark:text-slate-600"></i> <span data-i18n="dragHandleText">Drag handle to reposition card</span></p>
+    </div>
+  </div>
+
+  <!-- Floating Virtual Keyboard -->
+  <div id="floating-keyboard" class="w-[98%] max-w-md bg-white/95 dark:bg-brand-card/95 backdrop-blur-md border border-slate-200 dark:border-brand-border rounded-2xl shadow-2xl p-2 transition-all">
+    <div id="keyboard-drag-handle" class="flex items-center justify-between px-3 py-1 cursor-grab active:cursor-grabbing border-b border-slate-200 dark:border-brand-border/60 mb-1.5">
+      <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+        <i class="fa-solid fa-grip-lines text-slate-400 dark:text-slate-500"></i>
+        <span data-i18n="keyboardTitle">KEYBOARD (Badges = Remaining)</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button onclick="resetKeyboardPosition()" class="text-[11px] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800" title="Center">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+        </button>
+        <button onclick="toggleKeyboardCollapse()" id="btn-toggle-keyboard" class="text-[11px] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="keyboard-keys-container" class="flex flex-col gap-1">
+      <div class="flex justify-center gap-1">
+        <button id="key-Q" onclick="handleVirtualKey('Q')" class="key-btn">Q<span class="key-count-badge" id="badge-Q"></span></button>
+        <button id="key-W" onclick="handleVirtualKey('W')" class="key-btn">W<span class="key-count-badge" id="badge-W"></span></button>
+        <button id="key-E" onclick="handleVirtualKey('E')" class="key-btn">E<span class="key-count-badge" id="badge-E"></span></button>
+        <button id="key-R" onclick="handleVirtualKey('R')" class="key-btn">R<span class="key-count-badge" id="badge-R"></span></button>
+        <button id="key-T" onclick="handleVirtualKey('T')" class="key-btn">T<span class="key-count-badge" id="badge-T"></span></button>
+        <button id="key-Y" onclick="handleVirtualKey('Y')" class="key-btn">Y<span class="key-count-badge" id="badge-Y"></span></button>
+        <button id="key-U" onclick="handleVirtualKey('U')" class="key-btn">U<span class="key-count-badge" id="badge-U"></span></button>
+        <button id="key-I" onclick="handleVirtualKey('I')" class="key-btn">I<span class="key-count-badge" id="badge-I"></span></button>
+        <button id="key-O" onclick="handleVirtualKey('O')" class="key-btn">O<span class="key-count-badge" id="badge-O"></span></button>
+        <button id="key-P" onclick="handleVirtualKey('P')" class="key-btn">P<span class="key-count-badge" id="badge-P"></span></button>
+      </div>
+      <div class="flex justify-center gap-1">
+        <button id="key-A" onclick="handleVirtualKey('A')" class="key-btn">A<span class="key-count-badge" id="badge-A"></span></button>
+        <button id="key-S" onclick="handleVirtualKey('S')" class="key-btn">S<span class="key-count-badge" id="badge-S"></span></button>
+        <button id="key-D" onclick="handleVirtualKey('D')" class="key-btn">D<span class="key-count-badge" id="badge-D"></span></button>
+        <button id="key-F" onclick="handleVirtualKey('F')" class="key-btn">F<span class="key-count-badge" id="badge-F"></span></button>
+        <button id="key-G" onclick="handleVirtualKey('G')" class="key-btn">G<span class="key-count-badge" id="badge-G"></span></button>
+        <button id="key-H" onclick="handleVirtualKey('H')" class="key-btn">H<span class="key-count-badge" id="badge-H"></span></button>
+        <button id="key-J" onclick="handleVirtualKey('J')" class="key-btn">J<span class="key-count-badge" id="badge-J"></span></button>
+        <button id="key-K" onclick="handleVirtualKey('K')" class="key-btn">K<span class="key-count-badge" id="badge-K"></span></button>
+        <button id="key-L" onclick="handleVirtualKey('L')" class="key-btn">L<span class="key-count-badge" id="badge-L"></span></button>
+        <button id="key-Ñ" onclick="handleVirtualKey('Ñ')" class="key-btn hidden" id-es-key="true">Ñ<span class="key-count-badge" id="badge-Ñ"></span></button>
+      </div>
+      <div class="flex justify-center gap-1">
+        <button onclick="useHint()" class="action-btn bg-amber-600 hover:bg-amber-700 text-white" title="Hint">
+          <i class="fa-solid fa-lightbulb"></i>
+        </button>
+        <button id="key-Z" onclick="handleVirtualKey('Z')" class="key-btn">Z<span class="key-count-badge" id="badge-Z"></span></button>
+        <button id="key-X" onclick="handleVirtualKey('X')" class="key-btn">X<span class="key-count-badge" id="badge-X"></span></button>
+        <button id="key-C" onclick="handleVirtualKey('C')" class="key-btn">C<span class="key-count-badge" id="badge-C"></span></button>
+        <button id="key-V" onclick="handleVirtualKey('V')" class="key-btn">V<span class="key-count-badge" id="badge-V"></span></button>
+        <button id="key-B" onclick="handleVirtualKey('B')" class="key-btn">B<span class="key-count-badge" id="badge-B"></span></button>
+        <button id="key-N" onclick="handleVirtualKey('N')" class="key-btn">N<span class="key-count-badge" id="badge-N"></span></button>
+        <button id="key-M" onclick="handleVirtualKey('M')" class="key-btn">M<span class="key-count-badge" id="badge-M"></span></button>
+        <button onclick="handleBackspace()" class="action-btn bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200">
+          <i class="fa-solid fa-delete-left"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote Metadata Info Modal -->
+  <div id="modal-quote-info" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-brand-border">
+        <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100 text-base flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-amber-600 dark:text-brand-gold"></i> <span data-i18n="quoteDetailsTitle">Quote Details</span>
+        </h3>
+        <button onclick="closeQuoteInfoModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-sm">
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="categoryLabel">Category</span>
+          <span id="info-category" class="text-slate-800 dark:text-slate-100 font-medium">-</span>
+        </div>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="subcategoryLabel">Sub-Category</span>
+          <span id="info-subcategory" class="text-slate-800 dark:text-slate-100 font-medium">-</span>
+        </div>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="authorLabel">Author</span>
+          <span id="info-author" class="text-amber-600 dark:text-brand-gold font-medium">-</span>
+        </div>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="bookLabel">Book / Source</span>
+          <span id="info-book" class="text-sky-600 dark:text-brand-accent font-medium italic">-</span>
+        </div>
+      </div>
+
+      <button onclick="closeQuoteInfoModal()" class="w-full mt-5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold py-2.5 rounded-lg text-sm transition-colors" data-i18n="closeBtn">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Custom Game Modal -->
+  <div id="modal-custom" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-serif text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-sky-600 dark:text-brand-accent"></i> <span data-i18n="customSetupTitle">Custom Game Setup</span>
+        </h3>
+        <button onclick="closeCustomModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <div>
+          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1" data-i18n="selectGenreLabel">Select Genre Preset</label>
+          <select id="genre-select" onchange="onGenreSelectChange()" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-amber-500 dark:focus:border-brand-gold">
+            <option value="custom" data-i18n="presetCustom">-- Custom Quote Entry --</option>
+            <option value="philosophy" data-i18n="presetPhil">Philosophy & Ethics</option>
+            <option value="scifi" data-i18n="presetScifi">Sci-Fi & Cyberpunk</option>
+            <option value="classic" data-i18n="presetClassic">Classic Fiction</option>
+            <option value="science" data-i18n="presetScience">Science & Physics</option>
+            <option value="scripture" data-i18n="presetScripture">Scripture & Antiquity</option>
+            <option value="speech" data-i18n="presetSpeech">Historical Speeches</option>
+          </select>
+        </div>
+
+        <div id="custom-input-group">
+          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1" data-i18n="enterCustomLabel">Enter Custom Quote</label>
+          <textarea id="custom-quote-input" rows="3" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg p-3 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-amber-500 dark:focus:border-brand-gold text-sm" placeholder="Type quote here..."></textarea>
+          
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <input type="text" id="custom-category-input" placeholder="Category" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-subcategory-input" placeholder="Sub-Category" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+          </div>
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <input type="text" id="custom-author-input" placeholder="Author" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-title-input" placeholder="Book Title" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+          </div>
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <input type="text" id="custom-published-input" placeholder="Publication Date" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+            <input type="text" id="custom-trivia-input" placeholder="Quote Insight / Context" class="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-brand-border rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200 text-xs focus:outline-none">
+          </div>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="startCustomGame()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-lg transition-colors text-sm" data-i18n="launchGameBtn">
+            Launch Game
+          </button>
+          <button onclick="switchToDailyMode()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-lg text-sm" data-i18n="backToDailyBtn">
+            Back to Daily
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Modal -->
+  <div id="modal-results" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden overflow-y-auto">
+    <div class="bg-white dark:bg-brand-card border border-amber-500/40 dark:border-brand-gold/40 rounded-2xl max-w-sm w-full p-4 shadow-2xl text-center my-auto">
+      
+      <div class="inline-flex p-2 bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 rounded-full mb-1">
+        <i class="fa-solid fa-trophy text-lg"></i>
+      </div>
+      <h3 class="font-serif text-base font-bold text-slate-900 dark:text-slate-100 mb-0.5" data-i18n="puzzleSolvedTitle">Puzzle Solved!</h3>
+      <p id="results-author-quote" class="text-[11px] text-slate-500 dark:text-slate-400 italic mb-3 font-quote">"..."</p>
+
+      <div class="max-h-[55vh] overflow-y-auto pr-1 space-y-3 mb-3 text-left">
+        <div id="results-trivia-container" class="hidden bg-amber-500/10 dark:bg-brand-gold/10 border border-amber-500/30 dark:border-brand-gold/30 rounded-xl p-3 text-[11px] space-y-1">
+          <div class="font-serif font-bold text-amber-700 dark:text-brand-gold flex items-center gap-1.5 mb-1 text-xs">
+            <i class="fa-solid fa-feather-pointed"></i> <span data-i18n="literaryInsightTitle">Literary Insight & Trivia</span>
+          </div>
+          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100" data-i18n="authorResLabel">Author:</strong> <span id="res-author"></span></p>
+          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100" data-i18n="workResLabel">Work/Book:</strong> <span id="res-work" class="italic"></span></p>
+          <p class="text-slate-700 dark:text-slate-300"><strong class="text-slate-900 dark:text-slate-100" data-i18n="dateResLabel">Date published:</strong> <span id="res-published"></span></p>
+          
+          <div class="max-h-24 overflow-y-auto pr-1 pt-1 border-t border-amber-500/20 dark:border-brand-gold/20">
+            <p class="text-slate-700 dark:text-slate-300 leading-relaxed"><strong class="text-slate-900 dark:text-slate-100" data-i18n="aboutResLabel">About the quote:</strong> <span id="res-trivia"></span></p>
+          </div>
+        </div>
+
+        <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-3 text-[11px] space-y-1">
+          <div class="flex justify-between text-slate-700 dark:text-slate-300">
+            <span data-i18n="quoteLettersLabel">Quote Letters:</span>
+            <span class="font-bold text-sky-600 dark:text-brand-accent" id="res-total-letters">0</span>
+          </div>
+          <div class="flex justify-between text-slate-700 dark:text-slate-300">
+            <span data-i18n="timeTakenLabel">Time Taken:</span>
+            <span class="font-bold text-amber-600 dark:text-brand-gold font-mono" id="res-time-taken">00:00</span>
+          </div>
+          <div class="flex justify-between text-slate-500 dark:text-slate-400">
+            <span><span data-i18n="mistakesLabel">Mistakes</span> (<span id="res-mistakes-count">0</span> × <span id="res-mistake-rate">0%</span>):</span>
+            <span class="font-bold text-rose-500 dark:text-rose-400" id="res-mistakes-deduct">-0%</span>
+          </div>
+          <div class="flex justify-between text-slate-500 dark:text-slate-400">
+            <span><span data-i18n="hintsLabel">Hints</span> (<span id="res-hints-count">0</span> × <span id="res-hint-rate">0%</span>):</span>
+            <span class="font-bold text-amber-600 dark:text-amber-400" id="res-hints-deduct">-0%</span>
+          </div>
+          <div class="border-t border-slate-200 dark:border-brand-border pt-1 flex justify-between text-xs font-bold text-slate-900 dark:text-slate-100">
+            <span data-i18n="finalScoreLabel">Final Resulting Score:</span>
+            <span class="text-amber-600 dark:text-brand-gold" id="res-final-score">100%</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[9px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1" data-i18n="shareCardLabel">Shareable Score Card</label>
+          <textarea id="share-card-preview" readonly rows="5" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-brand-border rounded-xl p-2.5 text-[11px] font-mono text-emerald-600 dark:text-emerald-300 focus:outline-none resize-none select-all"></textarea>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 dark:hover:bg-brand-goldHover text-white dark:text-slate-950 font-bold py-2.5 rounded-xl transition-colors text-xs flex items-center justify-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-copy"></i> <span data-i18n="copyCardBtn">Copy Share Card</span>
+        </button>
+        <button onclick="closeResultsModal()" class="px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold py-2.5" data-i18n="closeBtn">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="modal-help" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-sm w-full p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100" data-i18n="helpTitle">How to Play & Logical Clues</h3>
+        <button onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 leading-relaxed">
+        <p data-i18n="helpLine1">• Fill in missing quote tiles using your physical keyboard or floating virtual keyboard.</p>
+        <p data-i18n="helpLine2">• Click Details at the top to inspect quote categories & author info.</p>
+        <p><strong data-i18n="helpLine3Title">• Logical Clue Coloring System:</strong></p>
+        <div class="space-y-1 pl-2 border-l-2 border-amber-500 dark:border-brand-gold">
+          <p><strong class="text-emerald-600 dark:text-emerald-400" data-i18n="helpEmerald">Emerald Green:</strong> Correct letter in exact tile slot!</p>
+          <p><strong class="text-amber-600 dark:text-amber-400" data-i18n="helpGold">Warm Gold:</strong> Letter belongs inside this exact word, but wrong position!</p>
+          <p><strong class="text-sky-600 dark:text-sky-400" data-i18n="helpCyan">Cyan Blue:</strong> Letter exists in the quote, but inside a different word.</p>
+          <p><strong class="text-slate-500 dark:text-slate-400" data-i18n="helpGrey">Dark Grey:</strong> Letter does not exist anywhere in the quote.</p>
+        </div>
+        <p data-i18n="helpLine4">• <strong>Occurrence Badges:</strong> Virtual keys display remaining letter counts counting down to an asterisk (*) when fully found.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dictionary translations for UI
+    const TRANSLATIONS = {
+      en: {
+        langToggle: "ES",
+        dailyChallenge: "Daily Challenge",
+        customMode: "Custom Mode",
+        mistakesLabel: "Mistakes",
+        hintsLabel: "Hints",
+        scoreLabel: "Score",
+        detailsBtn: "Details",
+        customBtn: "Custom",
+        lockedTitle: "Today's Puzzle Completed!",
+        shareBtn: "Share Score",
+        nextQuoteLabel: "Next Quote in",
+        legendCorrect: "Correct Slot",
+        legendSameWord: "Same Word",
+        legendInQuote: "In Quote",
+        legendNotInQuote: "Not in Quote",
+        sourceRevealed: "SOURCE REVEALED",
+        dragHandleText: "Drag handle to reposition card",
+        keyboardTitle: "KEYBOARD (Badges = Remaining)",
+        quoteDetailsTitle: "Quote Details",
+        categoryLabel: "Category",
+        subcategoryLabel: "Sub-Category",
+        authorLabel: "Author",
+        bookLabel: "Book / Source",
+        closeBtn: "Close",
+        customSetupTitle: "Custom Game Setup",
+        selectGenreLabel: "Select Genre Preset",
+        presetCustom: "-- Custom Quote Entry --",
+        presetPhil: "Philosophy & Ethics",
+        presetScifi: "Sci-Fi & Cyberpunk",
+        presetClassic: "Classic Fiction",
+        presetScience: "Science & Physics",
+        presetScripture: "Scripture & Antiquity",
+        presetSpeech: "Historical Speeches",
+        enterCustomLabel: "Enter Custom Quote",
+        launchGameBtn: "Launch Game",
+        backToDailyBtn: "Back to Daily",
+        puzzleSolvedTitle: "Puzzle Solved!",
+        literaryInsightTitle: "Literary Insight & Trivia",
+        authorResLabel: "Author:",
+        workResLabel: "Work/Book:",
+        dateResLabel: "Date published:",
+        aboutResLabel: "About the quote:",
+        quoteLettersLabel: "Quote Letters:",
+        timeTakenLabel: "Time Taken:",
+        finalScoreLabel: "Final Resulting Score:",
+        shareCardLabel: "Shareable Score Card",
+        copyCardBtn: "Copy Share Card",
+        helpTitle: "How to Play & Logical Clues",
+        helpLine1: "• Fill in missing quote tiles using your physical keyboard or floating virtual keyboard.",
+        helpLine2: "• Click Details at the top to inspect quote categories & author info.",
+        helpLine3Title: "• Logical Clue Coloring System:",
+        helpEmerald: "Emerald Green: Correct letter in exact tile slot!",
+        helpGold: "Warm Gold: Letter belongs inside this exact word, but wrong position!",
+        helpCyan: "Cyan Blue: Letter exists in the quote, but inside a different word.",
+        helpGrey: "Dark Grey: Letter does not exist anywhere in the quote.",
+        helpLine4: "• Occurrence Badges: Virtual keys display remaining letter counts counting down to an asterisk (*) when fully found."
+      },
+      es: {
+        langToggle: "EN",
+        dailyChallenge: "Desafío Diario",
+        customMode: "Modo Personalizado",
+        mistakesLabel: "Errores",
+        hintsLabel: "Pistas",
+        scoreLabel: "Puntuación",
+        detailsBtn: "Detalles",
+        customBtn: "Personalizado",
+        lockedTitle: "¡Rompecabezas de Hoy Completado!",
+        shareBtn: "Compartir Puntuación",
+        nextQuoteLabel: "Siguiente Frase en",
+        legendCorrect: "Casilla Correcta",
+        legendSameWord: "Misma Palabra",
+        legendInQuote: "En la Frase",
+        legendNotInQuote: "No en la Frase",
+        sourceRevealed: "FUENTE REVELADA",
+        dragHandleText: "Arrastra el asa para mover la tarjeta",
+        keyboardTitle: "TECLADO (Insignias = Restantes)",
+        quoteDetailsTitle: "Detalles de la Frase",
+        categoryLabel: "Categoría",
+        subcategoryLabel: "Subcategoría",
+        authorLabel: "Autor",
+        bookLabel: "Libro / Fuente",
+        closeBtn: "Cerrar",
+        customSetupTitle: "Configuración de Juego Personalizado",
+        selectGenreLabel: "Seleccionar Género Preestablecido",
+        presetCustom: "-- Ingresar Frase Personalizada --",
+        presetPhil: "Filosofía y Ética",
+        presetScifi: "Ciencia Ficción y Ciberpunk",
+        presetClassic: "Ficción Clásica",
+        presetScience: "Ciencia y Física",
+        presetScripture: "Escritura y Antigüedad",
+        presetSpeech: "Discursos Históricos",
+        enterCustomLabel: "Ingresar Frase Personalizada",
+        launchGameBtn: "Iniciar Juego",
+        backToDailyBtn: "Volver al Diario",
+        puzzleSolvedTitle: "¡Rompecabezas Resuelto!",
+        literaryInsightTitle: "Perspicacia Literaria y Curiosidades",
+        authorResLabel: "Autor:",
+        workResLabel: "Obra/Libro:",
+        dateResLabel: "Fecha de publicación:",
+        aboutResLabel: "Sobre la frase:",
+        quoteLettersLabel: "Letras de la frase:",
+        timeTakenLabel: "Tiempo empleado:",
+        finalScoreLabel: "Puntuación Final Resultante:",
+        shareCardLabel: "Tarjeta de Puntuación Compartible",
+        copyCardBtn: "Copiar Tarjeta",
+        helpTitle: "Cómo Jugar y Pistas Lógicas",
+        helpLine1: "• Completa las casillas vacías usando tu teclado físico o el teclado virtual flotante.",
+        helpLine2: "• Haz clic en Detalles arriba para inspeccionar categorías e información del autor.",
+        helpLine3Title: "• Sistema de Colores de Pistas Lógicas:",
+        helpEmerald: "Verde Esmeralda: ¡Letra correcta en la casilla exacta!",
+        helpGold: "Oro Cálido: La letra pertenece a esta misma palabra, ¡pero en otra posición!",
+        helpCyan: "Azul Cian: La letra existe en la frase, pero en otra palabra.",
+        helpGrey: "Gris Oscuro: La letra no existe en ninguna parte de la frase.",
+        helpLine4: "• Insignias de Recuento: Las teclas muestran los recuentos restantes de letras hasta llegar a un asterisco (*)."
+      }
+    };
+
+    // Hardcoded Fallback Payload (Ensures bulletproof offline execution if quotes.json is missing)
+    const FALLBACK_PAYLOAD = {
+      daily: [
+        { 
+          en: { quote: "Real courage is when you know you're licked before you begin.", author: "Harper Lee", title: "To Kill a Mockingbird", published: "July 11, 1960", trivia: "Spoken by Atticus Finch in Chapter 11.", category: "Classic Literature", subCategory: "Fiction" },
+          es: { quote: "El verdadero valor es cuando sabes que estás vencido antes de empezar.", author: "Harper Lee", title: "Matar a un ruiseñor", published: "11 de julio de 1960", trivia: "Dicho por Atticus Finch en el capítulo 11.", category: "Literatura Clásica", subCategory: "Ficción" }
+        }
+      ],
+      presets: {
+        philosophy: [
+          {
+            en: { quote: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", title: "Twilight of the Idols", published: "1889", trivia: "Found in Maxims and Arrows.", category: "Philosophy", subCategory: "Non-Fiction" },
+            es: { quote: "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", author: "Friedrich Nietzsche", title: "El crepúsculo de los ídolos", published: "1889", trivia: "Encontrado en Máximas y flechas.", category: "Filosofía", subCategory: "No Ficción" }
+          }
+        ],
+        science: [
+          {
+            en: { quote: "God does not play dice with the universe.", author: "Albert Einstein", title: "Letter to Max Born", published: "1926", trivia: "Einstein's view on quantum mechanics.", category: "Science", subCategory: "Physics" },
+            es: { quote: "Dios no juega a los dados con el universo.", author: "Albert Einstein", title: "Carta a Max Born", published: "1926", trivia: "La visión de Einstein sobre la mecánica cuántica.", category: "Ciencia", subCategory: "Física" }
+          }
+        ],
+        scripture: [
+          {
+            en: { quote: "Let us cut the living child in two, and give half to the one, and half to the other.", author: "King Solomon", title: "First Book of Kings", published: "c. 950 BC", trivia: "Solomon's test of maternal wisdom.", category: "Scripture", subCategory: "Ancient History" },
+            es: { quote: "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.", author: "Rey Salomón", title: "Primer Libro de los Reyes", published: "c. 950 a. C.", trivia: "La célebre prueba de sabiduría maternal.", category: "Escritura", subCategory: "Historia Antigua" }
+          }
+        ],
+        speech: [
+          {
+            en: { quote: "Ask not what your country can do for you – ask what you can do for your country.", author: "John F. Kennedy", title: "Inaugural Address", published: "January 20, 1961", trivia: "Call to civic action.", category: "Speeches", subCategory: "Political Oratory" },
+            es: { quote: "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.", author: "John F. Kennedy", title: "Discurso Inaugural", published: "20 de enero de 1961", trivia: "Llamado a la acción cívica.", category: "Discursos", subCategory: "Oratoria Política" }
+          }
+        ],
+        scifi: [
+          {
+            en: { quote: "I must not fear. Fear is the mind-killer.", author: "Frank Herbert", title: "Dune", published: "August 1965", trivia: "Litany Against Fear.", category: "Sci-Fi", subCategory: "Fiction" },
+            es: { quote: "No debo tener miedo. El miedo mata la mente.", author: "Frank Herbert", title: "Dune", published: "Agosto de 1965", trivia: "La letanía contra el miedo.", category: "Ciencia Ficción", subCategory: "Ficción" }
+          }
+        ],
+        classic: [
+          {
+            en: { quote: "All happy families are alike; each unhappy family is unhappy in its own way.", author: "Leo Tolstoy", title: "Anna Karenina", published: "1878", trivia: "Famous opening sentence.", category: "Classic Literature", subCategory: "Fiction" },
+            es: { quote: "Todas las familias felices se asemejan; cada familia infeliz lo es a su manera.", author: "León Tolstói", title: "Ana Karenina", published: "1878", trivia: "La famosa frase inicial.", category: "Ficción Clásica", subCategory: "Ficción" }
+          }
+        ]
+      }
+    };
+
+    let GAME_DATA = FALLBACK_PAYLOAD;
+    let currentLang = localStorage.getItem('bookgrid_lang') || 'en';
+    let currentGameMode = 'daily';
+    let targetQuote = "";
+    let targetAuthor = "";
+    let targetTitle = "";
+    let targetCategory = "";
+    let targetSubCategory = "";
+    let targetPublished = "";
+    let targetTrivia = "";
+
+    let cleanLetters = [];
+    let wordAssignments = [];
+    let wordsCleanLetters = [];
+    let userGuesses = [];
+    let lockedTiles = [];
+    let keyStates = {};
+    let letterCountsTotal = {};
+    let letterCountsSolved = {};
+    let selectedTileIndex = 0;
+    let countMistakes = 0;
+    let countHints = 0;
+    let isGameComplete = false;
+    let isNativeKeyboardActive = false;
+
+    let gameStartTime = null;
+    let gameElapsedTimeSeconds = 0;
+    let gameTimerInterval = null;
+
+    // Asynchronously fetch JSON pipeline data, fall back smoothly if unreachable
+    async function loadGameData() {
+      try {
+        const res = await fetch('quotes.json?v=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.daily && data.presets) {
+            GAME_DATA = data;
+          }
+        }
+      } catch (err) {
+        console.warn("Using offline fallback quote payload:", err);
+      }
+      initDailyGame();
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+      localStorage.setItem('bookgrid_lang', currentLang);
+      updateLanguageUI();
+      if (currentGameMode === 'daily') {
+        initDailyGame();
+      }
+    }
+
+    function updateLanguageUI() {
+      const dict = TRANSLATIONS[currentLang];
+      document.getElementById('lang-label').innerText = currentLang === 'en' ? 'ES' : 'EN';
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      const nKey = document.querySelector('[id-es-key="true"]');
+      if (nKey) {
+        if (currentLang === 'es') {
+          nKey.classList.remove('hidden');
+        } else {
+          nKey.classList.add('hidden');
+        }
+      }
+    }
+
+    function t(key) {
+      return TRANSLATIONS[currentLang][key] || key;
+    }
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('bookgrid_theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      } else {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('bookgrid_theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('theme-icon');
+      if (!icon) return;
+      if (isDark) {
+        icon.className = 'fa-solid fa-sun text-sm sm:text-lg text-amber-400';
+      } else {
+        icon.className = 'fa-solid fa-moon text-sm sm:text-lg text-slate-700';
+      }
+    }
+
+    function toggleFullscreen() {
+      const icon = document.getElementById('fullscreen-icon');
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        if (icon) icon.className = 'fa-solid fa-compress text-sm sm:text-lg text-amber-500 dark:text-brand-gold';
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+        if (icon) icon.className = 'fa-solid fa-expand text-sm sm:text-lg';
+      }
+    }
+
+    function attemptAutoFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().then(() => {
+          const icon = document.getElementById('fullscreen-icon');
+          if (icon) icon.className = 'fa-solid fa-compress text-sm sm:text-lg text-amber-500 dark:text-brand-gold';
+        }).catch(() => {
+          const triggerFullscreenOnFirstInteraction = () => {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().then(() => {
+                const icon = document.getElementById('fullscreen-icon');
+                if (icon) icon.className = 'fa-solid fa-compress text-sm sm:text-lg text-amber-500 dark:text-brand-gold';
+              }).catch(() => {});
             }
-            renderQuote();
+            window.removeEventListener('pointerdown', triggerFullscreenOnFirstInteraction);
+          };
+          window.addEventListener('pointerdown', triggerFullscreenOnFirstInteraction, { once: true });
+        });
+      }
+    }
+
+    function toggleNativeKeyboard() {
+      const input = document.getElementById('hidden-keyboard-input');
+      const btn = document.getElementById('btn-native-keyboard');
+      if (!input) return;
+
+      isNativeKeyboardActive = !isNativeKeyboardActive;
+
+      if (isNativeKeyboardActive) {
+        input.focus();
+        btn.classList.add('bg-amber-500/20', 'border-amber-500', 'text-amber-600', 'dark:text-brand-gold');
+      } else {
+        input.blur();
+        btn.classList.remove('bg-amber-500/20', 'border-amber-500', 'text-amber-600', 'dark:text-brand-gold');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      updateLanguageUI();
+      initKeyboardDrag();
+      initRevealCardDrag();
+      startCountdownTimer();
+      attemptAutoFullscreen();
+      
+      loadGameData(); // Loads quotes.json asynchronously
+      
+      const input = document.getElementById('hidden-keyboard-input');
+      if (input) {
+        input.addEventListener('input', (e) => {
+          if (isGameComplete) return;
+          const val = e.target.value.toUpperCase();
+          if (val.length > 0) {
+            const char = val[val.length - 1];
+            if ((char >= 'A' && char <= 'Z') || char === 'Ñ') {
+              handleVirtualKey(char);
+            }
+          }
+          input.value = '';
+        });
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (isGameComplete) return;
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+          if (e.target.id !== 'hidden-keyboard-input') return;
         }
 
-        function renderQuote() {
-            const list = activePayload.daily || FALLBACK_PAYLOAD.daily;
-            const item = list[currentIndex % list.length][currentLang];
+        const key = e.key.toUpperCase();
+        if (((key >= 'A' && key <= 'Z') || key === 'Ñ') && key.length === 1) {
+          handleVirtualKey(key);
+        } else if (e.key === 'Backspace') {
+          handleBackspace();
+        }
+      });
+    });
 
-            document.getElementById('quoteDisplay').textContent = `"${item.quote}"`;
-            document.getElementById('authorDisplay').textContent = `— ${item.author}`;
-            document.getElementById('sourceDisplay').textContent = `${item.title} (${item.published})`;
-            document.getElementById('triviaDisplay').textContent = `💡 Trivia: ${item.trivia}`;
+    function getTodayUTCString() {
+      const now = new Date();
+      return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
+    }
+
+    function startGameTimer() {
+      gameStartTime = Date.now();
+      if (gameTimerInterval) clearInterval(gameTimerInterval);
+      gameTimerInterval = setInterval(() => {
+        if (!isGameComplete) {
+          gameElapsedTimeSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
+        }
+      }, 1000);
+    }
+
+    function formatTime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function initDailyGame() {
+      currentGameMode = 'daily';
+      document.getElementById('mode-text').innerText = t('dailyChallenge');
+
+      const todayStr = getTodayUTCString();
+      const lockKey = `bookgrid_daily_solved_${currentLang}_${todayStr}`;
+      const savedData = localStorage.getItem(lockKey);
+
+      let dateHash = 0;
+      for (let i = 0; i < todayStr.length; i++) {
+        dateHash += todayStr.charCodeAt(i);
+      }
+      
+      const dailyPool = GAME_DATA.daily || FALLBACK_PAYLOAD.daily;
+      const masterObj = dailyPool[dateHash % dailyPool.length];
+      const quoteObj = masterObj[currentLang] || masterObj['en'];
+
+      targetQuote = quoteObj.quote;
+      targetAuthor = quoteObj.author;
+      targetTitle = quoteObj.title;
+      targetCategory = quoteObj.category || "General";
+      targetSubCategory = quoteObj.subCategory || "Literature";
+      targetPublished = quoteObj.published || "Unknown";
+      targetTrivia = quoteObj.trivia || "A memorable excerpt.";
+
+      updateQuoteInfoModalUI();
+
+      if (savedData) {
+        const data = JSON.parse(savedData);
+        countMistakes = data.mistakes;
+        countHints = data.hints;
+        gameElapsedTimeSeconds = data.timeSeconds || 0;
+        isGameComplete = true;
+
+        setupBoard();
+        userGuesses = [...cleanLetters];
+        lockedTiles = cleanLetters.map(() => true);
+        
+        cleanLetters.forEach(ch => {
+          letterCountsSolved[ch] = letterCountsTotal[ch];
+          updateVirtualKeyboardState(ch, 'correct');
+        });
+
+        renderBoard();
+        
+        document.getElementById('daily-locked-banner').classList.remove('hidden');
+        document.getElementById('floating-keyboard').classList.add('hidden');
+        
+        const revealCard = document.getElementById('floating-reveal-card');
+        revealCard.classList.remove('hidden');
+        document.getElementById('author-name').innerText = targetAuthor;
+        document.getElementById('book-title').innerText = targetTitle;
+        
+        document.getElementById('locked-score-summary').innerText = `${t('lockedTitle').replace('!', '')} (${data.score}%)`;
+        updateStatsDisplay();
+      } else {
+        isGameComplete = false;
+        countMistakes = 0;
+        countHints = 0;
+        gameElapsedTimeSeconds = 0;
+        document.getElementById('daily-locked-banner').classList.add('hidden');
+        document.getElementById('floating-keyboard').classList.remove('hidden');
+        document.getElementById('floating-reveal-card').classList.add('hidden');
+        setupBoard();
+        startGameTimer();
+      }
+    }
+
+    function updateQuoteInfoModalUI() {
+      document.getElementById('info-category').innerText = targetCategory;
+      document.getElementById('info-subcategory').innerText = targetSubCategory;
+      document.getElementById('info-author').innerText = targetAuthor;
+      document.getElementById('info-book').innerText = targetTitle;
+    }
+
+    function setupBoard() {
+      cleanLetters = [];
+      wordAssignments = [];
+      wordsCleanLetters = [];
+      userGuesses = [];
+      lockedTiles = [];
+      keyStates = {};
+      letterCountsTotal = {};
+      letterCountsSolved = {};
+      selectedTileIndex = 0;
+
+      const rawWords = targetQuote.split(' ');
+      const container = document.getElementById('quote-container');
+      container.innerHTML = '';
+
+      let globalLetterIndex = 0;
+
+      rawWords.forEach((wordStr, wordIdx) => {
+        const wordEl = document.createElement('div');
+        wordEl.className = 'bg-word';
+
+        const currentWordLetters = [];
+
+        for (let i = 0; i < wordStr.length; i++) {
+          const char = wordStr[i];
+          const upperChar = char.toUpperCase();
+
+          if ((upperChar >= 'A' && upperChar <= 'Z') || upperChar === 'Ñ') {
+            cleanLetters.push(upperChar);
+            wordAssignments.push(wordIdx);
+            currentWordLetters.push(upperChar);
+            userGuesses.push('');
+            lockedTiles.push(false);
+
+            letterCountsTotal[upperChar] = (letterCountsTotal[upperChar] || 0) + 1;
+            letterCountsSolved[upperChar] = 0;
+
+            const tile = document.createElement('div');
+            tile.id = `tile-${globalLetterIndex}`;
+            tile.className = 'tile-box';
+            
+            const idx = globalLetterIndex;
+            tile.onclick = () => selectTile(idx);
+
+            wordEl.appendChild(tile);
+            globalLetterIndex++;
+          } else {
+            const punct = document.createElement('span');
+            punct.className = 'punct-symbol';
+            punct.innerText = char;
+            wordEl.appendChild(punct);
+          }
+        }
+        wordsCleanLetters.push(currentWordLetters);
+        container.appendChild(wordEl);
+      });
+
+      resetVirtualKeyboardUI();
+      findNextAvailableTileIndex();
+      renderBoard();
+      updateStatsDisplay();
+    }
+
+    function resetVirtualKeyboardUI() {
+      const keys = document.querySelectorAll('.key-btn');
+      keys.forEach(k => {
+        k.classList.remove('key-correct', 'key-same-word', 'key-present', 'key-absent');
+      });
+
+      for (let i = 65; i <= 90; i++) {
+        const char = String.fromCharCode(i);
+        const badge = document.getElementById(`badge-${char}`);
+        if (badge) badge.innerText = '';
+      }
+      const nBadge = document.getElementById('badge-Ñ');
+      if (nBadge) nBadge.innerText = '';
+    }
+
+    function updateVirtualKeyboardState(letter, state) {
+      const current = keyStates[letter];
+      const priority = { 'correct': 4, 'same-word': 3, 'present': 2, 'absent': 1 };
+      
+      if (!current || priority[state] > (priority[current] || 0)) {
+        keyStates[letter] = state;
+      }
+
+      const activeState = keyStates[letter];
+      const keyBtn = letter === 'Ñ' ? document.getElementById('key-Ñ') : document.getElementById(`key-${letter}`);
+      
+      if (keyBtn) {
+        keyBtn.classList.remove('key-correct', 'key-same-word', 'key-present', 'key-absent');
+        if (activeState === 'correct') keyBtn.classList.add('key-correct');
+        else if (activeState === 'same-word') keyBtn.classList.add('key-same-word');
+        else if (activeState === 'present') keyBtn.classList.add('key-present');
+        else if (activeState === 'absent') keyBtn.classList.add('key-absent');
+      }
+
+      updateKeyboardBadge(letter);
+    }
+
+    function updateKeyboardBadge(letter) {
+      const badge = letter === 'Ñ' ? document.getElementById('badge-Ñ') : document.getElementById(`badge-${letter}`);
+      if (!badge) return;
+
+      const total = letterCountsTotal[letter] || 0;
+      const solved = letterCountsSolved[letter] || 0;
+      const remaining = total - solved;
+
+      if (total === 0) {
+        badge.innerText = '';
+        badge.style.display = 'none';
+      } else if (remaining > 0) {
+        badge.innerText = remaining;
+        badge.style.display = 'block';
+      } else {
+        badge.innerText = '∗';
+        badge.style.display = 'block';
+      }
+    }
+
+    function renderBoard() {
+      for (let i = 0; i < cleanLetters.length; i++) {
+        const tile = document.getElementById(`tile-${i}`);
+        if (!tile) continue;
+
+        const val = userGuesses[i] || '';
+        tile.innerText = val;
+
+        tile.classList.remove('active', 'tile-correct', 'tile-same-word', 'tile-present', 'tile-absent');
+
+        if (isGameComplete || lockedTiles[i]) {
+          tile.classList.add('tile-correct');
+        } else if (val !== '') {
+          const wordIdx = wordAssignments[i];
+          const currentWordLetters = wordsCleanLetters[wordIdx] || [];
+
+          if (val === cleanLetters[i]) {
+            tile.classList.add('tile-correct');
+          } else if (currentWordLetters.includes(val)) {
+            tile.classList.add('tile-same-word');
+          } else if (cleanLetters.includes(val)) {
+            tile.classList.add('tile-present');
+          } else {
+            tile.classList.add('tile-absent');
+          }
+        } else if (i === selectedTileIndex) {
+          tile.classList.add('active');
+        }
+      }
+    }
+
+    function selectTile(index) {
+      if (isGameComplete || lockedTiles[index]) return;
+      selectedTileIndex = index;
+      renderBoard();
+    }
+
+    function findNextAvailableTileIndex() {
+      for (let i = selectedTileIndex; i < cleanLetters.length; i++) {
+        if (!lockedTiles[i]) {
+          selectedTileIndex = i;
+          return;
+        }
+      }
+      for (let i = 0; i < selectedTileIndex; i++) {
+        if (!lockedTiles[i]) {
+          selectedTileIndex = i;
+          return;
+        }
+      }
+    }
+
+    function handleVirtualKey(letter) {
+      if (isGameComplete || lockedTiles[selectedTileIndex]) return;
+
+      userGuesses[selectedTileIndex] = letter;
+      const wordIdx = wordAssignments[selectedTileIndex];
+      const currentWordLetters = wordsCleanLetters[wordIdx] || [];
+
+      if (letter === cleanLetters[selectedTileIndex]) {
+        lockedTiles[selectedTileIndex] = true;
+        letterCountsSolved[letter] = (letterCountsSolved[letter] || 0) + 1;
+        updateVirtualKeyboardState(letter, 'correct');
+      } else {
+        countMistakes++;
+        if (currentWordLetters.includes(letter)) {
+          updateVirtualKeyboardState(letter, 'same-word');
+        } else if (cleanLetters.includes(letter)) {
+          updateVirtualKeyboardState(letter, 'present');
+        } else {
+          updateVirtualKeyboardState(letter, 'absent');
+        }
+      }
+
+      findNextAvailableTileIndex();
+      renderBoard();
+      updateStatsDisplay();
+      checkWinCondition();
+    }
+
+    function handleBackspace() {
+      if (isGameComplete) return;
+      
+      if (!lockedTiles[selectedTileIndex] && userGuesses[selectedTileIndex] !== '') {
+        userGuesses[selectedTileIndex] = '';
+      } else {
+        let prev = selectedTileIndex - 1;
+        while (prev >= 0 && lockedTiles[prev]) {
+          prev--;
+        }
+        if (prev >= 0) {
+          selectedTileIndex = prev;
+          if (!lockedTiles[selectedTileIndex]) {
+            userGuesses[selectedTileIndex] = '';
+          }
+        }
+      }
+      renderBoard();
+    }
+
+    function useHint() {
+      if (isGameComplete) return;
+
+      const unrevealed = [];
+      for (let i = 0; i < cleanLetters.length; i++) {
+        if (!lockedTiles[i]) {
+          unrevealed.push(i);
+        }
+      }
+
+      if (unrevealed.length === 0) return;
+
+      const randomIdx = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+      const char = cleanLetters[randomIdx];
+
+      userGuesses[randomIdx] = char;
+      lockedTiles[randomIdx] = true;
+      letterCountsSolved[char] = (letterCountsSolved[char] || 0) + 1;
+      countHints++;
+
+      updateVirtualKeyboardState(char, 'correct');
+
+      selectedTileIndex = randomIdx;
+      findNextAvailableTileIndex();
+      renderBoard();
+      updateStatsDisplay();
+      checkWinCondition();
+    }
+
+    function checkWinCondition() {
+      const isFilled = lockedTiles.every(status => status === true);
+      if (isFilled) {
+        isGameComplete = true;
+        if (gameTimerInterval) clearInterval(gameTimerInterval);
+        const finalScore = calculateScore();
+
+        if (currentGameMode === 'daily') {
+          const todayStr = getTodayUTCString();
+          localStorage.setItem(`bookgrid_daily_solved_${currentLang}_${todayStr}`, JSON.stringify({
+            score: finalScore,
+            mistakes: countMistakes,
+            hints: countHints,
+            timeSeconds: gameElapsedTimeSeconds
+          }));
         }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'es' : 'en';
-            renderQuote();
-        }
+        setTimeout(() => {
+          const revealCard = document.getElementById('floating-reveal-card');
+          revealCard.classList.remove('hidden');
+          document.getElementById('author-name').innerText = targetAuthor;
+          document.getElementById('book-title').innerText = targetTitle;
+          openResultsModal();
+        }, 300);
+      }
+    }
 
-        function loadRandomQuote() {
-            const list = activePayload.daily || FALLBACK_PAYLOAD.daily;
-            currentIndex = (currentIndex + 1) % list.length;
-            renderQuote();
-        }
+    function calculateScore() {
+      const totalLetters = cleanLetters.length || 1;
+      const mistakePenaltyRate = 100 / totalLetters;
+      const hintPenaltyRate = 50 / totalLetters;
 
-        window.addEventListener('DOMContentLoaded', initGame);
-    </script>
+      const totalDeduction = (countMistakes * mistakePenaltyRate) + (countHints * hintPenaltyRate);
+      return Math.max(0, Math.round((100 - totalDeduction) * 10) / 10);
+    }
+
+    function updateStatsDisplay() {
+      document.getElementById('stat-mistakes').innerText = countMistakes;
+      document.getElementById('stat-hints').innerText = countHints;
+      document.getElementById('stat-score').innerText = `${calculateScore()}%`;
+    }
+
+    function initKeyboardDrag() {
+      const keyboard = document.getElementById('floating-keyboard');
+      const handle = document.getElementById('keyboard-drag-handle');
+
+      let isDragging = false;
+      let startX, startY, initialLeft, initialTop;
+
+      function onStart(clientX, clientY) {
+        isDragging = true;
+        const rect = keyboard.getBoundingClientRect();
+        startX = clientX;
+        startY = clientY;
+        initialLeft = rect.left;
+        initialTop = rect.top;
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
+
+        keyboard.style.left = `${initialLeft + deltaX}px`;
+        keyboard.style.top = `${initialTop + deltaY}px`;
+        keyboard.style.bottom = 'auto';
+        keyboard.style.transform = 'none';
+      }
+
+      function onEnd() {
+        isDragging = false;
+      }
+
+      handle.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        onStart(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        onMove(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      window.addEventListener('touchend', onEnd);
+
+      handle.addEventListener('mousedown', (e) => {
+        onStart(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        onMove(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', onEnd);
+    }
+
+    function initRevealCardDrag() {
+      const card = document.getElementById('floating-reveal-card');
+      const handle = document.getElementById('reveal-card-drag-handle');
+
+      let isDragging = false;
+      let startX, startY, initialLeft, initialTop;
+
+      function onStart(clientX, clientY) {
+        isDragging = true;
+        const rect = card.getBoundingClientRect();
+        startX = clientX;
+        startY = clientY;
+        initialLeft = rect.left;
+        initialTop = rect.top;
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
+
+        card.style.left = `${initialLeft + deltaX}px`;
+        card.style.top = `${initialTop + deltaY}px`;
+        card.style.transform = 'none';
+      }
+
+      function onEnd() {
+        isDragging = false;
+      }
+
+      handle.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        onStart(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        onMove(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      window.addEventListener('touchend', onEnd);
+
+      handle.addEventListener('mousedown', (e) => {
+        onStart(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        onMove(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', onEnd);
+    }
+
+    function resetKeyboardPosition() {
+      const keyboard = document.getElementById('floating-keyboard');
+      keyboard.style.left = '50%';
+      keyboard.style.top = 'auto';
+      keyboard.style.bottom = 'calc(8px + env(safe-area-inset-bottom))';
+      keyboard.style.transform = 'translateX(-50%)';
+    }
+
+    function resetRevealCardPosition() {
+      const card = document.getElementById('floating-reveal-card');
+      card.style.left = '50%';
+      card.style.top = '90px';
+      card.style.transform = 'translateX(-50%)';
+    }
+
+    function toggleKeyboardCollapse() {
+      const keysContainer = document.getElementById('keyboard-keys-container');
+      const toggleBtn = document.getElementById('btn-toggle-keyboard');
+
+      if (keysContainer.classList.contains('hidden')) {
+        keysContainer.classList.remove('hidden');
+        toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+      } else {
+        keysContainer.classList.add('hidden');
+        toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
+      }
+    }
+
+    function toggleRevealCardCollapse() {
+      const cardBody = document.getElementById('reveal-card-body');
+      const toggleBtn = document.getElementById('btn-toggle-reveal-card');
+
+      if (cardBody.classList.contains('hidden')) {
+        cardBody.classList.remove('hidden');
+        toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+      } else {
+        cardBody.classList.add('hidden');
+        toggleBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
+      }
+    }
+
+    function generateShareCardText() {
+      const score = calculateScore();
+      const timeStr = formatTime(gameElapsedTimeSeconds);
+      const headerTitle = currentLang === 'es' ? '🎉 ¡COMPLETADO! 🎉' : '🎉 COMPLETED! 🎉';
+      return `${headerTitle}\n📚 **BOOKGRID®** (${currentLang.toUpperCase()}) #${getTodayUTCString()}\nScore: ${score}% | Time: ${timeStr}\nMistakes: ${countMistakes} | Hints: ${countHints}\n🟩🟨📖`;
+    }
+
+    function openResultsModal() {
+      const totalLetters = cleanLetters.length || 1;
+      const mistakePenaltyRate = (100 / totalLetters).toFixed(1);
+      const hintPenaltyRate = (50 / totalLetters).toFixed(1);
+
+      const totalMistakeLoss = (countMistakes * (100 / totalLetters)).toFixed(1);
+      const totalHintLoss = (countHints * (50 / totalLetters)).toFixed(1);
+
+      document.getElementById('res-total-letters').innerText = totalLetters;
+      document.getElementById('res-time-taken').innerText = formatTime(gameElapsedTimeSeconds);
+      document.getElementById('res-mistakes-count').innerText = countMistakes;
+      document.getElementById('res-mistake-rate').innerText = `${mistakePenaltyRate}%`;
+      document.getElementById('res-mistakes-deduct').innerText = `-${totalMistakeLoss}%`;
+
+      document.getElementById('res-hints-count').innerText = countHints;
+      document.getElementById('res-hint-rate').innerText = `${hintPenaltyRate}%`;
+      document.getElementById('res-hints-deduct').innerText = `-${totalHintLoss}%`;
+
+      document.getElementById('res-final-score').innerText = `${calculateScore()}%`;
+      document.getElementById('results-author-quote').innerText = `"${targetQuote}"`;
+
+      const triviaContainer = document.getElementById('results-trivia-container');
+      if (targetTrivia || targetPublished || targetAuthor || targetTitle) {
+        document.getElementById('res-author').innerText = targetAuthor || "Unknown";
+        document.getElementById('res-work').innerText = targetTitle || "Unknown Work";
+        document.getElementById('res-published').innerText = targetPublished || "Unknown";
+        document.getElementById('res-trivia').innerText = targetTrivia || "A key passage.";
+        triviaContainer.classList.remove('hidden');
+      } else {
+        triviaContainer.classList.add('hidden');
+      }
+
+      document.getElementById('share-card-preview').value = generateShareCardText();
+      document.getElementById('modal-results').classList.remove('hidden');
+    }
+
+    function closeResultsModal() {
+      document.getElementById('modal-results').classList.add('hidden');
+      if (currentGameMode === 'daily') {
+        initDailyGame();
+      }
+    }
+
+    function openQuoteInfoModal() {
+      updateQuoteInfoModalUI();
+      document.getElementById('modal-quote-info').classList.remove('hidden');
+    }
+
+    function closeQuoteInfoModal() {
+      document.getElementById('modal-quote-info').classList.add('hidden');
+    }
+
+    function openCustomModal() {
+      document.getElementById('modal-custom').classList.remove('hidden');
+    }
+
+    function closeCustomModal() {
+      document.getElementById('modal-custom').classList.add('hidden');
+    }
+
+    function openHelpModal() {
+      document.getElementById('modal-help').classList.remove('hidden');
+    }
+
+    function closeHelpModal() {
+      document.getElementById('modal-help').classList.add('hidden');
+    }
+
+    function onGenreSelectChange() {
+      const val = document.getElementById('genre-select').value;
+      const customGroup = document.getElementById('custom-input-group');
+      if (val === 'custom') {
+        customGroup.classList.remove('hidden');
+      } else {
+        customGroup.classList.add('hidden');
+      }
+    }
+
+    function startCustomGame() {
+      const val = document.getElementById('genre-select').value;
+      
+      if (val === 'custom') {
+        const q = document.getElementById('custom-quote-input').value.trim();
+        const cat = document.getElementById('custom-category-input').value.trim() || 'Custom';
+        const subCat = document.getElementById('custom-subcategory-input').value.trim() || 'Custom';
+        const a = document.getElementById('custom-author-input').value.trim() || 'Unknown';
+        const t = document.getElementById('custom-title-input').value.trim() || 'Custom';
+        const pub = document.getElementById('custom-published-input').value.trim() || 'Unspecified';
+        const triv = document.getElementById('custom-trivia-input').value.trim() || 'Custom entry.';
+
+        if (!q) return alert(currentLang === 'es' ? "Por favor ingresa una frase primero." : "Please enter a custom quote first.");
+        targetQuote = q;
+        targetCategory = cat;
+        targetSubCategory = subCat;
+        targetAuthor = a;
+        targetTitle = t;
+        targetPublished = pub;
+        targetTrivia = triv;
+      } else {
+        const presetPools = GAME_DATA.presets || FALLBACK_PAYLOAD.presets;
+        const categoryArray = presetPools[val] || FALLBACK_PAYLOAD.presets[val] || FALLBACK_PAYLOAD.presets['classic'];
+        
+        // Pick a random entry from the selected preset category
+        const randomItem = categoryArray[Math.floor(Math.random() * categoryArray.length)];
+        const selected = randomItem[currentLang] || randomItem['en'];
+
+        targetQuote = selected.quote;
+        targetAuthor = selected.author;
+        targetTitle = selected.title;
+        targetCategory = selected.category || "Preset";
+        targetSubCategory = selected.subCategory || "Preset";
+        targetPublished = selected.published || "Unknown";
+        targetTrivia = selected.trivia || "Notable excerpt.";
+      }
+
+      currentGameMode = 'custom';
+      isGameComplete = false;
+      countMistakes = 0;
+      countHints = 0;
+      gameElapsedTimeSeconds = 0;
+
+      updateQuoteInfoModalUI();
+
+      document.getElementById('mode-text').innerText = t('customMode');
+      document.getElementById('daily-locked-banner').classList.add('hidden');
+      document.getElementById('floating-keyboard').classList.remove('hidden');
+      document.getElementById('floating-reveal-card').classList.add('hidden');
+      
+      closeCustomModal();
+      setupBoard();
+      startGameTimer();
+    }
+
+    function switchToDailyMode() {
+      closeCustomModal();
+      initDailyGame();
+    }
+
+    function shareResults() {
+      const shareText = generateShareCardText();
+      const btn = document.getElementById('btn-copy-card');
+
+      function showCopiedSuccess() {
+        if (btn) {
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (currentLang === 'es' ? '¡Copiado!' : 'Copied!');
+          btn.classList.remove('bg-amber-500', 'dark:bg-brand-gold', 'hover:bg-amber-600', 'dark:hover:bg-brand-goldHover');
+          btn.classList.add('bg-emerald-500', 'text-white');
+
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('bg-emerald-500', 'text-white');
+            btn.classList.add('bg-amber-500', 'dark:bg-brand-gold', 'hover:bg-amber-600', 'dark:hover:bg-brand-goldHover');
+          }, 2000);
+        }
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(shareText).then(() => {
+          showCopiedSuccess();
+        }).catch(() => {
+          fallbackCopyText(shareText);
+        });
+      } else {
+        fallbackCopyText(shareText);
+      }
+
+      function fallbackCopyText(text) {
+        const textarea = document.getElementById('share-card-preview');
+        if (textarea) {
+          textarea.focus();
+          textarea.select();
+          textarea.setSelectionRange(0, 99999);
+
+          try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+              showCopiedSuccess();
+            } else {
+              alert(currentLang === 'es' ? "¡Tarjeta seleccionada! Mantén presionado para copiar." : "Card selected below! Tap and hold to copy manually.");
+            }
+          } catch (err) {
+            alert(currentLang === 'es' ? "¡Tarjeta seleccionada! Mantén presionado para copiar." : "Card selected below! Tap and hold to copy manually.");
+          }
+        }
+      }
+    }
+
+    function startCountdownTimer() {
+      function updateTimer() {
+        const now = new Date();
+        const nextUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
+        const diff = nextUTC - now;
+
+        const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+        const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+        const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+
+        const timerEl = document.getElementById('countdown-timer');
+        if (timerEl) {
+          timerEl.innerText = `${hours}:${minutes}:${seconds}`;
+        }
+      }
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+  </script>
 </body>
 </html>
