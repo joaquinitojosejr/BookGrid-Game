@@ -2,8 +2,8 @@ name: Automated Weekly Quotes Pipeline
 
 on:
   schedule:
-    - cron: '0 0 * * 1'
-  workflow_dispatch:
+    - cron: '0 0 * * 1'  # Runs every Monday at midnight UTC
+  workflow_dispatch:      # Allows manual trigger via Actions tab
 
 jobs:
   build-and-update:
@@ -20,7 +20,12 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Install Dependencies
+        run: pip install google-genai
+
       - name: Run Python Content Pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scripts/generate_quotes.py
 
       - name: Commit and Push Fresh Payload
