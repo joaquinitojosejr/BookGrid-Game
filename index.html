@@ -1544,7 +1544,7 @@
       const score = calculateScore();
       const timeStr = formatTime(gameElapsedTimeSeconds);
       const headerTitle = currentLang === 'es' ? '🎉 ¡COMPLETADO! 🎉' : '🎉 COMPLETED! 🎉';
-      return `${headerTitle}\n📚 **BOOKGRID®** (${currentLang.toUpperCase()}) #${getTodayUTCString()}\nScore: ${score}% | Time: ${timeStr}\nMistakes: ${countMistakes} | Hints: ${countHints}\n🟩🟨📖`;
+      return `${headerTitle}\n📚 **BOOKGRID®** (${currentLang.toUpperCase()}) #${getTodayUTCString()}\n📖 Work: ${targetTitle} — ${targetAuthor}\nScore: ${score}% | Time: ${timeStr}\nMistakes: ${countMistakes} | Hints: ${countHints}\n🟩🟨📖`;
     }
 
     function openResultsModal() {
