@@ -1,9 +1,9 @@
+import os
 import json
 import random
-import os
 
-# Sample Master Seed Data across all literary domains
-SAMPLE_MASTER_LIBRARY = [
+# Built-in Master Seed Library (Acts as a Bulletproof Fallback if API fails)
+FALLBACK_MASTER_LIBRARY = [
     {
         "en": { "quote": "Real courage is when you know you're licked before you begin.", "author": "Harper Lee", "title": "To Kill a Mockingbird", "published": "July 11, 1960", "trivia": "Spoken by Atticus Finch in Chapter 11.", "category": "Classic Literature", "subCategory": "Fiction" },
         "es": { "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar.", "author": "Harper Lee", "title": "Matar a un ruiseñor", "published": "11 de julio de 1960", "trivia": "Dicho por Atticus Finch en el capítulo 11.", "category": "Literatura Clásica", "subCategory": "Ficción" }
@@ -29,71 +29,93 @@ SAMPLE_MASTER_LIBRARY = [
         "es": { "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.", "author": "John F. Kennedy", "title": "Discurso Inaugural", "published": "20 de enero de 1961", "trivia": "Inspirador llamado al servicio cívico.", "category": "Discursos", "subCategory": "Oratoria Política" }
     },
     {
-        "en": { "quote": "He who has a why to live can bear almost any how.", "author": "Friedrich Nietzsche", "title": "Twilight of the Idols", "published": "1889", "trivia": "Found in Maxims and Arrows (#12).", "category": "Philosophy", "subCategory": "Non-Fiction" },
+        "en": { "quote": "He who has a why to live can bear almost any how.", "author": "Friedrich Nietzsche", "title": "Twilight of the Idols", "published": "1889", "trivia": "Found in Maxims and Arrows.", "category": "Philosophy", "subCategory": "Non-Fiction" },
         "es": { "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", "author": "Friedrich Nietzsche", "title": "El crepúsculo de los ídolos", "published": "1889", "trivia": "Encontrado en Máximas y flechas.", "category": "Filosofía", "subCategory": "No Ficción" }
     }
 ]
 
-PRESET_SEED_POOLS = {
-    "philosophy": [
-        {
-            "en": { "quote": "He who has a why to live can bear almost any how.", "author": "Friedrich Nietzsche", "title": "Twilight of the Idols", "published": "1889", "trivia": "Found in Maxims and Arrows.", "category": "Philosophy", "subCategory": "Non-Fiction" },
-            "es": { "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", "author": "Friedrich Nietzsche", "title": "El crepúsculo de los ídolos", "published": "1889", "trivia": "Encontrado en Máximas y flechas.", "category": "Filosofía", "subCategory": "No Ficción" }
-        },
-        {
-            "en": { "quote": "The unexamined life is not worth living.", "author": "Socrates", "title": "Apology", "published": "c. 399 BC", "trivia": "Socrates' defense statement.", "category": "Philosophy", "subCategory": "Classic" },
-            "es": { "quote": "Una vida sin examen no tiene objeto vivirla.", "author": "Sócrates", "title": "Apología de Sócrates", "published": "c. 399 a. C.", "trivia": "La famosa declaración de defensa de Sócrates.", "category": "Filosofía", "subCategory": "Clásico" }
-        }
-    ],
-    "science": [
-        {
-            "en": { "quote": "God does not play dice with the universe.", "author": "Albert Einstein", "title": "Letter to Max Born", "published": "1926", "trivia": "Einstein's view on quantum mechanics.", "category": "Science", "subCategory": "Physics" },
-            "es": { "quote": "Dios no juega a los dados con el universo.", "author": "Albert Einstein", "title": "Carta a Max Born", "published": "1926", "trivia": "La visión de Einstein sobre la mecánica cuántica.", "category": "Ciencia", "subCategory": "Física" }
-        },
-        {
-            "en": { "quote": "If I have seen further it is by standing on the shoulders of giants.", "author": "Isaac Newton", "title": "Letter to Robert Hooke", "published": "1675", "trivia": "Acknowledging scientific progress.", "category": "Science", "subCategory": "Physics" },
-            "es": { "quote": "Si he logrado ver más lejos, ha sido porque he subido a hombros de gigantes.", "author": "Isaac Newton", "title": "Carta a Robert Hooke", "published": "1675", "trivia": "Reconociendo el avance científico acumulativo.", "category": "Ciencia", "subCategory": "Física" }
-        }
-    ],
-    "scripture": [
-        {
-            "en": { "quote": "Let us cut the living child in two, and give half to the one, and half to the other.", "author": "King Solomon", "title": "First Book of Kings", "published": "c. 950 BC", "trivia": "Solomon's test of maternal wisdom.", "category": "Scripture", "subCategory": "Ancient History" },
-            "es": { "quote": "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.", "author": "Rey Salomón", "title": "Primer Libro de los Reyes", "published": "c. 950 a. C.", "trivia": "La célebre prueba de sabiduría maternal de Salomón.", "category": "Escritura", "subCategory": "Historia Antigua" }
-        }
-    ],
-    "speech": [
-        {
-            "en": { "quote": "Ask not what your country can do for you – ask what you can do for your country.", "author": "John F. Kennedy", "title": "Inaugural Address", "published": "January 20, 1961", "trivia": "Inaugural call to action.", "category": "Speeches", "subCategory": "Political Oratory" },
-            "es": { "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.", "author": "John F. Kennedy", "title": "Discurso Inaugural", "published": "20 de enero de 1961", "trivia": "Un llamado a la acción cívica memorable.", "category": "Discursos", "subCategory": "Oratoria Política" }
-        }
-    ],
-    "scifi": [
-        {
-            "en": { "quote": "I must not fear. Fear is the mind-killer.", "author": "Frank Herbert", "title": "Dune", "published": "August 1965", "trivia": "Litany Against Fear.", "category": "Sci-Fi", "subCategory": "Fiction" },
-            "es": { "quote": "No debo tener miedo. El miedo mata la mente.", "author": "Frank Herbert", "title": "Dune", "published": "Agosto de 1965", "trivia": "La letanía contra el miedo de Bene Gesserit.", "category": "Ciencia Ficción", "subCategory": "Ficción" }
-        }
-    ],
-    "classic": [
-        {
-            "en": { "quote": "All happy families are alike; each unhappy family is unhappy in its own way.", "author": "Leo Tolstoy", "title": "Anna Karenina", "published": "1878", "trivia": "The famous opening sentence.", "category": "Classic Literature", "subCategory": "Fiction" },
-            "es": { "quote": "Todas las familias felices se asemejan; cada familia infeliz lo es a su manera.", "author": "León Tolstói", "title": "Ana Karenina", "published": "1878", "trivia": "La famosa frase inicial de Tolstói.", "category": "Ficción Clásica", "subCategory": "Ficción" }
-        }
-    ]
+FALLBACK_PRESETS = {
+    "philosophy": [FALLBACK_MASTER_LIBRARY[6]],
+    "science": [FALLBACK_MASTER_LIBRARY[3]],
+    "scripture": [FALLBACK_MASTER_LIBRARY[4]],
+    "speech": [FALLBACK_MASTER_LIBRARY[5]],
+    "scifi": [FALLBACK_MASTER_LIBRARY[1]],
+    "classic": [FALLBACK_MASTER_LIBRARY[0], FALLBACK_MASTER_LIBRARY[2]]
 }
 
-def generate_weekly_payload():
-    daily_selection = random.sample(SAMPLE_MASTER_LIBRARY, min(7, len(SAMPLE_MASTER_LIBRARY)))
+def generate_via_ai(api_key):
+    from google import genai
+    client = genai.Client(api_key=api_key)
     
-    payload = {
-        "daily": daily_selection,
-        "presets": PRESET_SEED_POOLS
+    prompt = """
+    Generate a valid JSON object containing 7 unique quotes spanning classical literature, philosophy, science, scripture, speeches, and sci-fi.
+    Each quote MUST be provided in both English ('en') and Spanish ('es').
+
+    Strict JSON structure:
+    {
+      "daily": [
+        {
+          "en": { "quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..." },
+          "es": { "quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..." }
+        }
+      ],
+      "presets": {
+        "philosophy": [],
+        "science": [],
+        "scripture": [],
+        "speech": [],
+        "scifi": [],
+        "classic": []
+      }
     }
+    Include at least 1-2 items inside each category in presets. Output valid raw JSON only without markdown formatting blocks.
+    """
     
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=prompt,
+    )
+    
+    raw_text = response.text.strip()
+    if raw_text.startswith("```json"):
+        raw_text = raw_text[7:]
+    if raw_text.startswith("```"):
+        raw_text = raw_text[3:]
+    if raw_text.endswith("```"):
+        raw_text = raw_text[:-3]
+    raw_text = raw_text.strip()
+        
+    return json.loads(raw_text)
+
+def generate_via_fallback():
+    print("Using built-in static seed library fallback...")
+    daily_selection = random.sample(FALLBACK_MASTER_LIBRARY, min(7, len(FALLBACK_MASTER_LIBRARY)))
+    return {
+        "daily": daily_selection,
+        "presets": FALLBACK_PRESETS
+    }
+
+def main():
+    api_key = os.environ.get("GEMINI_API_KEY")
+    payload = None
+
+    if api_key:
+        try:
+            print("Attempting AI quote generation via Gemini API...")
+            payload = generate_via_ai(api_key)
+            print("Successfully generated AI quotes payload.")
+        except Exception as e:
+            print(f"AI Generation failed ({e}). Falling back to static seeds.")
+            payload = generate_via_fallback()
+    else:
+        print("No GEMINI_API_KEY found. Falling back to static seed pool.")
+        payload = generate_via_fallback()
+
     output_path = os.path.join(os.path.dirname(__file__), '..', 'quotes.json')
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
         
-    print(f"Successfully generated clean quotes payload at {output_path}")
+    print(f"Successfully created payload at: {output_path}")
 
 if __name__ == "__main__":
-    generate_weekly_payload()
+    main()
