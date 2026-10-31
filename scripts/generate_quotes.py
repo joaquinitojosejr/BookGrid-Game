@@ -111,7 +111,7 @@ def main():
         print("No GEMINI_API_KEY found. Falling back to static seed pool.")
         payload = generate_via_fallback()
 
-    output_path = os.path.join(os.path.dirname(__file__), 'quotes.json')
+    output_path = os.path.join(os.path.dirname(__file__), '..', 'quotes.json')
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
         
