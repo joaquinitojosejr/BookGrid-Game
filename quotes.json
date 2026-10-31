@@ -1,1 +1,278 @@
-
+{
+  "daily": [
+    {
+      "en": {
+        "quote": "You have power over your mind - not outside events. Realize this, and you will find strength.",
+        "author": "Marcus Aurelius",
+        "title": "Meditations",
+        "published": "180 AD",
+        "trivia": "Written during military campaigns along the northern border of the Roman Empire as private personal exercises.",
+        "category": "Philosophy",
+        "subCategory": "Stoicism"
+      },
+      "es": {
+        "quote": "Tienes poder sobre tu mente, no sobre los acontecimientos externos. Comprende esto y encontrarás la fuerza.",
+        "author": "Marco Aurelio",
+        "title": "Meditaciones",
+        "published": "180 d.C.",
+        "trivia": "Escrito durante las campañas militares en la frontera norte del Imperio Romano como reflexiones personales.",
+        "category": "Filosofía",
+        "subCategory": "Estoicismo"
+      }
+    },
+    {
+      "en": {
+        "quote": "Somewhere, something incredible is waiting to be known.",
+        "author": "Carl Sagan",
+        "title": "Cosmos",
+        "published": "1980",
+        "trivia": "Popularized by Sagan, though originally attributed to him by Sharon Begley in a 1977 Newsweek profile.",
+        "category": "Science",
+        "subCategory": "Astronomy"
+      },
+      "es": {
+        "quote": "En algún lugar, algo increíble está esperando ser descubierto.",
+        "author": "Carl Sagan",
+        "title": "Cosmos",
+        "published": "1980",
+        "trivia": "Popularizada por Sagan, aunque originalmente le fue atribuida por Sharon Begley en un artículo de Newsweek de 1977.",
+        "category": "Ciencia",
+        "subCategory": "Astronomía"
+      }
+    },
+    {
+      "en": {
+        "quote": "To every thing there is a season, and a time to every purpose under the heaven.",
+        "author": "King Solomon (attributed)",
+        "title": "Ecclesiastes 3:1",
+        "published": "c. 300 BC",
+        "trivia": "This passage served as the direct inspiration for Pete Seeger's hit folk song 'Turn! Turn! Turn!'.",
+        "category": "Scripture",
+        "subCategory": "Biblical Wisdom"
+      },
+      "es": {
+        "quote": "Todo tiene su momento oportuno; hay un tiempo para todo lo que se hace bajo el cielo.",
+        "author": "Rey Salomón (atribuido)",
+        "title": "Eclesiastés 3:1",
+        "published": "c. 300 a.C.",
+        "trivia": "Este pasaje sirvió de inspiración directa para la famosa canción folk 'Turn! Turn! Turn!' de Pete Seeger.",
+        "category": "Escrituras",
+        "subCategory": "Sabiduría Bíblica"
+      }
+    },
+    {
+      "en": {
+        "quote": "I have a dream that my four little children will one day live in a nation where they will not be judged by the color of their skin but by the content of their character.",
+        "author": "Martin Luther King Jr.",
+        "title": "I Have a Dream Speech",
+        "published": "1963",
+        "trivia": "King improvised the 'I have a dream' section after gospel singer Mahalia Jackson shouted from the crowd: 'Tell 'em about the dream, Martin!'",
+        "category": "Speeches",
+        "subCategory": "Civil Rights"
+      },
+      "es": {
+        "quote": "Tengo el sueño de que mis cuatro hijos vivirán un día en una nación donde no serán juzgados por el color de su piel, sino por el contenido de su carácter.",
+        "author": "Martin Luther King Jr.",
+        "title": "Discurso 'Tengo un sueño'",
+        "published": "1963",
+        "trivia": "King improvisó el pasaje de 'Tengo un sueño' cuando la cantante Mahalia Jackson le gritó: '¡Cuéntales sobre el sueño, Martin!'",
+        "category": "Discursos",
+        "subCategory": "Derechos Civiles"
+      }
+    },
+    {
+      "en": {
+        "quote": "I must not fear. Fear is the mind-killer. Fear is the little-death that brings total obliteration.",
+        "author": "Frank Herbert",
+        "title": "Dune",
+        "published": "1965",
+        "trivia": "Known as the 'Litany Against Fear', it was inspired by Zen Buddhist principles and Shakespearean soliloquies.",
+        "category": "Sci-Fi",
+        "subCategory": "Space Opera"
+      },
+      "es": {
+        "quote": "No debo tener miedo. El miedo mata la mente. El miedo es la pequeña muerte que conduce a la destrucción total.",
+        "author": "Frank Herbert",
+        "title": "Dune",
+        "published": "1965",
+        "trivia": "Conocida como la 'Letanía contra el miedo', fue inspirada por preceptos del budismo zen y soliloquios shakespearianos.",
+        "category": "Ciencia Ficción",
+        "subCategory": "Ópera Espacial"
+      }
+    },
+    {
+      "en": {
+        "quote": "Beware; for I am fearless, and therefore powerful.",
+        "author": "Mary Shelley",
+        "title": "Frankenstein; or, The Modern Prometheus",
+        "published": "1818",
+        "trivia": "Shelley was only 18 years old when she began writing the novel during the rainy 'Year Without a Summer' at Lake Geneva.",
+        "category": "Classical Literature",
+        "subCategory": "Gothic Fiction"
+      },
+      "es": {
+        "quote": "Ten cuidado; porque no temo nada y, por tanto, soy poderoso.",
+        "author": "Mary Shelley",
+        "title": "Frankenstein o el moderno Prometeo",
+        "published": "1818",
+        "trivia": "Shelley tenía apenas 18 años cuando empezó a redactar la novela en el lluvioso 'Año sin verano' junto al lago de Ginebra.",
+        "category": "Literatura Clásica",
+        "subCategory": "Ficción Gótica"
+      }
+    },
+    {
+      "en": {
+        "quote": "The truth is rarely pure and never simple.",
+        "author": "Oscar Wilde",
+        "title": "The Importance of Being Earnest",
+        "published": "1895",
+        "trivia": "The play premiered on Valentine's Day 1895 in London and was Wilde's theatrical masterpiece before his downfall.",
+        "category": "Classical Literature",
+        "subCategory": "Satirical Comedy"
+      },
+      "es": {
+        "quote": "La verdad rara vez es pura y nunca es simple.",
+        "author": "Oscar Wilde",
+        "title": "La importancia de llamarse Ernesto",
+        "published": "1895",
+        "trivia": "La obra se estrenó el día de San Valentín de 1895 en Londres y supuso la cumbre cómica de Wilde antes de su juicio.",
+        "category": "Literatura Clásica",
+        "subCategory": "Comedia Satírica"
+      }
+    }
+  ],
+  "presets": {
+    "philosophy": [
+      {
+        "en": {
+          "quote": "The unexamined life is not worth living.",
+          "author": "Socrates",
+          "title": "Apology (by Plato)",
+          "published": "c. 399 BC",
+          "trivia": "Spoken at Socrates' trial where he faced charges of corrupting the youth of Athens.",
+          "category": "Philosophy",
+          "subCategory": "Ancient Greek"
+        },
+        "es": {
+          "quote": "Una vida sin examen no merece la pena ser vivida.",
+          "author": "Sócrates",
+          "title": "Apología de Sócrates (por Platón)",
+          "published": "c. 399 a.C.",
+          "trivia": "Pronunciada durante el juicio donde Sócrates enfrentó cargos por corromper a la juventud ateniense.",
+          "category": "Filosofía",
+          "subCategory": "Griega Clásica"
+        }
+      }
+    ],
+    "science": [
+      {
+        "en": {
+          "quote": "Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less.",
+          "author": "Marie Curie",
+          "title": "Collected Works",
+          "published": "1935",
+          "trivia": "Curie remains the only person to win Nobel Prizes in two different scientific fields: Physics and Chemistry.",
+          "category": "Science",
+          "subCategory": "Physics & Chemistry"
+        },
+        "es": {
+          "quote": "Nada en la vida debe ser temido, solamente comprendido. Ahora es el momento de comprender más, para que podamos temer menos.",
+          "author": "Marie Curie",
+          "title": "Obras reunidas",
+          "published": "1935",
+          "trivia": "Curie sigue siendo la única persona en ganar Premios Nobel en dos ciencias distintas: Física y Química.",
+          "category": "Ciencia",
+          "subCategory": "Física y Química"
+        }
+      }
+    ],
+    "scripture": [
+      {
+        "en": {
+          "quote": "You have a right to perform your prescribed duty, but you are not entitled to the fruits of action.",
+          "author": "Vyasa (attributed)",
+          "title": "Bhagavad Gita",
+          "published": "c. 200 BC",
+          "trivia": "This core concept of Karma Yoga emphasizes acting selflessly without emotional attachment to outcomes.",
+          "category": "Scripture",
+          "subCategory": "Hindu Text"
+        },
+        "es": {
+          "quote": "Tienes derecho únicamente a tu acción, pero nunca a los frutos de ella.",
+          "author": "Vyasa (atribuido)",
+          "title": "Bhagavad-gita",
+          "published": "c. 200 a.C.",
+          "trivia": "Este principio medular del Karma Yoga recalca actuar de forma desinteresada sin apego a los resultados.",
+          "category": "Escrituras",
+          "subCategory": "Texto Hindú"
+        }
+      }
+    ],
+    "speech": [
+      {
+        "en": {
+          "quote": "We shall fight on the beaches, we shall fight on the landing grounds, we shall fight in the fields and in the streets... we shall never surrender.",
+          "author": "Winston Churchill",
+          "title": "We Shall Fight on the Beaches",
+          "published": "1940",
+          "trivia": "Delivered to the House of Commons following the Dunkirk evacuation, unifying British resolve against invasion.",
+          "category": "Speeches",
+          "subCategory": "Wartime Address"
+        },
+        "es": {
+          "quote": "Lucharemos en las playas, lucharemos en los aeródromos, lucharemos en los campos y en las calles... jamás nos rendiremos.",
+          "author": "Winston Churchill",
+          "title": "Lucharemos en las playas",
+          "published": "1940",
+          "trivia": "Pronunciado ante la Cámara de los Comunes tras la evacuación de Dunkerque, afianzando la resistencia británica.",
+          "category": "Discursos",
+          "subCategory": "Discurso Bélico"
+        }
+      }
+    ],
+    "scifi": [
+      {
+        "en": {
+          "quote": "Two possibilities exist: either we are alone in the Universe or we are not. Both are equally terrifying.",
+          "author": "Arthur C. Clarke",
+          "title": "Visions: How Science Will Revolutionize the 21st Century",
+          "published": "1999",
+          "trivia": "Clarke, co-creator of '2001: A Space Odyssey', was also an early proponent of geostationary telecommunications satellites.",
+          "category": "Sci-Fi",
+          "subCategory": "Hard Science Fiction"
+        },
+        "es": {
+          "quote": "Existen dos posibilidades: o estamos solos en el Universo o no lo estamos. Ambas resultan igualmente aterradoras.",
+          "author": "Arthur C. Clarke",
+          "title": "Visiones: Cómo la ciencia revolucionará el siglo XXI",
+          "published": "1999",
+          "trivia": "Clarke, cocreador de '2001: Odisea del espacio', fue además pionero en proponer satélites geosincrónicos de comunicación.",
+          "category": "Ciencia Ficción",
+          "subCategory": "Ciencia Ficción Dura"
+        }
+      }
+    ],
+    "classic": [
+      {
+        "en": {
+          "quote": "There is no greater sorrow than to recall our times of joy in wretchedness.",
+          "author": "Dante Alighieri",
+          "title": "The Divine Comedy (Inferno)",
+          "published": "1320",
+          "trivia": "Spoken by Francesca da Rimini in the Second Circle of Hell; widely adapted across world literature.",
+          "category": "Classical Literature",
+          "subCategory": "Epic Poetry"
+        },
+        "es": {
+          "quote": "No hay mayor dolor que acordarse del tiempo feliz en la desgracia.",
+          "author": "Dante Alighieri",
+          "title": "La Divina Comedia (Infierno)",
+          "published": "1320",
+          "trivia": "Pronunciado por Francesca da Rimini en el segundo círculo del Infierno; citado con frecuencia en la literatura universal.",
+          "category": "Literatura Clásica",
+          "subCategory": "Poesía Épica"
+        }
+      }
+    ]
+  }
+}
