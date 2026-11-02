@@ -2,42 +2,22 @@
   "daily": [
     {
       "en": {
-        "quote": "Not all those who wander are lost.",
-        "author": "J.R.R. Tolkien",
-        "title": "The Fellowship of the Ring",
-        "published": "July 29, 1954",
-        "trivia": "Part of Bilbo Baggins' poem regarding Aragorn.",
-        "category": "Fantasy",
-        "subCategory": "Fiction"
+        "quote": "He who has a why to live can bear almost any how.",
+        "author": "Friedrich Nietzsche",
+        "title": "Twilight of the Idols",
+        "published": "1889",
+        "trivia": "Found in Maxims and Arrows.",
+        "category": "Philosophy",
+        "subCategory": "Non-Fiction"
       },
       "es": {
-        "quote": "No todos los que vagan están perdidos.",
-        "author": "J.R.R. Tolkien",
-        "title": "La Comunidad del Anillo",
-        "published": "29 de julio de 1954",
-        "trivia": "Parte del poema de Bilbo Bolsón sobre Aragorn.",
-        "category": "Fantasía",
-        "subCategory": "Ficción"
-      }
-    },
-    {
-      "en": {
-        "quote": "God does not play dice with the universe.",
-        "author": "Albert Einstein",
-        "title": "Letter to Max Born",
-        "published": "1926",
-        "trivia": "Einstein's objection to quantum probability.",
-        "category": "Science",
-        "subCategory": "Physics"
-      },
-      "es": {
-        "quote": "Dios no juega a los dados con el universo.",
-        "author": "Albert Einstein",
-        "title": "Carta a Max Born",
-        "published": "1926",
-        "trivia": "La objeción de Einstein a la probabilidad cuántica.",
-        "category": "Ciencia",
-        "subCategory": "Física"
+        "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.",
+        "author": "Friedrich Nietzsche",
+        "title": "El crepúsculo de los ídolos",
+        "published": "1889",
+        "trivia": "Encontrado en Máximas y flechas.",
+        "category": "Filosofía",
+        "subCategory": "No Ficción"
       }
     },
     {
@@ -62,22 +42,42 @@
     },
     {
       "en": {
-        "quote": "He who has a why to live can bear almost any how.",
-        "author": "Friedrich Nietzsche",
-        "title": "Twilight of the Idols",
-        "published": "1889",
-        "trivia": "Found in Maxims and Arrows.",
-        "category": "Philosophy",
-        "subCategory": "Non-Fiction"
+        "quote": "Ask not what your country can do for you – ask what you can do for your country.",
+        "author": "John F. Kennedy",
+        "title": "Inaugural Address",
+        "published": "January 20, 1961",
+        "trivia": "Call to civic service in American history.",
+        "category": "Speeches",
+        "subCategory": "Political Oratory"
       },
       "es": {
-        "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.",
-        "author": "Friedrich Nietzsche",
-        "title": "El crepúsculo de los ídolos",
-        "published": "1889",
-        "trivia": "Encontrado en Máximas y flechas.",
-        "category": "Filosofía",
-        "subCategory": "No Ficción"
+        "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.",
+        "author": "John F. Kennedy",
+        "title": "Discurso Inaugural",
+        "published": "20 de enero de 1961",
+        "trivia": "Inspirador llamado al servicio cívico.",
+        "category": "Discursos",
+        "subCategory": "Oratoria Política"
+      }
+    },
+    {
+      "en": {
+        "quote": "Not all those who wander are lost.",
+        "author": "J.R.R. Tolkien",
+        "title": "The Fellowship of the Ring",
+        "published": "July 29, 1954",
+        "trivia": "Part of Bilbo Baggins' poem regarding Aragorn.",
+        "category": "Fantasy",
+        "subCategory": "Fiction"
+      },
+      "es": {
+        "quote": "No todos los que vagan están perdidos.",
+        "author": "J.R.R. Tolkien",
+        "title": "La Comunidad del Anillo",
+        "published": "29 de julio de 1954",
+        "trivia": "Parte del poema de Bilbo Bolsón sobre Aragorn.",
+        "category": "Fantasía",
+        "subCategory": "Ficción"
       }
     },
     {
@@ -122,22 +122,22 @@
     },
     {
       "en": {
-        "quote": "Ask not what your country can do for you – ask what you can do for your country.",
-        "author": "John F. Kennedy",
-        "title": "Inaugural Address",
-        "published": "January 20, 1961",
-        "trivia": "Call to civic service in American history.",
-        "category": "Speeches",
-        "subCategory": "Political Oratory"
+        "quote": "God does not play dice with the universe.",
+        "author": "Albert Einstein",
+        "title": "Letter to Max Born",
+        "published": "1926",
+        "trivia": "Einstein's objection to quantum probability.",
+        "category": "Science",
+        "subCategory": "Physics"
       },
       "es": {
-        "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.",
-        "author": "John F. Kennedy",
-        "title": "Discurso Inaugural",
-        "published": "20 de enero de 1961",
-        "trivia": "Inspirador llamado al servicio cívico.",
-        "category": "Discursos",
-        "subCategory": "Oratoria Política"
+        "quote": "Dios no juega a los dados con el universo.",
+        "author": "Albert Einstein",
+        "title": "Carta a Max Born",
+        "published": "1926",
+        "trivia": "La objeción de Einstein a la probabilidad cuántica.",
+        "category": "Ciencia",
+        "subCategory": "Física"
       }
     }
   ],
