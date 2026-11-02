@@ -2,142 +2,142 @@
   "daily": [
     {
       "en": {
-        "quote": "The happiness of your life depends upon the quality of your thoughts.",
-        "author": "Marcus Aurelius",
-        "title": "Meditations",
-        "published": "c. 180 AD",
-        "trivia": "Marcus Aurelius wrote Meditations in Greek as a private journal for personal guidance while on military campaign.",
-        "category": "Philosophy",
-        "subCategory": "Stoicism"
-      },
-      "es": {
-        "quote": "La felicidad de tu vida depende de la calidad de tus pensamientos.",
-        "author": "Marco Aurelio",
-        "title": "Meditaciones",
-        "published": "c. 180 d.C.",
-        "trivia": "Marco Aurelio escribió las Meditaciones en griego como un diario íntimo de guía personal durante sus campañas militares.",
-        "category": "Filosofía",
-        "subCategory": "Estoicismo"
-      }
-    },
-    {
-      "en": {
-        "quote": "Somewhere, something incredible is waiting to be known.",
-        "author": "Carl Sagan",
-        "title": "Cosmos",
-        "published": "1980",
-        "trivia": "The accompanying television series Cosmos became one of the most celebrated and widely watched science documentaries in history.",
-        "category": "Science",
-        "subCategory": "Astronomy"
-      },
-      "es": {
-        "quote": "En algún lugar, algo increíble está esperando ser conocido.",
-        "author": "Carl Sagan",
-        "title": "Cosmos",
-        "published": "1980",
-        "trivia": "La serie de televisión Cosmos se convirtió en uno de los documentales científicos más vistos y celebrados de la historia.",
-        "category": "Ciencia",
-        "subCategory": "Astronomía"
-      }
-    },
-    {
-      "en": {
-        "quote": "To everything there is a season, and a time to every purpose under heaven.",
-        "author": "King Solomon",
-        "title": "Ecclesiastes",
-        "published": "c. 3rd Century BC",
-        "trivia": "This poetic passage directly inspired the 1965 international folk-rock hit 'Turn! Turn! Turn!' by The Byrds.",
-        "category": "Scripture",
-        "subCategory": "Wisdom Literature"
-      },
-      "es": {
-        "quote": "Todo tiene su tiempo, y todo lo que se quiere debajo del cielo tiene su hora.",
-        "author": "Rey Salomón",
-        "title": "Eclesiastés",
-        "published": "c. Siglo III a.C.",
-        "trivia": "Este pasaje poético inspiró directamente el éxito internacional de folk-rock de 1965 'Turn! Turn! Turn!' de The Byrds.",
-        "category": "Escritura",
-        "subCategory": "Literatura Sapiencial"
-      }
-    },
-    {
-      "en": {
-        "quote": "Darkness cannot drive out darkness; only light can do that. Hate cannot drive out hate; only love can do that.",
-        "author": "Martin Luther King Jr.",
-        "title": "Strength to Love",
-        "published": "1963",
-        "trivia": "This quote originated from a sermon delivered in 1957 before being published in King's landmark collection of addresses.",
-        "category": "Speech",
-        "subCategory": "Civil Rights"
-      },
-      "es": {
-        "quote": "La oscuridad no puede expulsar a la oscuridad; solo la luz puede hacer eso. El odio no puede expulsar al odio; solo el amor puede hacer eso.",
-        "author": "Martin Luther King Jr.",
-        "title": "La fuerza de amar",
-        "published": "1963",
-        "trivia": "Esta cita se originó en un sermón pronunciado en 1957 antes de ser incluida en la emblemática colección de discursos de King.",
-        "category": "Discurso",
-        "subCategory": "Derechos Civiles"
-      }
-    },
-    {
-      "en": {
-        "quote": "I must not fear. Fear is the mind-killer. Fear is the little-death that brings total obliteration.",
-        "author": "Frank Herbert",
-        "title": "Dune",
-        "published": "1965",
-        "trivia": "Known as the Litany Against Fear, this incantation was created by the Bene Gesserit order to maintain absolute mental focus.",
-        "category": "Sci-Fi",
-        "subCategory": "Space Opera"
-      },
-      "es": {
-        "quote": "No debo tener miedo. El miedo es el asesino de la mente. El miedo es la pequeña muerte que conduce a la destrucción total.",
-        "author": "Frank Herbert",
-        "title": "Dune",
-        "published": "1965",
-        "trivia": "Conocida como la Letanía contra el miedo, este mantra fue creado por la orden Bene Gesserit para mantener un enfoque mental absoluto.",
-        "category": "Ciencia Ficción",
-        "subCategory": "Ópera Espacial"
-      }
-    },
-    {
-      "en": {
-        "quote": "Finally, from so little sleeping and so much reading, his brain dried up and he went completely out of his mind.",
+        "quote": "In a village of La Mancha, the name of which I have no desire to call to mind.",
         "author": "Miguel de Cervantes",
         "title": "Don Quixote",
         "published": "1605",
-        "trivia": "Don Quixote is widely considered the first modern novel and one of the most translated literary works in history.",
-        "category": "Classic",
-        "subCategory": "Picaresque Novel"
+        "trivia": "The iconic opening line of Cervantes' masterpiece.",
+        "category": "Classic Literature",
+        "subCategory": "Fiction"
       },
       "es": {
-        "quote": "Del poco dormir y del mucho leer, se le secó el celebro de manera que vino a perder el juicio.",
+        "quote": "En un lugar de la Mancha, de cuyo nombre no quiero acordarme.",
         "author": "Miguel de Cervantes",
         "title": "Don Quijote de la Mancha",
         "published": "1605",
-        "trivia": "Don Quijote es considerado la primera novela moderna y una de las obras literarias más traducidas de la historia.",
-        "category": "Clásico",
-        "subCategory": "Novela Picaresca"
+        "trivia": "La famosísima frase inicial de Cervantes.",
+        "category": "Literatura Clásica",
+        "subCategory": "Ficción"
       }
     },
     {
       "en": {
-        "quote": "We suffer more often in imagination than in reality.",
-        "author": "Seneca",
-        "title": "Letters from a Stoic",
-        "published": "c. 65 AD",
-        "trivia": "Seneca penned this observation in Letter XIII to his friend Lucilius, counseling him against excessive anxiety over future events.",
-        "category": "Philosophy",
-        "subCategory": "Stoicism"
+        "quote": "Not all those who wander are lost.",
+        "author": "J.R.R. Tolkien",
+        "title": "The Fellowship of the Ring",
+        "published": "July 29, 1954",
+        "trivia": "Part of Bilbo Baggins' poem regarding Aragorn.",
+        "category": "Fantasy",
+        "subCategory": "Fiction"
       },
       "es": {
-        "quote": "Sufrimos más a menudo en la imaginación que en la realidad.",
-        "author": "Séneca",
-        "title": "Cartas a Lucilio",
-        "published": "c. 65 d.C.",
-        "trivia": "Séneca escribió esta reflexión en la Carta XIII a su amigo Lucilio, aconsejándole contra la ansiedad desmedida por eventos futuros.",
+        "quote": "No todos los que vagan están perdidos.",
+        "author": "J.R.R. Tolkien",
+        "title": "La Comunidad del Anillo",
+        "published": "29 de julio de 1954",
+        "trivia": "Parte del poema de Bilbo Bolsón sobre Aragorn.",
+        "category": "Fantasía",
+        "subCategory": "Ficción"
+      }
+    },
+    {
+      "en": {
+        "quote": "He who has a why to live can bear almost any how.",
+        "author": "Friedrich Nietzsche",
+        "title": "Twilight of the Idols",
+        "published": "1889",
+        "trivia": "Found in Maxims and Arrows.",
+        "category": "Philosophy",
+        "subCategory": "Non-Fiction"
+      },
+      "es": {
+        "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.",
+        "author": "Friedrich Nietzsche",
+        "title": "El crepúsculo de los ídolos",
+        "published": "1889",
+        "trivia": "Encontrado en Máximas y flechas.",
         "category": "Filosofía",
-        "subCategory": "Estoicismo"
+        "subCategory": "No Ficción"
+      }
+    },
+    {
+      "en": {
+        "quote": "God does not play dice with the universe.",
+        "author": "Albert Einstein",
+        "title": "Letter to Max Born",
+        "published": "1926",
+        "trivia": "Einstein's objection to quantum probability.",
+        "category": "Science",
+        "subCategory": "Physics"
+      },
+      "es": {
+        "quote": "Dios no juega a los dados con el universo.",
+        "author": "Albert Einstein",
+        "title": "Carta a Max Born",
+        "published": "1926",
+        "trivia": "La objeción de Einstein a la probabilidad cuántica.",
+        "category": "Ciencia",
+        "subCategory": "Física"
+      }
+    },
+    {
+      "en": {
+        "quote": "Ask not what your country can do for you – ask what you can do for your country.",
+        "author": "John F. Kennedy",
+        "title": "Inaugural Address",
+        "published": "January 20, 1961",
+        "trivia": "Call to civic service in American history.",
+        "category": "Speeches",
+        "subCategory": "Political Oratory"
+      },
+      "es": {
+        "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.",
+        "author": "John F. Kennedy",
+        "title": "Discurso Inaugural",
+        "published": "20 de enero de 1961",
+        "trivia": "Inspirador llamado al servicio cívico.",
+        "category": "Discursos",
+        "subCategory": "Oratoria Política"
+      }
+    },
+    {
+      "en": {
+        "quote": "Let us cut the living child in two, and give half to the one, and half to the other.",
+        "author": "King Solomon",
+        "title": "First Book of Kings",
+        "published": "c. 950 BC",
+        "trivia": "Solomon's famous judgment of maternal wisdom.",
+        "category": "Scripture",
+        "subCategory": "Ancient History"
+      },
+      "es": {
+        "quote": "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.",
+        "author": "Rey Salomón",
+        "title": "Primer Libro de los Reyes",
+        "published": "c. 950 a. C.",
+        "trivia": "El célebre juicio de Salomón sobre la sabiduría materna.",
+        "category": "Escritura",
+        "subCategory": "Historia Antigua"
+      }
+    },
+    {
+      "en": {
+        "quote": "Real courage is when you know you're licked before you begin.",
+        "author": "Harper Lee",
+        "title": "To Kill a Mockingbird",
+        "published": "July 11, 1960",
+        "trivia": "Spoken by Atticus Finch in Chapter 11.",
+        "category": "Classic Literature",
+        "subCategory": "Fiction"
+      },
+      "es": {
+        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar.",
+        "author": "Harper Lee",
+        "title": "Matar a un ruiseñor",
+        "published": "11 de julio de 1960",
+        "trivia": "Dicho por Atticus Finch en el capítulo 11.",
+        "category": "Literatura Clásica",
+        "subCategory": "Ficción"
       }
     }
   ],
@@ -145,152 +145,152 @@
     "philosophy": [
       {
         "en": {
-          "quote": "The happiness of your life depends upon the quality of your thoughts.",
-          "author": "Marcus Aurelius",
-          "title": "Meditations",
-          "published": "c. 180 AD",
-          "trivia": "Marcus Aurelius wrote Meditations in Greek as a private journal for personal guidance while on military campaign.",
+          "quote": "He who has a why to live can bear almost any how.",
+          "author": "Friedrich Nietzsche",
+          "title": "Twilight of the Idols",
+          "published": "1889",
+          "trivia": "Found in Maxims and Arrows.",
           "category": "Philosophy",
-          "subCategory": "Stoicism"
+          "subCategory": "Non-Fiction"
         },
         "es": {
-          "quote": "La felicidad de tu vida depende de la calidad de tus pensamientos.",
-          "author": "Marco Aurelio",
-          "title": "Meditaciones",
-          "published": "c. 180 d.C.",
-          "trivia": "Marco Aurelio escribió las Meditaciones en griego como un diario íntimo de guía personal durante sus campañas militares.",
+          "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.",
+          "author": "Friedrich Nietzsche",
+          "title": "El crepúsculo de los ídolos",
+          "published": "1889",
+          "trivia": "Encontrado en Máximas y flechas.",
           "category": "Filosofía",
-          "subCategory": "Estoicismo"
-        }
-      },
-      {
-        "en": {
-          "quote": "We suffer more often in imagination than in reality.",
-          "author": "Seneca",
-          "title": "Letters from a Stoic",
-          "published": "c. 65 AD",
-          "trivia": "Seneca penned this observation in Letter XIII to his friend Lucilius, counseling him against excessive anxiety over future events.",
-          "category": "Philosophy",
-          "subCategory": "Stoicism"
-        },
-        "es": {
-          "quote": "Sufrimos más a menudo en la imaginación que en la realidad.",
-          "author": "Séneca",
-          "title": "Cartas a Lucilio",
-          "published": "c. 65 d.C.",
-          "trivia": "Séneca escribió esta reflexión en la Carta XIII a su amigo Lucilio, aconsejándole contra la ansiedad desmedida por eventos futuros.",
-          "category": "Filosofía",
-          "subCategory": "Estoicismo"
+          "subCategory": "No Ficción"
         }
       }
     ],
     "science": [
       {
         "en": {
-          "quote": "Somewhere, something incredible is waiting to be known.",
-          "author": "Carl Sagan",
-          "title": "Cosmos",
-          "published": "1980",
-          "trivia": "The accompanying television series Cosmos became one of the most celebrated and widely watched science documentaries in history.",
+          "quote": "God does not play dice with the universe.",
+          "author": "Albert Einstein",
+          "title": "Letter to Max Born",
+          "published": "1926",
+          "trivia": "Einstein's objection to quantum probability.",
           "category": "Science",
-          "subCategory": "Astronomy"
+          "subCategory": "Physics"
         },
         "es": {
-          "quote": "En algún lugar, algo increíble está esperando ser conocido.",
-          "author": "Carl Sagan",
-          "title": "Cosmos",
-          "published": "1980",
-          "trivia": "La serie de televisión Cosmos se convirtió en uno de los documentales científicos más vistos y celebrados de la historia.",
+          "quote": "Dios no juega a los dados con el universo.",
+          "author": "Albert Einstein",
+          "title": "Carta a Max Born",
+          "published": "1926",
+          "trivia": "La objeción de Einstein a la probabilidad cuántica.",
           "category": "Ciencia",
-          "subCategory": "Astronomía"
+          "subCategory": "Física"
         }
       }
     ],
     "scripture": [
       {
         "en": {
-          "quote": "To everything there is a season, and a time to every purpose under heaven.",
+          "quote": "Let us cut the living child in two, and give half to the one, and half to the other.",
           "author": "King Solomon",
-          "title": "Ecclesiastes",
-          "published": "c. 3rd Century BC",
-          "trivia": "This poetic passage directly inspired the 1965 international folk-rock hit 'Turn! Turn! Turn!' by The Byrds.",
+          "title": "First Book of Kings",
+          "published": "c. 950 BC",
+          "trivia": "Solomon's famous judgment of maternal wisdom.",
           "category": "Scripture",
-          "subCategory": "Wisdom Literature"
+          "subCategory": "Ancient History"
         },
         "es": {
-          "quote": "Todo tiene su tiempo, y todo lo que se quiere debajo del cielo tiene su hora.",
+          "quote": "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.",
           "author": "Rey Salomón",
-          "title": "Eclesiastés",
-          "published": "c. Siglo III a.C.",
-          "trivia": "Este pasaje poético inspiró directamente el éxito internacional de folk-rock de 1965 'Turn! Turn! Turn!' de The Byrds.",
+          "title": "Primer Libro de los Reyes",
+          "published": "c. 950 a. C.",
+          "trivia": "El célebre juicio de Salomón sobre la sabiduría materna.",
           "category": "Escritura",
-          "subCategory": "Literatura Sapiencial"
+          "subCategory": "Historia Antigua"
         }
       }
     ],
     "speech": [
       {
         "en": {
-          "quote": "Darkness cannot drive out darkness; only light can do that. Hate cannot drive out hate; only love can do that.",
-          "author": "Martin Luther King Jr.",
-          "title": "Strength to Love",
-          "published": "1963",
-          "trivia": "This quote originated from a sermon delivered in 1957 before being published in King's landmark collection of addresses.",
-          "category": "Speech",
-          "subCategory": "Civil Rights"
+          "quote": "Ask not what your country can do for you – ask what you can do for your country.",
+          "author": "John F. Kennedy",
+          "title": "Inaugural Address",
+          "published": "January 20, 1961",
+          "trivia": "Call to civic service in American history.",
+          "category": "Speeches",
+          "subCategory": "Political Oratory"
         },
         "es": {
-          "quote": "La oscuridad no puede expulsar a la oscuridad; solo la luz puede hacer eso. El odio no puede expulsar al odio; solo el amor puede hacer eso.",
-          "author": "Martin Luther King Jr.",
-          "title": "La fuerza de amar",
-          "published": "1963",
-          "trivia": "Esta cita se originó en un sermón pronunciado en 1957 antes de ser incluida en la emblemática colección de discursos de King.",
-          "category": "Discurso",
-          "subCategory": "Derechos Civiles"
+          "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.",
+          "author": "John F. Kennedy",
+          "title": "Discurso Inaugural",
+          "published": "20 de enero de 1961",
+          "trivia": "Inspirador llamado al servicio cívico.",
+          "category": "Discursos",
+          "subCategory": "Oratoria Política"
         }
       }
     ],
     "scifi": [
       {
         "en": {
-          "quote": "I must not fear. Fear is the mind-killer. Fear is the little-death that brings total obliteration.",
-          "author": "Frank Herbert",
-          "title": "Dune",
-          "published": "1965",
-          "trivia": "Known as the Litany Against Fear, this incantation was created by the Bene Gesserit order to maintain absolute mental focus.",
-          "category": "Sci-Fi",
-          "subCategory": "Space Opera"
+          "quote": "Not all those who wander are lost.",
+          "author": "J.R.R. Tolkien",
+          "title": "The Fellowship of the Ring",
+          "published": "July 29, 1954",
+          "trivia": "Part of Bilbo Baggins' poem regarding Aragorn.",
+          "category": "Fantasy",
+          "subCategory": "Fiction"
         },
         "es": {
-          "quote": "No debo tener miedo. El miedo es el asesino de la mente. El miedo es la pequeña muerte que conduce a la destrucción total.",
-          "author": "Frank Herbert",
-          "title": "Dune",
-          "published": "1965",
-          "trivia": "Conocida como la Letanía contra el miedo, este mantra fue creado por la orden Bene Gesserit para mantener un enfoque mental absoluto.",
-          "category": "Ciencia Ficción",
-          "subCategory": "Ópera Espacial"
+          "quote": "No todos los que vagan están perdidos.",
+          "author": "J.R.R. Tolkien",
+          "title": "La Comunidad del Anillo",
+          "published": "29 de julio de 1954",
+          "trivia": "Parte del poema de Bilbo Bolsón sobre Aragorn.",
+          "category": "Fantasía",
+          "subCategory": "Ficción"
         }
       }
     ],
     "classic": [
       {
         "en": {
-          "quote": "Finally, from so little sleeping and so much reading, his brain dried up and he went completely out of his mind.",
+          "quote": "Real courage is when you know you're licked before you begin.",
+          "author": "Harper Lee",
+          "title": "To Kill a Mockingbird",
+          "published": "July 11, 1960",
+          "trivia": "Spoken by Atticus Finch in Chapter 11.",
+          "category": "Classic Literature",
+          "subCategory": "Fiction"
+        },
+        "es": {
+          "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar.",
+          "author": "Harper Lee",
+          "title": "Matar a un ruiseñor",
+          "published": "11 de julio de 1960",
+          "trivia": "Dicho por Atticus Finch en el capítulo 11.",
+          "category": "Literatura Clásica",
+          "subCategory": "Ficción"
+        }
+      },
+      {
+        "en": {
+          "quote": "In a village of La Mancha, the name of which I have no desire to call to mind.",
           "author": "Miguel de Cervantes",
           "title": "Don Quixote",
           "published": "1605",
-          "trivia": "Don Quixote is widely considered the first modern novel and one of the most translated literary works in history.",
-          "category": "Classic",
-          "subCategory": "Picaresque Novel"
+          "trivia": "The iconic opening line of Cervantes' masterpiece.",
+          "category": "Classic Literature",
+          "subCategory": "Fiction"
         },
         "es": {
-          "quote": "Del poco dormir y del mucho leer, se le secó el celebro de manera que vino a perder el juicio.",
+          "quote": "En un lugar de la Mancha, de cuyo nombre no quiero acordarme.",
           "author": "Miguel de Cervantes",
           "title": "Don Quijote de la Mancha",
           "published": "1605",
-          "trivia": "Don Quijote es considerado la primera novela moderna y una de las obras literarias más traducidas de la historia.",
-          "category": "Clásico",
-          "subCategory": "Novela Picaresca"
+          "trivia": "La famosísima frase inicial de Cervantes.",
+          "category": "Literatura Clásica",
+          "subCategory": "Ficción"
         }
       }
     ]
