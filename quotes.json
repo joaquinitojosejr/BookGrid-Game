@@ -2,26 +2,6 @@
   "daily": [
     {
       "en": {
-        "quote": "In a village of La Mancha, the name of which I have no desire to call to mind.",
-        "author": "Miguel de Cervantes",
-        "title": "Don Quixote",
-        "published": "1605",
-        "trivia": "The iconic opening line of Cervantes' masterpiece.",
-        "category": "Classic Literature",
-        "subCategory": "Fiction"
-      },
-      "es": {
-        "quote": "En un lugar de la Mancha, de cuyo nombre no quiero acordarme.",
-        "author": "Miguel de Cervantes",
-        "title": "Don Quijote de la Mancha",
-        "published": "1605",
-        "trivia": "La famosísima frase inicial de Cervantes.",
-        "category": "Literatura Clásica",
-        "subCategory": "Ficción"
-      }
-    },
-    {
-      "en": {
         "quote": "Not all those who wander are lost.",
         "author": "J.R.R. Tolkien",
         "title": "The Fellowship of the Ring",
@@ -37,6 +17,46 @@
         "published": "29 de julio de 1954",
         "trivia": "Parte del poema de Bilbo Bolsón sobre Aragorn.",
         "category": "Fantasía",
+        "subCategory": "Ficción"
+      }
+    },
+    {
+      "en": {
+        "quote": "God does not play dice with the universe.",
+        "author": "Albert Einstein",
+        "title": "Letter to Max Born",
+        "published": "1926",
+        "trivia": "Einstein's objection to quantum probability.",
+        "category": "Science",
+        "subCategory": "Physics"
+      },
+      "es": {
+        "quote": "Dios no juega a los dados con el universo.",
+        "author": "Albert Einstein",
+        "title": "Carta a Max Born",
+        "published": "1926",
+        "trivia": "La objeción de Einstein a la probabilidad cuántica.",
+        "category": "Ciencia",
+        "subCategory": "Física"
+      }
+    },
+    {
+      "en": {
+        "quote": "In a village of La Mancha, the name of which I have no desire to call to mind.",
+        "author": "Miguel de Cervantes",
+        "title": "Don Quixote",
+        "published": "1605",
+        "trivia": "The iconic opening line of Cervantes' masterpiece.",
+        "category": "Classic Literature",
+        "subCategory": "Fiction"
+      },
+      "es": {
+        "quote": "En un lugar de la Mancha, de cuyo nombre no quiero acordarme.",
+        "author": "Miguel de Cervantes",
+        "title": "Don Quijote de la Mancha",
+        "published": "1605",
+        "trivia": "La famosísima frase inicial de Cervantes.",
+        "category": "Literatura Clásica",
         "subCategory": "Ficción"
       }
     },
@@ -62,42 +82,22 @@
     },
     {
       "en": {
-        "quote": "God does not play dice with the universe.",
-        "author": "Albert Einstein",
-        "title": "Letter to Max Born",
-        "published": "1926",
-        "trivia": "Einstein's objection to quantum probability.",
-        "category": "Science",
-        "subCategory": "Physics"
+        "quote": "Real courage is when you know you're licked before you begin.",
+        "author": "Harper Lee",
+        "title": "To Kill a Mockingbird",
+        "published": "July 11, 1960",
+        "trivia": "Spoken by Atticus Finch in Chapter 11.",
+        "category": "Classic Literature",
+        "subCategory": "Fiction"
       },
       "es": {
-        "quote": "Dios no juega a los dados con el universo.",
-        "author": "Albert Einstein",
-        "title": "Carta a Max Born",
-        "published": "1926",
-        "trivia": "La objeción de Einstein a la probabilidad cuántica.",
-        "category": "Ciencia",
-        "subCategory": "Física"
-      }
-    },
-    {
-      "en": {
-        "quote": "Ask not what your country can do for you – ask what you can do for your country.",
-        "author": "John F. Kennedy",
-        "title": "Inaugural Address",
-        "published": "January 20, 1961",
-        "trivia": "Call to civic service in American history.",
-        "category": "Speeches",
-        "subCategory": "Political Oratory"
-      },
-      "es": {
-        "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.",
-        "author": "John F. Kennedy",
-        "title": "Discurso Inaugural",
-        "published": "20 de enero de 1961",
-        "trivia": "Inspirador llamado al servicio cívico.",
-        "category": "Discursos",
-        "subCategory": "Oratoria Política"
+        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar.",
+        "author": "Harper Lee",
+        "title": "Matar a un ruiseñor",
+        "published": "11 de julio de 1960",
+        "trivia": "Dicho por Atticus Finch en el capítulo 11.",
+        "category": "Literatura Clásica",
+        "subCategory": "Ficción"
       }
     },
     {
@@ -122,22 +122,22 @@
     },
     {
       "en": {
-        "quote": "Real courage is when you know you're licked before you begin.",
-        "author": "Harper Lee",
-        "title": "To Kill a Mockingbird",
-        "published": "July 11, 1960",
-        "trivia": "Spoken by Atticus Finch in Chapter 11.",
-        "category": "Classic Literature",
-        "subCategory": "Fiction"
+        "quote": "Ask not what your country can do for you – ask what you can do for your country.",
+        "author": "John F. Kennedy",
+        "title": "Inaugural Address",
+        "published": "January 20, 1961",
+        "trivia": "Call to civic service in American history.",
+        "category": "Speeches",
+        "subCategory": "Political Oratory"
       },
       "es": {
-        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar.",
-        "author": "Harper Lee",
-        "title": "Matar a un ruiseñor",
-        "published": "11 de julio de 1960",
-        "trivia": "Dicho por Atticus Finch en el capítulo 11.",
-        "category": "Literatura Clásica",
-        "subCategory": "Ficción"
+        "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.",
+        "author": "John F. Kennedy",
+        "title": "Discurso Inaugural",
+        "published": "20 de enero de 1961",
+        "trivia": "Inspirador llamado al servicio cívico.",
+        "category": "Discursos",
+        "subCategory": "Oratoria Política"
       }
     }
   ],
