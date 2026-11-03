@@ -1561,7 +1561,7 @@
       ctx.scale(scale, scale);
 
       // 1. Solid Dark Background
-      ctx.fillStyle = '#d3d3d3';
+      ctx.fillStyle = '#0f172a';
       ctx.fillRect(0, 0, width, height);
 
       // 2. High-Contrast Outer Gold Border
@@ -1587,13 +1587,13 @@
       
       letters.forEach(l => {
         ctx.fillStyle = l.color;
-        ctx.fillText(1.char, titleX, 40);
-        titleX += ctx.measureText(1.char).width;
+        ctx.fillText(l.char, titleX, 40);
+        titleX += ctx.measureText(l.char).width;
       });
 
       // ® Symbol
-      ctx.font = '700 24px "Inter", Arial, sans-serif';
-      ctx.fillStyle = '#000000';
+      ctx.font = '700 11px "Inter", Arial, sans-serif';
+      ctx.fillStyle = '#fbbf24';
       ctx.fillText('®', titleX + 4, 30);
 
       // 4. Puzzle Number / Date ID
