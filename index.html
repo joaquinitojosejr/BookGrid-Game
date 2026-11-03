@@ -1033,17 +1033,29 @@
       currentGameMode = 'daily';
       document.getElementById('mode-text').innerText = t('dailyChallenge');
 
+          function getTodayUTCString() {
+      const now = new Date();
+      const year = now.getUTCFullYear();
+      const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(now.getUTCDate()).padStart(2, '0');
+      return `${year}${month}${day}`;
+    }
+
+    function initDailyGame() {
+      currentGameMode = 'daily';
+      document.getElementById('mode-text').innerText = t('dailyChallenge');
+
+      // True Day-Since-Epoch math: advances by exactly 1 every calendar day globally
+      const now = new Date();
+      const utcDate = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+      const dayIndex = Math.floor(utcDate / (1000 * 60 * 60 * 24));
+      
       const todayStr = getTodayUTCString();
       const lockKey = `bookgrid_daily_solved_${currentLang}_${todayStr}`;
       const savedData = localStorage.getItem(lockKey);
-
-      let dateHash = 0;
-      for (let i = 0; i < todayStr.length; i++) {
-        dateHash += todayStr.charCodeAt(i);
-      }
       
       const dailyPool = GAME_DATA.daily || FALLBACK_PAYLOAD.daily;
-      const masterObj = dailyPool[dateHash % dailyPool.length];
+      const masterObj = dailyPool[dayIndex % dailyPool.length];
       const quoteObj = masterObj[currentLang] || masterObj['en'];
 
       targetQuote = quoteObj.quote;
