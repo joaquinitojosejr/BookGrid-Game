@@ -31,7 +31,7 @@ FALLBACK_MASTER_LIBRARY = [
     {
         "en": { "quote": "He who has a why to live can bear almost any how.", "author": "Friedrich Nietzsche", "title": "Twilight of the Idols", "published": "1889", "trivia": "Found in Maxims and Arrows.", "category": "Philosophy", "subCategory": "Non-Fiction" },
         "es": { "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", "author": "Friedrich Nietzsche", "title": "El crepúsculo de los ídolos", "published": "1889", "trivia": "Encontrado en Máximas y flechas.", "category": "Filosofía", "subCategory": "No Ficción" }
-    ]
+    }
 ]
 
 def generate_via_ai(api_key):
