@@ -31,54 +31,28 @@ FALLBACK_MASTER_LIBRARY = [
     {
         "en": { "quote": "He who has a why to live can bear almost any how.", "author": "Friedrich Nietzsche", "title": "Twilight of the Idols", "published": "1889", "trivia": "Found in Maxims and Arrows.", "category": "Philosophy", "subCategory": "Non-Fiction" },
         "es": { "quote": "Quien tiene un porqué para vivir puede soportar casi cualquier cómo.", "author": "Friedrich Nietzsche", "title": "El crepúsculo de los ídolos", "published": "1889", "trivia": "Encontrado en Máximas y flechas.", "category": "Filosofía", "subCategory": "No Ficción" }
-    }
+    ]
 ]
-
-FALLBACK_PRESETS = {
-    "philosophy": [FALLBACK_MASTER_LIBRARY[6]],
-    "science": [FALLBACK_MASTER_LIBRARY[3]],
-    "scripture": [FALLBACK_MASTER_LIBRARY[4]],
-    "speech": [FALLBACK_MASTER_LIBRARY[5]],
-    "scifi": [FALLBACK_MASTER_LIBRARY[1]],
-    "classic": [FALLBACK_MASTER_LIBRARY[0], FALLBACK_MASTER_LIBRARY[2]]
-}
 
 def generate_via_ai(api_key):
     from google import genai
     client = genai.Client(api_key=api_key)
     
     prompt = """
-    Generate a valid JSON object containing EXACTLY 7 unique quotes total spanning classical literature, philosophy, science, scripture, speeches, and sci-fi.
+    Generate a valid JSON array containing EXACTLY 7 NEW, unique literary quotes spanning classical literature, philosophy, science, scripture, speeches, and sci-fi.
     Each quote MUST be provided in both English ('en') and Spanish ('es').
-
-    Instructions:
-    - Generate EXACTLY 7 unique quote objects in total.
-    - Put all 7 quotes inside the 'daily' array.
-    - Categorize those exact same 7 quotes into the arrays inside 'presets' (philosophy, science, scripture, speech, scifi, classic).
-    - DO NOT generate extra quotes for the presets section. Reuse the 7 quotes from 'daily'.
-
-    Strict JSON structure:
-    {
-      "daily": [
-        {
-          "en": { "quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..." },
-          "es": { "quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..." }
-        }
-      ],
-      "presets": {
-        "philosophy": [],
-        "science": [],
-        "scripture": [],
-        "speech": [],
-        "scifi": [],
-        "classic": []
+    
+    Strict JSON structure (Return ONLY a raw JSON array of objects, no markdown formatting):
+    [
+      {
+        "en": { "quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..." },
+        "es": { "quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..." }
       }
-    }
-    Output valid raw JSON only without markdown formatting blocks.
+    ]
     """
     
     response = client.models.generate_content(
-        model='gemini-3.8-flash',
+        model='gemini-2.5-flash',
         contents=prompt,
     )
     
@@ -93,36 +67,68 @@ def generate_via_ai(api_key):
         
     return json.loads(raw_text)
 
-def generate_via_fallback():
-    print("Using built-in static seed library fallback...")
-    daily_selection = random.sample(FALLBACK_MASTER_LIBRARY, min(7, len(FALLBACK_MASTER_LIBRARY)))
-    return {
-        "daily": daily_selection,
-        "presets": FALLBACK_PRESETS
-    }
-
 def main():
     api_key = os.environ.get("GEMINI_API_KEY")
-    payload = None
+    output_path = os.path.join(os.path.dirname(__file__), '..', 'quotes.json')
+    
+    # 1. Load existing quotes.json so we never lose historical progress
+    existing_data = {"daily": [], "presets": {}}
+    if os.path.exists(output_path):
+        try:
+            with open(output_path, 'r', encoding='utf-8') as f:
+                loaded = json.load(f)
+                if isinstance(loaded, dict) and "daily" in loaded:
+                    existing_data = loaded
+        except Exception as e:
+            print(f"Warning: Could not read existing quotes.json ({e}). Starting fresh archive.")
 
+    new_quotes = []
     if api_key:
         try:
             print("Attempting AI quote generation via Gemini API...")
-            payload = generate_via_ai(api_key)
-            print("Successfully generated AI quotes payload.")
+            new_quotes = generate_via_ai(api_key)
+            print(f"Successfully generated {len(new_quotes)} new AI quotes.")
         except Exception as e:
-            print(f"AI Generation failed ({e}). Falling back to static seeds.")
-            payload = generate_via_fallback()
+            print(f"AI Generation failed ({e}). Skipping AI injection for this cycle.")
     else:
-        print("No GEMINI_API_KEY found. Falling back to static seed pool.")
-        payload = generate_via_fallback()
+        print("No GEMINI_API_KEY found in environment secrets. Skipping automated fetch.")
 
-    output_path = os.path.join(os.path.dirname(__file__), '..', 'quotes.json')
+    # 2. Append new quotes safely, avoiding exact duplicate quotes
+    existing_quotes_texts = {item['en']['quote'] for item in existing_data["daily"]}
+    
+    added_count = 0
+    for q in new_quotes:
+        if 'en' in q and 'quote' in q['en']:
+            if q['en']['quote'] not in existing_quotes_texts:
+                existing_data["daily"].append(q)
+                existing_quotes_texts.add(q['en']['quote'])
+                added_count += 1
+
+    # If the file was completely empty, seed it with fallback items first
+    if not existing_data["daily"]:
+        existing_data["daily"] = FALLBACK_MASTER_LIBRARY
+        added_count = len(FALLBACK_MASTER_LIBRARY)
+
+    # Rebuild simple presets dynamically from the massive cumulative pool
+    existing_data["presets"] = {
+        "philosophy": [q for q in existing_data["daily"] if q['en'].get('category') == 'Philosophy'],
+        "science": [q for q in existing_data["daily"] if q['en'].get('category') == 'Science'],
+        "scripture": [q for q in existing_data["daily"] if q['en'].get('category') == 'Scripture'],
+        "speech": [q for q in existing_data["daily"] if q['en'].get('category') == 'Speeches'],
+        "scifi": [q for q in existing_data["daily"] if q['en'].get('category') == 'Sci-Fi' or q['en'].get('category'] == 'Fantasy'],
+        "classic": [q for q in existing_data["daily"] if 'Classic' in q['en'].get('category', '')]
+    }
+
+    # Fallback for empty categories so UI dropdowns don't break
+    for cat in ["philosophy", "science", "scripture", "speech", "scifi", "classic"]:
+        if not existing_data["presets"][cat]:
+            existing_data["presets"][cat] = [existing_data["daily"][0]]
+
+    # 3. Save the cumulative expanded file back out
     with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+        json.dump(existing_data, f, ensure_ascii=False, indent=2)
         
-    print(f"Successfully created payload at: {output_path}")
+    print(f"Successfully updated archive! Total cumulative quotes in pool: {len(existing_data['daily'])} (Added {added_count} new ones). Saved to: {output_path}")
 
 if __name__ == "__main__":
     main()
-
