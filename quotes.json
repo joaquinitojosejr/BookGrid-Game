@@ -2,6 +2,26 @@
   "daily": [
     {
       "en": {
+        "quote": "Ask not what your country can do for you – ask what you can do for your country.",
+        "author": "John F. Kennedy",
+        "title": "Inaugural Address",
+        "published": "January 20, 1961",
+        "trivia": "Call to civic service in American history.",
+        "category": "Speeches",
+        "subCategory": "Political Oratory"
+      },
+      "es": {
+        "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.",
+        "author": "John F. Kennedy",
+        "title": "Discurso Inaugural",
+        "published": "20 de enero de 1961",
+        "trivia": "Inspirador llamado al servicio cívico.",
+        "category": "Discursos",
+        "subCategory": "Oratoria Política"
+      }
+    },
+    {
+      "en": {
         "quote": "Let us cut the living child in two, and give half to the one, and half to the other.",
         "author": "King Solomon",
         "title": "First Book of Kings",
@@ -42,46 +62,6 @@
     },
     {
       "en": {
-        "quote": "God does not play dice with the universe.",
-        "author": "Albert Einstein",
-        "title": "Letter to Max Born",
-        "published": "1926",
-        "trivia": "Einstein's objection to quantum probability.",
-        "category": "Science",
-        "subCategory": "Physics"
-      },
-      "es": {
-        "quote": "Dios no juega a los dados con el universo.",
-        "author": "Albert Einstein",
-        "title": "Carta a Max Born",
-        "published": "1926",
-        "trivia": "La objeción de Einstein a la probabilidad cuántica.",
-        "category": "Ciencia",
-        "subCategory": "Física"
-      }
-    },
-    {
-      "en": {
-        "quote": "Ask not what your country can do for you – ask what you can do for your country.",
-        "author": "John F. Kennedy",
-        "title": "Inaugural Address",
-        "published": "January 20, 1961",
-        "trivia": "Call to civic service in American history.",
-        "category": "Speeches",
-        "subCategory": "Political Oratory"
-      },
-      "es": {
-        "quote": "No preguntes qué puede hacer tu país por ti; pregúntate qué puedes hacer tú por tu país.",
-        "author": "John F. Kennedy",
-        "title": "Discurso Inaugural",
-        "published": "20 de enero de 1961",
-        "trivia": "Inspirador llamado al servicio cívico.",
-        "category": "Discursos",
-        "subCategory": "Oratoria Política"
-      }
-    },
-    {
-      "en": {
         "quote": "In a village of La Mancha, the name of which I have no desire to call to mind.",
         "author": "Miguel de Cervantes",
         "title": "Don Quixote",
@@ -118,6 +98,26 @@
         "trivia": "Dicho por Atticus Finch en el capítulo 11.",
         "category": "Literatura Clásica",
         "subCategory": "Ficción"
+      }
+    },
+    {
+      "en": {
+        "quote": "God does not play dice with the universe.",
+        "author": "Albert Einstein",
+        "title": "Letter to Max Born",
+        "published": "1926",
+        "trivia": "Einstein's objection to quantum probability.",
+        "category": "Science",
+        "subCategory": "Physics"
+      },
+      "es": {
+        "quote": "Dios no juega a los dados con el universo.",
+        "author": "Albert Einstein",
+        "title": "Carta a Max Born",
+        "published": "1926",
+        "trivia": "La objeción de Einstein a la probabilidad cuántica.",
+        "category": "Ciencia",
+        "subCategory": "Física"
       }
     },
     {
