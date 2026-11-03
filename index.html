@@ -1005,34 +1005,6 @@
       });
     });
 
-    function getTodayUTCString() {
-  const now = new Date();
-  const year = now.getUTCFullYear(); // yyyy
-  const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(now.getUTCDate()).padStart(2, '0');
-  return `${year}${month}${day}`; // Results in yyyymmdd (e.g., 20261103)
-}
-
-    function startGameTimer() {
-      gameStartTime = Date.now();
-      if (gameTimerInterval) clearInterval(gameTimerInterval);
-      gameTimerInterval = setInterval(() => {
-        if (!isGameComplete) {
-          gameElapsedTimeSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
-        }
-      }, 1000);
-    }
-
-    function formatTime(totalSeconds) {
-      const mins = Math.floor(totalSeconds / 60);
-      const secs = totalSeconds % 60;
-      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    }
-
-    function initDailyGame() {
-      currentGameMode = 'daily';
-      document.getElementById('mode-text').innerText = t('dailyChallenge');
-
           function getTodayUTCString() {
       const now = new Date();
       const year = now.getUTCFullYear();
