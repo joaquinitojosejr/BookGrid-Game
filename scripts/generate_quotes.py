@@ -115,7 +115,7 @@ def main():
         "science": [q for q in existing_data["daily"] if q['en'].get('category') == 'Science'],
         "scripture": [q for q in existing_data["daily"] if q['en'].get('category') == 'Scripture'],
         "speech": [q for q in existing_data["daily"] if q['en'].get('category') == 'Speeches'],
-        "scifi": [q for q in existing_data["daily"] if q['en'].get('category') == 'Sci-Fi' or q['en'].get('category'] == 'Fantasy'],
+        "scifi": [q for q in existing_data["daily"] if q['en'].get('category') == 'Sci-Fi' or q['en'].get('category') == 'Fantasy'],
         "classic": [q for q in existing_data["daily"] if 'Classic' in q['en'].get('category', '')]
     }
 
