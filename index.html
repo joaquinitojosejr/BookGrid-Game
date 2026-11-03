@@ -1003,9 +1003,12 @@
     });
 
     function getTodayUTCString() {
-      const now = new Date();
-      return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
-    }
+  const now = new Date();
+  const year = now.getUTCFullYear(); // yyyy
+  const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(now.getUTCDate()).padStart(2, '0');
+  return `${year}${month}${day}`; // Results in yyyymmdd (e.g., 20261103)
+}
 
     function startGameTimer() {
       gameStartTime = Date.now();
