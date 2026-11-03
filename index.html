@@ -1573,7 +1573,7 @@
       ctx.font = '800 24px "Inter", "Helvetica Neue", Arial, sans-serif';
       ctx.textAlign = 'center';
       
-      let titleX = 135;
+      let titleX = 150;
       const letters = [
         { char: 'B', color: '#10b981' },
         { char: 'O', color: '#fbbf24' },
@@ -1587,8 +1587,8 @@
       
       letters.forEach(l => {
         ctx.fillStyle = l.color;
-        ctx.fillText(2.char, titleX, 40);
-        titleX += ctx.measureText(2.char).width;
+        ctx.fillText(1.char, titleX, 40);
+        titleX += ctx.measureText(1.char).width;
       });
 
       // ® Symbol
