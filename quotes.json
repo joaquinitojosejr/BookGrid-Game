@@ -2,26 +2,6 @@
   "daily": [
     {
       "en": {
-        "quote": "Let us cut the living child in two, and give half to the one, and half to the other.",
-        "author": "King Solomon",
-        "title": "First Book of Kings",
-        "published": "c. 950 BC",
-        "trivia": "Solomon's famous judgment of maternal wisdom.",
-        "category": "Scripture",
-        "subCategory": "Ancient History"
-      },
-      "es": {
-        "quote": "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.",
-        "author": "Rey Salomón",
-        "title": "Primer Libro de los Reyes",
-        "published": "c. 950 a. C.",
-        "trivia": "El célebre juicio de Salomón sobre la sabiduría materna.",
-        "category": "Escritura",
-        "subCategory": "Historia Antigua"
-      }
-    },
-    {
-      "en": {
         "quote": "Ask not what your country can do for you – ask what you can do for your country.",
         "author": "John F. Kennedy",
         "title": "Inaugural Address",
@@ -58,6 +38,26 @@
         "trivia": "Encontrado en Máximas y flechas.",
         "category": "Filosofía",
         "subCategory": "No Ficción"
+      }
+    },
+    {
+      "en": {
+        "quote": "Real courage is when you know you're licked before you begin.",
+        "author": "Harper Lee",
+        "title": "To Kill a Mockingbird",
+        "published": "July 11, 1960",
+        "trivia": "Spoken by Atticus Finch in Chapter 11.",
+        "category": "Classic Literature",
+        "subCategory": "Fiction"
+      },
+      "es": {
+        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar.",
+        "author": "Harper Lee",
+        "title": "Matar a un ruiseñor",
+        "published": "11 de julio de 1960",
+        "trivia": "Dicho por Atticus Finch en el capítulo 11.",
+        "category": "Literatura Clásica",
+        "subCategory": "Ficción"
       }
     },
     {
@@ -102,6 +102,26 @@
     },
     {
       "en": {
+        "quote": "Let us cut the living child in two, and give half to the one, and half to the other.",
+        "author": "King Solomon",
+        "title": "First Book of Kings",
+        "published": "c. 950 BC",
+        "trivia": "Solomon's famous judgment of maternal wisdom.",
+        "category": "Scripture",
+        "subCategory": "Ancient History"
+      },
+      "es": {
+        "quote": "Partid en dos al niño vivo, y dad la mitad a la una y la mitad a la otra.",
+        "author": "Rey Salomón",
+        "title": "Primer Libro de los Reyes",
+        "published": "c. 950 a. C.",
+        "trivia": "El célebre juicio de Salomón sobre la sabiduría materna.",
+        "category": "Escritura",
+        "subCategory": "Historia Antigua"
+      }
+    },
+    {
+      "en": {
         "quote": "God does not play dice with the universe.",
         "author": "Albert Einstein",
         "title": "Letter to Max Born",
@@ -118,26 +138,6 @@
         "trivia": "La objeción de Einstein a la probabilidad cuántica.",
         "category": "Ciencia",
         "subCategory": "Física"
-      }
-    },
-    {
-      "en": {
-        "quote": "Real courage is when you know you're licked before you begin.",
-        "author": "Harper Lee",
-        "title": "To Kill a Mockingbird",
-        "published": "July 11, 1960",
-        "trivia": "Spoken by Atticus Finch in Chapter 11.",
-        "category": "Classic Literature",
-        "subCategory": "Fiction"
-      },
-      "es": {
-        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar.",
-        "author": "Harper Lee",
-        "title": "Matar a un ruiseñor",
-        "published": "11 de julio de 1960",
-        "trivia": "Dicho por Atticus Finch en el capítulo 11.",
-        "category": "Literatura Clásica",
-        "subCategory": "Ficción"
       }
     }
   ],
