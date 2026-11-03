@@ -838,20 +838,23 @@
     let gameElapsedTimeSeconds = 0;
     let gameTimerInterval = null;
 
+        
     async function loadGameData() {
       try {
-        const res = await fetch('quotes.json?v=' + Date.now());
+        const res = await fetch('quotes.json?v=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
-          if (data && data.daily && data.presets) {
+          if (data && data.daily && Array.isArray(data.daily) && data.daily.length > 0) {
             GAME_DATA = data;
+            console.log(`Successfully loaded ${data.daily.length} quotes from quotes.json!`);
           }
         }
       } catch (err) {
-        console.warn("Using offline fallback quote payload:", err);
+        console.warn("Could not fetch quotes.json, using built-in payload:", err);
       }
       initDailyGame();
     }
+
 
     function toggleLanguage() {
       currentLang = currentLang === 'en' ? 'es' : 'en';
