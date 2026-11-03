@@ -1587,14 +1587,14 @@
       
       letters.forEach(l => {
         ctx.fillStyle = l.color;
-        ctx.fillText(l.char, titleX, 40);
+        ctx.fillText(l.char, titleX, 80);
         titleX += ctx.measureText(l.char).width;
       });
 
       // ® Symbol
       ctx.font = '700 24px "Inter", Arial, sans-serif';
       ctx.fillStyle = '#000000';
-      ctx.fillText('®', titleX + 8, 40);
+      ctx.fillText('®', titleX + 4, 30);
 
       // 4. Puzzle Number / Date ID
       ctx.font = '700 12px "Inter", Arial, sans-serif';
