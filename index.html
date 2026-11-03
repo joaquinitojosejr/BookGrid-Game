@@ -1545,7 +1545,7 @@
       }
     }
 
-    // --- HTML5 CANVAS SCORECARD IMAGE GENERATOR (FIXED LAYOUT & VISIBILITY) ---
+    // --- HTML5 CANVAS SCORECARD IMAGE GENERATOR (FULLY BOUND & VISIBLE) ---
     async function shareResults() {
       const btn = document.getElementById('btn-copy-card');
       const score = calculateScore();
@@ -1556,7 +1556,7 @@
       const canvas = document.createElement('canvas');
       const scale = 2;
       const width = 420;
-      const height = 480; // Increased height to comfortably house all text elements
+      const height = 500; // Expanded height to guarantee ample spacing for all metadata
       canvas.width = width * scale;
       canvas.height = height * scale;
       const ctx = canvas.getContext('2d');
@@ -1590,37 +1590,37 @@
       
       letters.forEach(l => {
         ctx.fillStyle = l.color;
-        ctx.fillText(l.char, titleX, 42);
+        ctx.fillText(l.char, titleX, 40);
         titleX += ctx.measureText(l.char).width;
       });
 
       // ® Symbol
       ctx.font = '700 11px Inter, sans-serif';
       ctx.fillStyle = '#fbbf24';
-      ctx.fillText('®', titleX + 4, 32);
+      ctx.fillText('®', titleX + 4, 30);
 
-      // 4. Subtitle: Puzzle Date ID & Language (Bright & legible)
+      // 4. Puzzle Number / Date ID & Mode Label (Guaranteed Display)
       ctx.font = '700 12px Inter, sans-serif';
       ctx.fillStyle = '#94a3b8'; // Slate-400
       let modeLabel = currentGameMode === 'daily' ? (currentLang === 'es' ? 'Desafío Diario' : 'Daily Challenge') : (currentLang === 'es' ? 'Modo Personalizado' : 'Custom Mode');
-      ctx.fillText(`${modeLabel} • #${dateStr} (${langStr})`, width / 2, 68);
+      ctx.fillText(`${modeLabel} • Puzzle #${dateStr} (${langStr})`, width / 2, 66);
 
-      // 5. Work Title & Author Attribution (High contrast cyan & white, perfectly positioned)
+      // 5. Work Title & Author Attribution (Explicitly bound to targetTitle & targetAuthor)
       ctx.font = 'italic 600 14px Lora, serif';
       ctx.fillStyle = '#38bdf8'; // Vivid Sky Blue for Title
-      let workText = `"${targetTitle}"`;
+      let workText = `"${targetTitle || 'Untitled'}"`;
       if (ctx.measureText(workText).width > width - 40) {
         ctx.font = 'italic 600 12px Lora, serif';
       }
-      ctx.fillText(workText, width / 2, 94);
+      ctx.fillText(workText, width / 2, 92);
 
       ctx.font = '700 13px Inter, sans-serif';
       ctx.fillStyle = '#f8fafc'; // Pure White for Author
-      ctx.fillText(`— ${targetAuthor}`, width / 2, 116);
+      ctx.fillText(`— ${targetAuthor || 'Unknown Author'}`, width / 2, 114);
 
-      // 6. Score & Stats Container Box (Shifted down slightly to prevent crowding)
+      // 6. Score & Stats Container Box
       const boxTop = 132;
-      const boxHeight = 255;
+      const boxHeight = 270;
       ctx.fillStyle = '#1e293b'; // Opaque Slate-800 card
       ctx.roundRect(25, boxTop, width - 50, boxHeight, 14);
       ctx.fill();
@@ -1658,6 +1658,7 @@
       ctx.fillText(currentLang === 'es' ? '⏱️ Tiempo empleado:' : '⏱️ Time Taken:', leftColX, boxTop + 132);
       ctx.fillText(currentLang === 'es' ? '❌ Errores cometidos:' : '❌ Mistakes Made:', leftColX, boxTop + 164);
       ctx.fillText(currentLang === 'es' ? '💡 Pistas usadas:' : '💡 Hints Used:', leftColX, boxTop + 196);
+      ctx.fillText(currentLang === 'es' ? '📅 Fecha / Puzzle:' : '📅 Puzzle Date:', leftColX, boxTop + 228);
 
       ctx.textAlign = 'right';
       ctx.fillStyle = '#ffffff'; // Pure white values
@@ -1666,6 +1667,8 @@
       ctx.fillText(`${countMistakes}`, rightColX, boxTop + 164);
       ctx.fillStyle = '#fbbf24'; // High-vis gold
       ctx.fillText(`${countHints}`, rightColX, boxTop + 196);
+      ctx.fillStyle = '#38bdf8'; // High-vis cyan date
+      ctx.fillText(`${dateStr}`, rightColX, boxTop + 228);
 
       // 7. Footer Domain Branding (Bold & bright white)
       ctx.textAlign = 'center';
