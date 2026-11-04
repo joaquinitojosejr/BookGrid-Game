@@ -1,4 +1,4 @@
-name: Automated Weekly Quotes Pipeline
+Name: Automated Weekly Quotes Pipeline
 
 on:
   schedule:
@@ -22,6 +22,17 @@ jobs:
 
       - name: Install Dependencies
         run: pip install google-genai
+
+      - name: Verify Environment
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "❌ ERROR: GEMINI_API_KEY secret is missing or empty in GitHub repository settings!"
+            exit 1
+          else
+            echo "✅ GEMINI_API_KEY secret successfully detected."
+          fi
 
       - name: Run Python Content Pipeline
         env:
