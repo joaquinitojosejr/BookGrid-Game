@@ -7,6 +7,7 @@
 
   <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
+<!-- Optional iOS specific meta tags for extra polish -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="/icon-192.png">
@@ -21,7 +22,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -55,6 +56,7 @@
       -webkit-touch-callout: none;
     }
 
+    /* Prevent elastic scrolling and address bar jumps on mobile */
     html, body {
       height: 100%;
       height: 100dvh;
@@ -643,6 +645,7 @@
   </div>
 
   <script>
+    // Dictionary translations for UI
     const TRANSLATIONS = {
       en: {
         langToggle: "ES",
@@ -762,6 +765,7 @@
       }
     };
 
+    // Hardcoded Fallback Payload (Ensures bulletproof offline execution if quotes.json is missing)
     const FALLBACK_PAYLOAD = {
       daily: [
         { 
@@ -838,23 +842,21 @@
     let gameElapsedTimeSeconds = 0;
     let gameTimerInterval = null;
 
-        
+    // Asynchronously fetch JSON pipeline data with cache-busting to defeat iOS/CDN caching
     async function loadGameData() {
       try {
-        const res = await fetch('quotes.json?v=' + Date.now(), { cache: 'no-store' });
+        const res = await fetch('quotes.json?v=' + Date.now());
         if (res.ok) {
           const data = await res.json();
-          if (data && data.daily && Array.isArray(data.daily) && data.daily.length > 0) {
+          if (data && data.daily && data.presets) {
             GAME_DATA = data;
-            console.log(`Successfully loaded ${data.daily.length} quotes from quotes.json!`);
           }
         }
       } catch (err) {
-        console.warn("Could not fetch quotes.json, using built-in payload:", err);
+        console.warn("Using offline fallback quote payload:", err);
       }
       initDailyGame();
     }
-
 
     function toggleLanguage() {
       currentLang = currentLang === 'en' ? 'es' : 'en';
@@ -973,7 +975,8 @@
       initRevealCardDrag();
       startCountdownTimer();
       attemptAutoFullscreen();
-      loadGameData();
+      
+      loadGameData(); // Loads quotes.json asynchronously with cache-buster
       
       const input = document.getElementById('hidden-keyboard-input');
       if (input) {
@@ -1006,12 +1009,9 @@
     });
 
     function getTodayUTCString() {
-  const now = new Date();
-  const year = now.getUTCFullYear(); // yyyy
-  const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(now.getUTCDate()).padStart(2, '0');
-  return `${year}${month}${day}`; // Results in yyyymmdd (e.g., 20261103)
-}
+      const now = new Date();
+      return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
+    }
 
     function startGameTimer() {
       gameStartTime = Date.now();
@@ -1545,138 +1545,92 @@
       }
     }
 
-    // --- HTML5 CANVAS SCORECARD IMAGE GENERATOR (BULLETPROOF SYSTEM FONT FALLBACKS) ---
+    // --- HTML5 CANVAS SCORECARD IMAGE GENERATOR ---
     async function shareResults() {
       const btn = document.getElementById('btn-copy-card');
       const score = calculateScore();
       const timeStr = formatTime(gameElapsedTimeSeconds);
       const dateStr = getTodayUTCString();
-      const langStr = currentLang.toUpperCase();
-
-      // Safely capture current active values with immediate fallbacks
-      const activeTitle = targetTitle || document.getElementById('book-title')?.innerText || "Literary Masterpiece";
-      const activeAuthor = targetAuthor || document.getElementById('author-name')?.innerText || "Author Unknown";
 
       const canvas = document.createElement('canvas');
       const scale = 2;
       const width = 420;
-      const height = 500;
+      const height = 340;
       canvas.width = width * scale;
       canvas.height = height * scale;
       const ctx = canvas.getContext('2d');
       ctx.scale(scale, scale);
 
-      // 1. Solid Dark Background
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(0, 0, width, height);
+      // Background
+      ctx.fillStyle = '#0f172a'; // slate-900
+      ctx.roundRect(0, 0, width, height, 20);
+      ctx.fill();
 
-      // 2. High-Contrast Outer Gold Border
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(1, 1, width - 2, height - 2);
+      // Outer Border
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
 
-      // 3. Multi-Color Game Logo: BOOKGRID®
-      ctx.font = '800 24px "Inter", "Helvetica Neue", Arial, sans-serif';
+      // Multi-Color Title: BOOKGRID®
+      ctx.font = '800 24px Cinzel, Inter, sans-serif';
       ctx.textAlign = 'center';
       
       let titleX = 135;
       const letters = [
-        { char: ' B ', color: '#10b981' },
-        { char: ' O ', color: '#fbbf24' },
-        { char: ' O ', color: '#38bdf8' },
-        { char: ' K ', color: '#f8fafc' },
-        { char: ' G ', color: '#10b981' },
-        { char: ' R ', color: '#fbbf24' },
-        { char: ' I  ', color: '#38bdf8' },
-        { char: '  D ', color: '#f8fafc' }
+        { char: 'B', color: '#10b981' },
+        { char: 'O', color: '#f59e0b' },
+        { char: 'O', color: '#0ea5e9' },
+        { char: 'K', color: '#94a3b8' },
+        { char: 'G', color: '#10b981' },
+        { char: 'R', color: '#f59e0b' },
+        { char: 'I', color: '#0ea5e9' },
+        { char: 'D', color: '#94a3b8' }
       ];
       
       letters.forEach(l => {
         ctx.fillStyle = l.color;
-        ctx.fillText(l.char, titleX, 40);
+        ctx.fillText(l.char, titleX, 48);
         titleX += ctx.measureText(l.char).width;
       });
 
       // ® Symbol
-      ctx.font = '800 24px "Inter", Arial, sans-serif';
-      ctx.fillStyle = '#fbbf24';
-      ctx.fillText('®', titleX + 4, 30);
+      ctx.font = '700 11px Inter, sans-serif';
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.9)';
+      ctx.fillText('®', titleX + 4, 38);
 
-      // 4. Puzzle Number / Date ID
-      ctx.font = '700 12px "Inter", Arial, sans-serif';
-      ctx.fillStyle = '#94a3b8';
-      let modeLabel = currentGameMode === 'daily' ? (currentLang === 'es' ? 'Desafío Diario' : 'Daily Challenge') : (currentLang === 'es' ? 'Modo Personalizado' : 'Custom Mode');
-      ctx.fillText(`${modeLabel} • Puzzle #${dateStr} (${langStr})`, width / 2, 66);
+      // Date Subtitle
+      ctx.font = '600 12px Inter, sans-serif';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText(`Daily Challenge • ${dateStr} (${currentLang.toUpperCase()})`, width / 2, 72);
 
-      // 5. Work Title & Author Attribution (Using safe system fallback fonts)
-      ctx.font = '600 italic 14px "Lora", Georgia, serif';
-      ctx.fillStyle = '#38bdf8'; 
-      let workText = `"${activeTitle}"`;
-      if (ctx.measureText(workText).width > width - 40) {
-        ctx.font = '600 italic 12px "Lora", Georgia, serif';
-      }
-      ctx.fillText(workText, width / 2, 92);
+      // Work & Author Subtitle
+      ctx.font = 'italic 13px Lora, serif';
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText(`"${targetTitle}" — ${targetAuthor}`, width / 2, 94);
 
-      ctx.font = '700 13px "Inter", Arial, sans-serif';
-      ctx.fillStyle = '#f8fafc';
-      ctx.fillText(`— ${activeAuthor}`, width / 2, 114);
+      // Score Highlight Box
+      ctx.fillStyle = 'rgba(30, 41, 59, 0.8)';
+      ctx.roundRect(30, 115, width - 60, 140, 14);
+      ctx.fill();
 
-      // 6. Score & Stats Container Box
-      const boxTop = 132;
-      const boxHeight = 270;
-      ctx.fillStyle = '#0f172a'; 
-      ctx.fillRect(25, boxTop, width - 50, boxHeight);
-
-      ctx.strokeStyle = '#f87171';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(25, boxTop, width - 50, boxHeight);
-
-      // Final Score Header
-      ctx.font = '700 11px "Inter", Arial, sans-serif';
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillText(currentLang === 'es' ? 'PUNTUACIÓN FINAL' : 'FINAL RESULTING SCORE', width / 2, boxTop + 28);
-
-      // Big Percentage Display
-      ctx.font = '800 48px "Inter", Arial, sans-serif';
-      ctx.fillStyle = '#fbbf24'; 
-      ctx.fillText(`${score}%`, width / 2, boxTop + 82);
-
-      // Divider Line Inside Box
-      ctx.strokeStyle = '#f87171';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(50, boxTop + 100);
-      ctx.lineTo(width - 50, boxTop + 100);
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.2)';
+      ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Detailed Metrics (Time, Mistakes, Hints, Date)
-      ctx.font = '700 13px "Inter", Arial, sans-serif';
-      ctx.fillStyle = '#e2e8f0';
-      
-      const leftColX = 55;
-      const rightColX = width - 55;
+      // Percentage Display
+      ctx.font = '800 48px Inter, sans-serif';
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillText(`${score}%`, width / 2, 175);
 
-      ctx.textAlign = 'left';
-      ctx.fillText(currentLang === 'es' ? '⏱️ Tiempo empleado:' : '⏱️ Time Taken:', leftColX, boxTop + 132);
-      ctx.fillText(currentLang === 'es' ? '❌ Errores cometidos:' : '❌ Mistakes Made:', leftColX, boxTop + 164);
-      ctx.fillText(currentLang === 'es' ? '💡 Pistas usadas:' : '💡 Hints Used:', leftColX, boxTop + 196);
-      ctx.fillText(currentLang === 'es' ? '📅 Fecha / Puzzle:' : '📅 Puzzle Date:', leftColX, boxTop + 228);
+      // Stats Sub-Text
+      ctx.font = '600 13px Inter, sans-serif';
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillText(`Time: ${timeStr}   •   Mistakes: ${countMistakes}   •   Hints: ${countHints}`, width / 2, 215);
 
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#ffffff'; 
-      ctx.fillText(timeStr, rightColX, boxTop + 132);
-      ctx.fillStyle = '#f87171'; 
-      ctx.fillText(`${countMistakes}`, rightColX, boxTop + 164);
-      ctx.fillStyle = '#fbbf24'; 
-      ctx.fillText(`${countHints}`, rightColX, boxTop + 196);
-      ctx.fillStyle = '#38bdf8'; 
-      ctx.fillText(`${dateStr}`, rightColX, boxTop + 228);
-
-      // 7. Footer Domain Branding
-      ctx.textAlign = 'center';
-      ctx.font = '800 18px "Inter", Arial, sans-serif';
-      ctx.fillStyle = '#f8fafc';
-      ctx.fillText('bookgrid.art', width / 2, height - 16);
+      // Footer Domain
+      ctx.font = '700 12px Inter, sans-serif';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('bookgrid.art', width / 2, height - 24);
 
       function showCopiedSuccess() {
         if (btn) {
