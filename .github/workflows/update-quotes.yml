@@ -1,4 +1,4 @@
-Name: Automated Weekly Quotes Pipeline
+name: Automated Weekly Quotes Pipeline
 
 on:
   schedule:
