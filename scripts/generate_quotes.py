@@ -45,7 +45,7 @@ def main():
 
     print("Attempting AI quote generation via Gemini API...")
     
-    max_retries = 3
+    max_retries = 5
     new_quotes = []
 
     for attempt in range(max_retries):
