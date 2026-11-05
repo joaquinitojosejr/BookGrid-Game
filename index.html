@@ -859,8 +859,14 @@
     }
 
     function toggleLanguage() {
+      saveCurrentProgress(); // Save current language progress before switching
+      
       currentLang = currentLang === 'en' ? 'es' : 'en';
       localStorage.setItem('bookgrid_lang', currentLang);
+      
+      document.getElementById('daily-locked-banner').classList.add('hidden');
+      document.getElementById('floating-keyboard').classList.remove('hidden');
+      
       updateLanguageUI();
       if (currentGameMode === 'daily') {
         initDailyGame();
@@ -1029,13 +1035,31 @@
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     }
 
+    function saveCurrentProgress() {
+      if (currentGameMode !== 'daily' || isGameComplete) return;
+      const todayStr = getTodayUTCString();
+      const progressKey = `bookgrid_daily_progress_${currentLang}_${todayStr}`;
+      
+      const progressData = {
+        userGuesses: userGuesses,
+        lockedTiles: lockedTiles,
+        countMistakes: countMistakes,
+        countHints: countHints,
+        timeSeconds: gameElapsedTimeSeconds
+      };
+      localStorage.setItem(progressKey, JSON.stringify(progressData));
+    }
+
     function initDailyGame() {
       currentGameMode = 'daily';
       document.getElementById('mode-text').innerText = t('dailyChallenge');
 
       const todayStr = getTodayUTCString();
-      const lockKey = `bookgrid_daily_solved_${currentLang}_${todayStr}`;
-      const savedData = localStorage.getItem(lockKey);
+      const solvedKey = `bookgrid_daily_solved_${currentLang}_${todayStr}`;
+      const progressKey = `bookgrid_daily_progress_${currentLang}_${todayStr}`;
+
+      const savedSolvedData = localStorage.getItem(solvedKey);
+      const savedProgressData = localStorage.getItem(progressKey);
 
       let dateHash = 0;
       for (let i = 0; i < todayStr.length; i++) {
@@ -1056,8 +1080,8 @@
 
       updateQuoteInfoModalUI();
 
-      if (savedData) {
-        const data = JSON.parse(savedData);
+      if (savedSolvedData) {
+        const data = JSON.parse(savedSolvedData);
         countMistakes = data.mistakes;
         countHints = data.hints;
         gameElapsedTimeSeconds = data.timeSeconds || 0;
@@ -1085,14 +1109,46 @@
         document.getElementById('locked-score-summary').innerText = `${t('lockedTitle').replace('!', '')} (${data.score}%)`;
         updateStatsDisplay();
       } else {
-        isGameComplete = false;
-        countMistakes = 0;
-        countHints = 0;
-        gameElapsedTimeSeconds = 0;
-        document.getElementById('daily-locked-banner').classList.add('hidden');
-        document.getElementById('floating-keyboard').classList.remove('hidden');
-        document.getElementById('floating-reveal-card').classList.add('hidden');
         setupBoard();
+
+        if (savedProgressData) {
+          const data = JSON.parse(savedProgressData);
+          userGuesses = data.userGuesses || [];
+          lockedTiles = data.lockedTiles || [];
+          countMistakes = data.countMistakes || 0;
+          countHints = data.countHints || 0;
+          gameElapsedTimeSeconds = data.timeSeconds || 0;
+          isGameComplete = false;
+
+          userGuesses.forEach((val, idx) => {
+            if (val && val === cleanLetters[idx]) {
+              lockedTiles[idx] = true;
+              letterCountsSolved[val] = (letterCountsSolved[val] || 0) + 1;
+              updateVirtualKeyboardState(val, 'correct');
+            } else if (val) {
+              const wordIdx = wordAssignments[idx];
+              const currentWordLetters = wordsCleanLetters[wordIdx] || [];
+              if (currentWordLetters.includes(val)) {
+                updateVirtualKeyboardState(val, 'same-word');
+              } else if (cleanLetters.includes(val)) {
+                updateVirtualKeyboardState(val, 'present');
+              } else {
+                updateVirtualKeyboardState(val, 'absent');
+              }
+            }
+          });
+
+          renderBoard();
+          updateStatsDisplay();
+        } else {
+          isGameComplete = false;
+          countMistakes = 0;
+          countHints = 0;
+          gameElapsedTimeSeconds = 0;
+          document.getElementById('daily-locked-banner').classList.add('hidden');
+          document.getElementById('floating-keyboard').classList.remove('hidden');
+          document.getElementById('floating-reveal-card').classList.add('hidden');
+        }
         startGameTimer();
       }
     }
@@ -1301,6 +1357,7 @@
       findNextAvailableTileIndex();
       renderBoard();
       updateStatsDisplay();
+      saveCurrentProgress();
       checkWinCondition();
     }
 
@@ -1322,6 +1379,7 @@
         }
       }
       renderBoard();
+      saveCurrentProgress();
     }
 
     function useHint() {
@@ -1350,6 +1408,7 @@
       findNextAvailableTileIndex();
       renderBoard();
       updateStatsDisplay();
+      saveCurrentProgress();
       checkWinCondition();
     }
 
@@ -1368,6 +1427,8 @@
             hints: countHints,
             timeSeconds: gameElapsedTimeSeconds
           }));
+          // Clean up in-progress save since it's fully solved
+          localStorage.removeItem(`bookgrid_daily_progress_${currentLang}_${todayStr}`);
         }
 
         setTimeout(() => {
