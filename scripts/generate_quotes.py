@@ -2,6 +2,7 @@ import os
 import json
 import time
 from google import genai
+from google.genai import types
 from google.genai.errors import APIError
 
 def main():
@@ -10,8 +11,12 @@ def main():
         print("❌ Error: GEMINI_API_KEY environment variable is missing.")
         exit(1)
 
-    # Initialize the Google GenAI client
-    client = genai.Client(api_key=api_key)
+    # Initialize the Google GenAI client with a strict 30-second timeout (in milliseconds)
+    # This prevents the script from hanging indefinitely if network traffic stalls.
+    client = genai.Client(
+        api_key=api_key,
+        http_options=types.HttpOptions(timeout=30000)
+    )
 
     # File path for quotes.json (relative to scripts/ directory)
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -45,11 +50,10 @@ def main():
 
     print("Attempting AI quote generation via Gemini API...")
     
-    max_retries = 5  # <--- Updated to 5 retries
+    max_retries = 5
     new_quotes = []
 
     for attempt in range(max_retries):
-
         try:
             print(f"-> Sending request to Gemini (Attempt {attempt + 1}/{max_retries})...")
             response = client.models.generate_content(
@@ -72,17 +76,21 @@ def main():
                 new_quotes = parsed_json["daily"]
                 break  # Success! Exit loop.
                 
-        except APIError as e:
-            if "503" in str(e) or "UNAVAILABLE" in str(e):
+        except (APIError, TimeoutError, Exception) as e:
+            error_str = str(e)
+            print(f"⚠️ Attempt {attempt + 1} failed: {error_str}")
+            
+            # Check if it's a retryable error (503, UNAVAILABLE, or timeout/socket stall)
+            if "503" in error_str or "UNAVAILABLE" in error_str or "timeout" in error_str.lower():
                 if attempt < max_retries - 1:
-                    sleep_time = (attempt + 1) * 5  # 5s, then 10s backoff delay
-                    print(f"⚠️ Server overloaded (503). Retrying in {sleep_time} seconds...")
+                    sleep_time = (attempt + 1) * 5  # 5s, 10s, 15s, 20s backoff delay
+                    print(f"Retrying in {sleep_time} seconds...")
                     time.sleep(sleep_time)
                     continue
-            print(f"AI Generation failed with API error: {e}")
-            break
-        except Exception as e:
-            print(f"AI Generation failed with parsing error: {e}")
+            
+            # If retries ran out or it's a permanent error, break out
+            if attempt == max_retries - 1:
+                print("Max retry attempts reached. Skipping AI injection for this cycle.")
             break
 
     # Accumulate new quotes into the daily pool without wiping historical entries
