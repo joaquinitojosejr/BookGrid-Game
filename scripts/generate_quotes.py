@@ -11,7 +11,7 @@ def main():
         print("❌ Error: GEMINI_API_KEY environment variable is missing.")
         exit(1)
 
-    # Initialize client with a 45-second timeout (45000ms)
+    # Initialize client with a 45-second timeout
     client = genai.Client(
         api_key=api_key,
         http_options=types.HttpOptions(timeout=45000)
@@ -31,13 +31,13 @@ def main():
         except Exception as e:
             print(f"Warning: Could not read existing quotes.json ({e}). Starting fresh archive.")
 
-    # Requesting 1 quote for a lightweight, instantaneous response test
+    # Clean, concise prompt for a single quote
     prompt_text = (
         "Generate 1 unique, profound, and famous literary, philosophical, scientific, "
         "or historical quote. It must include both English and Spanish translations, "
         "along with the author, book title/source, publication date, a short trivia/context note, "
         "category, and subCategory. "
-        "Format the output strictly as a JSON object matching this exact structure, with no markdown code blocks around it: "
+        "Return a JSON object matching this exact structure: "
         '{"daily": [{"en": {"quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..."}, '
         '"es": {"quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..."}}]}'
     )
@@ -50,24 +50,22 @@ def main():
     for attempt in range(max_retries):
         try:
             print(f"-> Sending request to Gemini (Attempt {attempt + 1}/{max_retries})...")
+            
+            # Using gemini-flash-latest with server-side JSON MIME type config to prevent timeouts
             response = client.models.generate_content(
-                model="gemini-3.8-flash",
-                contents=prompt_text
+                model="gemini-flash-latest",
+                contents=prompt_text,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json"
+                )
             )
             
             raw_text = response.text.strip()
-            if raw_text.startswith("```json"):
-                raw_text = raw_text[7:]
-            if raw_text.startswith("```"):
-                raw_text = raw_text[3:]
-            if raw_text.endswith("```"):
-                raw_text = raw_text[:-3]
-            raw_text = raw_text.strip()
-
             parsed_json = json.loads(raw_text)
+            
             if "daily" in parsed_json and isinstance(parsed_json["daily"], list):
                 new_quotes = parsed_json["daily"]
-                break  # Success! Exit loop.
+                break  # Success! Exit retry loop.
                 
         except (APIError, TimeoutError, Exception) as e:
             error_str = str(e)
