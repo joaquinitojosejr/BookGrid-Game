@@ -202,26 +202,6 @@
     },
     {
       "en": {
-        "quote": "Real courage is when you know you're licked before you begin, but you begin anyway and see it through no matter what.",
-        "author": "Harper Lee",
-        "title": "To Kill a Mockingbird",
-        "published": "1960",
-        "trivia": "Harper Lee won the Pulitzer Prize for Fiction in 1961 for this novel.",
-        "category": "Literature",
-        "subCategory": "Fiction"
-      },
-      "es": {
-        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar, pero empiezas de todos modos y lo llevas hasta el final pase lo que pase.",
-        "author": "Harper Lee",
-        "title": "Matar a un ruiseñor",
-        "published": "1960",
-        "trivia": "Harper Lee ganó el Premio Pulitzer de Ficción en 1961 por esta novela.",
-        "category": "Literatura",
-        "subCategory": "Ficción"
-      }
-    },
-    {
-      "en": {
         "quote": "Science is a way of thinking much more than it is a body of knowledge.",
         "author": "Carl Sagan",
         "title": "Broca's Brain",
