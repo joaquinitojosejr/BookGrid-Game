@@ -43,7 +43,7 @@ def main():
         '"es": {"quote": "...", "author": "...", "title": "...", "published": "...", "trivia": "...", "category": "...", "subCategory": "..."}}]}'
     )
 
-        print("Attempting AI quote generation via Gemini API...")
+    print("Attempting AI quote generation via Gemini API...")
     
     max_retries = 5  # <--- Updated to 5 retries
     new_quotes = []
