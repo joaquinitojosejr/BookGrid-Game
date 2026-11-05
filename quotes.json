@@ -106,8 +106,7 @@
         "author": "Marie Curie",
         "title": "Lecture Notes & Writings",
         "published": "1923",
-        "trivia": "Marie Curie was the 
-first person to win two Nobel Prizes in different scientific fields (Physics and Chemistry).",
+        "trivia": "Marie Curie was the first person to win two Nobel Prizes in different scientific fields (Physics and Chemistry).",
         "category": "Science",
         "subCategory": "Radioactivity"
       },
@@ -132,8 +131,7 @@ first person to win two Nobel Prizes in different scientific fields (Physics and
         "subCategory": "Existentialism"
       },
       "es": {
-        "quote": "La vida solo puede ser comprendida mirando hacia atrás; 
-pero debe ser vivida mirando hacia adelante.",
+        "quote": "La vida solo puede ser comprendida mirando hacia atrás; pero debe ser vivida mirando hacia adelante.",
         "author": "Søren Kierkegaard",
         "title": "Diarios y Papeles",
         "published": "1843",
@@ -148,8 +146,7 @@ pero debe ser vivida mirando hacia adelante.",
         "author": "Thomas Edison",
         "title": "Biographical Memoirs",
         "published": "1910",
-        "trivia": "Edison made thousands 
-of attempts before perfecting the carbon filament lightbulb.",
+        "trivia": "Edison made thousands of attempts before perfecting the carbon filament lightbulb.",
         "category": "History",
         "subCategory": "Innovation"
       },
@@ -175,8 +172,7 @@ of attempts before perfecting the carbon filament lightbulb.",
       },
       "es": {
         "quote": "Somos lo que hacemos repetidamente. La excelencia, por tanto, no es un acto, sino un hábito.",
-        "author": "Will Durant 
-(interpretando a Aristóteles)",
+        "author": "Will Durant (interpretando a Aristóteles)",
         "title": "La historia de la filosofía",
         "published": "1926",
         "trivia": "Aunque a menudo se atribuye directamente a Aristóteles, esta frase fue redactada por el historiador Will Durant.",
@@ -190,8 +186,7 @@ of attempts before perfecting the carbon filament lightbulb.",
         "author": "J.R.R. Tolkien",
         "title": "The Fellowship of the Ring",
         "published": "1954",
-        "trivia": "This line forms part of 
-the famous poem 'All that is gold does not glitter', written for the character Aragorn.",
+        "trivia": "This line forms part of the famous poem 'All that is gold does not glitter', written for the character Aragorn.",
         "category": "Literature",
         "subCategory": "Fantasy"
       },
@@ -216,8 +211,7 @@ the famous poem 'All that is gold does not glitter', written for the character A
         "subCategory": "Fiction"
       },
       "es": {
-        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar, pero empiezas de todos modos y lo llevas hasta el final pase lo 
-que pase.",
+        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar, pero empiezas de todos modos y lo llevas hasta el final pase lo que pase.",
         "author": "Harper Lee",
         "title": "Matar a un ruiseñor",
         "published": "1960",
@@ -232,8 +226,7 @@ que pase.",
         "author": "Carl Sagan",
         "title": "Broca's Brain",
         "published": "1979",
-        "trivia": "Carl Sagan was a pioneer 
-in exobiology and helped produce the Voyager Golden Records.",
+        "trivia": "Carl Sagan was a pioneer in exobiology and helped produce the Voyager Golden Records.",
         "category": "Science",
         "subCategory": "Astronomy"
       },
@@ -273,8 +266,7 @@ in exobiology and helped produce the Voyager Golden Records.",
         "author": "Albert Einstein",
         "title": "Three Rules of Work",
         "published": "1979",
-        "trivia": "Compiled from Einstein's notes, this maxim reflects his 
-philosophy on overcoming complex theoretical hurdles.",
+        "trivia": "Compiled from Einstein's notes, this maxim reflects his philosophy on overcoming complex theoretical hurdles.",
         "category": "Philosophy",
         "subCategory": "Wisdom"
       },
@@ -299,8 +291,7 @@ philosophy on overcoming complex theoretical hurdles.",
         "subCategory": "Classical Philosophy"
       },
       "es": {
-        "quote": "Podemos perdonar fácilmente a un niño que teme a la oscuridad; la verdadera tragedia de la 
-vida es cuando los hombres temen a la luz.",
+        "quote": "Podemos perdonar fácilmente a un niño que teme a la oscuridad; la verdadera tragedia de la vida es cuando los hombres temen a la luz.",
         "author": "Platón",
         "title": "Diálogos filosóficos",
         "published": "380 a.C.",
@@ -309,6 +300,6 @@ vida es cuando los hombres temen a la luz.",
         "subCategory": "Filosofía Clásica"
       }
     }
-  ]
+  ],
   "presets": {}
 }
