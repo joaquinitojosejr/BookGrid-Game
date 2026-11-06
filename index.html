@@ -845,7 +845,7 @@
     // Asynchronously fetch JSON pipeline data with cache-busting to defeat iOS/CDN caching
     async function loadGameData() {
       try {
-        const res = await fetch('quotes.json?v=' + Date.now());
+        const res = await fetch('/quotes.json?v=' + Date.now());
         if (res.ok) {
           const data = await res.json();
           if (data && data.daily && data.presets) {
