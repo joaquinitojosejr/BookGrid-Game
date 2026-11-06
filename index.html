@@ -843,12 +843,11 @@
     let gameTimerInterval = null;
 
     // Asynchronously fetch JSON pipeline data with cache-busting to defeat iOS/CDN caching
-        async function loadGameData() {
+            async function loadGameData() {
       try {
-        // Use the full explicit domain URL to eliminate any mobile path resolution ambiguity
-        const res = await fetch('https://bookgrid.art/quotes.json?v=' + Date.now(), {
-          cache: 'no-store'
-        });
+        // Use a standard relative path with cache-busting. 
+        // This avoids CORS/same-origin domain restrictions on iOS Safari.
+        const res = await fetch('./quotes.json?v=' + Date.now());
         
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
