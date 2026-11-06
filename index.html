@@ -843,17 +843,26 @@
     let gameTimerInterval = null;
 
     // Asynchronously fetch JSON pipeline data with cache-busting to defeat iOS/CDN caching
-    async function loadGameData() {
+        async function loadGameData() {
       try {
-        const res = await fetch('/quotes.json?v=' + Date.now());
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.daily && data.presets) {
-            GAME_DATA = data;
-          }
+        // Use the full explicit domain URL to eliminate any mobile path resolution ambiguity
+        const res = await fetch('https://bookgrid.art/quotes.json?v=' + Date.now(), {
+          cache: 'no-store'
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        if (data && data.daily && data.presets) {
+          GAME_DATA = data;
+          console.log("Successfully loaded external quotes.json payload!");
+        } else {
+          console.warn("quotes.json missing required keys, using fallback.");
         }
       } catch (err) {
-        console.warn("Using offline fallback quote payload:", err);
+        console.error("Failed to fetch quotes.json, falling back to hardcoded data:", err);
       }
       initDailyGame();
     }
