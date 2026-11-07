@@ -844,28 +844,16 @@
     let gameTimerInterval = null;
 
     // Asynchronously fetch JSON pipeline data with cache-busting to defeat iOS/CDN caching
-            async function loadGameData() {
-      try {
-        // Use a standard relative path with cache-busting. 
-        // This avoids CORS/same-origin domain restrictions on iOS Safari.
-        const res = await fetch('./quotes.json?v=' + Date.now());
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        
-        const data = await res.json();
-        if (data && data.daily && data.presets) {
-          GAME_DATA = data;
-          console.log("Successfully loaded external quotes.json payload!");
-        } else {
-          console.warn("quotes.json missing required keys, using fallback.");
-        }
-      } catch (err) {
-        console.error("Failed to fetch quotes.json, falling back to hardcoded data:", err);
+                function loadGameData() {
+      if (window.BOOKGRID_DATA) {
+        GAME_DATA = window.BOOKGRID_DATA;
+        console.log("Loaded external quotes via global script variable!");
+      } else {
+        console.warn("External quotes.js script not found, using fallback payload.");
+        GAME_DATA = FALLBACK_PAYLOAD;
       }
       initDailyGame();
-            }
+    }
 
     function toggleLanguage() {
       saveCurrentProgress(); // Save current language progress before switching
