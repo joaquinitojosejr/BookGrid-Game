@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BOOKGRID® - Universal Library Word Puzzle (Component 1)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Absolute root path for quotes.js -->
+  <script src="/quotes.js?v=comp1"></script>
+
+  <style>
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6 text-center">
+
+  <h1 class="text-2xl font-bold text-amber-500 mb-2">BOOKGRID® Reconstruction</h1>
+  <p class="text-xs text-slate-400 mb-6">Component 1: Core Engine & Data Link Test</p>
+
+  <!-- Visual Test Box -->
+  <div id="test-box" class="w-full max-w-md p-5 bg-slate-900 border border-slate-700 rounded-xl shadow-xl text-sm font-mono">
+    Checking data link...
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const box = document.getElementById('test-box');
+
+      if (typeof window.BOOKGRID_DATA !== 'undefined' && window.BOOKGRID_DATA && window.BOOKGRID_DATA.daily) {
+        const quoteItem = window.BOOKGRID_DATA.daily[0].en;
+        box.style.background = '#064e3b';
+        box.style.borderColor = '#10b981';
+        box.innerHTML = `
+          <strong class="text-emerald-400 block mb-2">SUCCESS: quotes.js loaded on iOS!</strong>
+          <em class="text-slate-200 block mb-1">"${quoteItem.quote}"</em>
+          <span class="text-amber-400">— ${quoteItem.author}</span>
+        `;
+      } else {
+        box.style.background = '#7f1d1d';
+        box.style.borderColor = '#ef4444';
+        box.innerHTML = `<strong class="text-red-400">FAILED: window.BOOKGRID_DATA is undefined.</strong>`;
+      }
+    });
+  </script>
+
+</body>
+</html>
