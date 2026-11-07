@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>iOS Data Loading Test</title>
+  
+  <!-- Load the external data file -->
+  <script src="./quotes.js?v=1"></script>
+</head>
+<body style="background: #0f172a; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; padding: 40px 20px;">
+
+  <h1>iOS Safari Isolation Test</h1>
+  <p>Testing external data parsing on GitHub Pages.</p>
+
+  <!-- Visible Status Box -->
+  <div id="status-box" style="margin-top: 30px; padding: 20px; background: #334155; border-radius: 12px; font-size: 16px;">
+    Checking external data...
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const box = document.getElementById('status-box');
+
+      if (typeof window.TEST_DATA !== 'undefined' && window.TEST_DATA) {
+        box.style.background = '#064e3b'; // Dark green
+        box.style.border = '2px solid #10b981';
+        box.innerHTML = `
+          <h3 style="color: #6ee7b7; margin-top: 0;">SUCCESS ON IOS!</h3>
+          <p style="font-style: italic; font-size: 18px;">"${window.TEST_DATA.quote}"</p>
+          <p style="color: #94a3b8; font-size: 14px;">— ${window.TEST_DATA.author}</p>
+        `;
+      } else {
+        box.style.background = '#7f1d1d'; // Dark red
+        box.style.border = '2px solid #ef4444';
+        box.innerHTML = `
+          <h3 style="color: #fca5a5; margin-top: 0;">FAILED ON IOS</h3>
+          <p>window.TEST_DATA is undefined. External script was blocked or skipped.</p>
+        `;
+      }
+    });
+  </script>
+
+</body>
+</html>
