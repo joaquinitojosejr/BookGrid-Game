@@ -1,4 +1,5 @@
-{
+window.BOOKGRID_DATA = {
+
   "daily": [
     {
       "en": {
@@ -282,4 +283,4 @@
     }
   ],
   "presets": {}
-}
+};
