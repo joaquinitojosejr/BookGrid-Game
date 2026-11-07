@@ -845,11 +845,24 @@
     let gameTimerInterval = null;
 
     // Asynchronously fetch JSON pipeline data with cache-busting to defeat iOS/CDN caching
-                function loadGameData() {
-      if (window.BOOKGRID_DATA) {
+                    function loadGameData() {
+      // Create a temporary debug banner on screen
+      let banner = document.getElementById('debug-banner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'debug-banner';
+        banner.style.cssText = 'position:fixed; top:60px; left:10px; right:10px; z-index:9999; background:red; color:white; padding:10px; font-size:12px; font-family:monospace; border-radius:8px; text-align:center; box-shadow: 0 4px 6px rgba(0,0,0,0.3);';
+        document.body.appendChild(banner);
+      }
+
+      if (typeof window.BOOKGRID_DATA !== 'undefined' && window.BOOKGRID_DATA && window.BOOKGRID_DATA.daily) {
         GAME_DATA = window.BOOKGRID_DATA;
+        banner.style.background = 'green';
+        banner.innerText = "SUCCESS: Loaded external quotes.js! Count: " + window.BOOKGRID_DATA.daily.length;
         console.log("Loaded external quotes via global script variable!");
       } else {
+        banner.style.background = 'red';
+        banner.innerText = "FAILED: window.BOOKGRID_DATA is undefined! Using fallback.";
         console.warn("External quotes.js script not found, using fallback payload.");
         GAME_DATA = FALLBACK_PAYLOAD;
       }
