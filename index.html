@@ -791,7 +791,7 @@
       checkWinCondition();
     }
 
-    function checkWinCondition() {
+        function checkWinCondition() {
       if (lockedTiles.every(s => s === true)) {
         isGameComplete = true;
         if (gameTimerInterval) clearInterval(gameTimerInterval);
@@ -799,6 +799,7 @@
 
         if (currentGameMode === 'daily') {
           const todayStr = getTodayUTCString();
+          // Explicitly namespace solved state by currentLang so languages never conflict
           localStorage.setItem(`bookgrid_daily_solved_${currentLang}_${todayStr}`, JSON.stringify({
             score: finalScore,
             mistakes: countMistakes,
