@@ -958,7 +958,13 @@
 
     function openQuoteInfoModal() { updateQuoteInfoModalUI(); document.getElementById('modal-quote-info').classList.remove('hidden'); }
     function closeQuoteInfoModal() { document.getElementById('modal-quote-info').classList.add('hidden'); }
-    function openCustomModal() { document.getElementById('modal-custom').classList.remove('hidden'); }
+    /function openCustomModal() { document.getElementById('modal-custom').classList.remove('hidden'); }
+        function openCustomModal() {
+      const msg = currentLang === 'es' 
+        ? "¡Pronto! Estamos trabajando en la configuración personalizada y los modos multijugador. ¡Mantente atento a las novedades!" 
+        : "Coming Soon! We are currently developing custom setups and multiplayer modes. Stand by for the excitement!";
+      alert(msg);
+    }
     function closeCustomModal() { document.getElementById('modal-custom').classList.add('hidden'); }
     function openHelpModal() { document.getElementById('modal-help').classList.remove('hidden'); }
     function closeHelpModal() { document.getElementById('modal-help').classList.add('hidden'); }
