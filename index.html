@@ -337,7 +337,7 @@
       en: {
         langToggle: "ES", dailyChallenge: "Daily Challenge", customMode: "Custom Mode", mistakesLabel: "Mistakes",
         hintsLabel: "Hints", scoreLabel: "Score", detailsBtn: "Details", customBtn: "Custom", lockedTitle: "Today's Puzzle Completed!",
-        shareBtn: "Share Score Card", nextQuoteLabel: "Next Quote in", legendCorrect: "Correct Slot", legendSameWord: "Same Word",
+        shareBtn: ">>>>>>> Share Score Card <<<<<<<", nextQuoteLabel: "Next Quote in", legendCorrect: "Correct Slot", legendSameWord: "Same Word",
         legendInQuote: "In Quote", legendNotInQuote: "Not in Quote", sourceRevealed: "SOURCE REVEALED", keyboardTitle: "KEYBOARD",
         quoteDetailsTitle: "Quote Details", categoryLabel: "Category", subcategoryLabel: "Sub-Category", authorLabel: "Author",
         bookLabel: "Book / Source", closeBtn: "Close", customSetupTitle: "Custom Game Setup", selectGenreLabel: "Select Genre Preset",
@@ -350,7 +350,7 @@
       es: {
         langToggle: "EN", dailyChallenge: "Desafío Diario", customMode: "Modo Personalizado", mistakesLabel: "Errores",
         hintsLabel: "Pistas", scoreLabel: "Puntuación", detailsBtn: "Detalles", customBtn: "Personalizado", lockedTitle: "¡Rompecabezas Completado!",
-        shareBtn: "Compartir Tarjeta", nextQuoteLabel: "Siguiente Frase en", legendCorrect: "Casilla Correcta", legendSameWord: "Misma Palabra",
+        shareBtn: ">> Compartir Tarjeta de Marcación <<", nextQuoteLabel: "Siguiente Frase en", legendCorrect: "Casilla Correcta", legendSameWord: "Misma Palabra",
         legendInQuote: "En la Frase", legendNotInQuote: "No en la Frase", sourceRevealed: "FUENTE REVELADA", keyboardTitle: "TECLADO",
         quoteDetailsTitle: "Detalles de la Frase", categoryLabel: "Categoría", subcategoryLabel: "Subcategoría", authorLabel: "Autor",
         bookLabel: "Libro / Fuente", closeBtn: "Cerrar", customSetupTitle: "Configuración Personalizada", selectGenreLabel: "Seleccionar Género",
@@ -864,7 +864,7 @@
         { text: 'R', color: '#d4af37', font: '800 26px Cinzel' }, 
         { text: 'I', color: '#38bdf8', font: '800 26px Cinzel' }, 
         { text: 'D', color: '#94a3b8', font: '800 26px Cinzel' }, 
-        { text: '®', color: '#dc2626', font: '700 12px Cinzel', superscript: true } 
+        { text: '®', color: '#ffffff', font: '800 50px Cinzel', superscript: true } 
       ];
 
       let totalWidth = 0;
@@ -878,14 +878,14 @@
         ctx.font = p.font;
         ctx.fillStyle = p.color;
         if (p.superscript) {
-          ctx.fillText(p.text, currentX, titleY - 12);
+          ctx.fillText(p.text, currentX, titleY - 4);
         } else {
           ctx.fillText(p.text, currentX, titleY);
         }
         currentX += ctx.measureText(p.text).width;
       });
 
-      // Subtitle below logo: "Daily Challenge: Puzzle #YYYYMMDD (EN)"
+      // Subtitle below logo: "Daily Challenge: Puzzle #YYYYMMDD (EN/ES)"
       const todayStr = getTodayUTCString(); // YYYY-MM-DD
       const puzzleId = todayStr.replace(/-/g, ''); // YYYYMMDD
       const langUpper = currentLang.toUpperCase();
@@ -980,7 +980,7 @@
     // Temporarily disabled custom modal with a bilingual holding notice
     function openCustomModal() {
       const msg = currentLang === 'es' 
-        ? "¡Pronto! Estamos trabajando en la configuración personalizada y los modos multijugador. ¡Mantente atento a las novedades mientras se desarrolla la emoción!" 
+        ? "¡Pronto en Estreno! Estamos trabajando en la configuración personalizada y los modos multijugador. ¡Mantente atento a las novedades mientras se desarrolla la emoción!" 
         : "Coming Soon! We are currently developing custom setups and multiplayer modes. Stand by while the excitement is being developed!";
       alert(msg);
     }
