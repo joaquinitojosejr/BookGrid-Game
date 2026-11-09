@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full dark">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+  <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/icon-192.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BOOKGRID® - Universal Library Word Puzzle</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Absolute Root Path for quotes.js -->
+  <script src="/quotes.js?v=final"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              border: '#334155',
+              gold: '#d4af37',
+              goldHover: '#b59226',
+              accent: '#38bdf8'
+            }
+          },
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            body: ['Inter', 'sans-serif'],
+            quote: ['Lora', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .no-select { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    html, body {
+      height: 100%; height: 100dvh; overflow: hidden; position: fixed; width: 100%; margin: 0; padding: 0;
+      padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);
+    }
+    .bg-word { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 3px; margin-right: 10px; margin-bottom: 10px; }
+    #floating-keyboard { position: fixed; bottom: calc(8px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 50; touch-action: none; }
+    #floating-reveal-card { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); z-index: 45; touch-action: none; }
+    .key-btn {
+      position: relative; background-color: #1e293b; color: #f8fafc; font-weight: 600; border-radius: 0.375rem;
+      font-size: 0.75rem; height: 2.35rem; min-width: 28px; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: all 0.2s ease;
+    }
+    .key-btn:hover { background-color: #334155; }
+    .key-btn:active { background-color: #475569; }
+    .key-btn.key-correct { background-color: #059669 !important; color: #ffffff !important; }
+    .key-btn.key-same-word { background-color: #d4af37 !important; color: #0f172a !important; font-weight: 700; }
+    .key-btn.key-present { background-color: #0284c7 !important; color: #ffffff !important; }
+    .key-btn.key-absent { background-color: #334155 !important; color: #64748b !important; opacity: 0.5; }
+    .key-count-badge {
+      position: absolute; top: -3px; right: -3px; font-size: 0.6rem; font-weight: 800; line-height: 1;
+      background-color: #0f172a; color: #d4af37; border: 1px solid #334155; padding: 1px 3px; border-radius: 3px;
+    }
+    .action-btn { font-size: 0.75rem; height: 2.35rem; padding-left: 0.5rem; padding-right: 0.5rem; display: flex; align-items: center; justify-content: center; border-radius: 0.375rem; }
+    .tile-box {
+      width: 1.65rem; height: 2.1rem; border-width: 1.5px; border-color: #334155; background-color: rgba(30, 41, 59, 0.9);
+      border-radius: 0.375rem; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif;
+      font-size: 0.95rem; font-weight: 700; color: #f8fafc; transition: all 0.2s ease; cursor: pointer;
+    }
+    .tile-box.active { border-color: #d4af37; box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3); transform: scale(1.05); background-color: #1e293b; }
+    .tile-box.tile-correct { background-color: rgba(6, 78, 59, 0.9); border-color: #10b981; color: #6ee7b7; }
+    .tile-box.tile-same-word { background-color: rgba(180, 130, 20, 0.9); border-color: #d4af37; color: #fef08a; }
+    .tile-box.tile-present { background-color: rgba(12, 74, 110, 0.9); border-color: #38bdf8; color: #7dd3fc; }
+    .tile-box.tile-absent { background-color: rgba(30, 41, 59, 0.5); border-color: #475569; color: #94a3b8; }
+    .punct-symbol { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 800; color: #d4af37; padding-left: 0.05rem; padding-right: 0.05rem; }
+    @media (min-width: 640px) {
+      .key-btn { min-width: 40px; font-size: 0.875rem; height: 2.85rem; }
+      .tile-box { width: 2.3rem; height: 2.8rem; font-size: 1.15rem; }
+      .bg-word { gap: 4px; margin-right: 14px; margin-bottom: 12px; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-brand-dark text-slate-800 dark:text-slate-100 font-body h-[100dvh] flex flex-col overflow-hidden no-select transition-colors duration-200">
+
+  <input type="text" id="hidden-keyboard-input" autocomplete="off" autocapitalize="none" spellcheck="false" class="sr-only opacity-0 absolute -z-50 pointer-events-none" aria-hidden="true" />
+
+  <!-- Header -->
+  <header class="bg-white dark:bg-brand-card border-b border-slate-200 dark:border-brand-border px-2 sm:px-4 py-2 flex items-center justify-between shrink-0 z-10 shadow-sm dark:shadow-none">
+    <div class="flex items-center space-x-1.5 shrink-0">
+      <i class="fa-solid fa-book-bookmark text-amber-600 dark:text-brand-gold text-lg sm:text-xl"></i>
+      <h1 class="font-serif font-bold text-base sm:text-2xl tracking-wider inline-flex items-baseline select-none">
+        <span class="text-emerald-500">B</span><span class="text-amber-500 dark:text-brand-gold">O</span><span class="text-sky-500 dark:text-brand-accent">O</span><span class="text-slate-400 dark:text-slate-500">K</span><span class="text-emerald-500">G</span><span class="text-amber-500 dark:text-brand-gold">R</span><span class="text-sky-500 dark:text-brand-accent">I</span><span class="text-slate-400 dark:text-slate-500">D</span>
+        <span class="text-[18px] sm:text-xs font-sans font-extrabold text-red-600/70 dark:text-brand-red/70 ml-0.5 relative -top-1">®</span>
+      </h1>
+    </div>
+    
+    <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
+      <!-- Virtual Keyboard Toggle Button -->
+      <button onclick="toggleVirtualKeyboard()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center" title="Toggle Virtual Keyboard">
+        <i class="fa-solid fa-keyboard text-sm sm:text-lg"></i>
+      </button>
+
+      <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-2 py-1.5 text-[11px] sm:text-xs font-bold text-amber-600 dark:text-brand-gold hover:text-amber-700 transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1">
+        <i class="fa-solid fa-globe"></i> <span id="lang-label">ES</span>
+      </button>
+      <button onclick="toggleFullscreen()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+        <i id="fullscreen-icon" class="fa-solid fa-expand text-sm sm:text-lg"></i>
+      </button>
+      <button onclick="toggleTheme()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        <i id="theme-icon" class="fa-solid fa-sun text-sm sm:text-lg"></i>
+      </button>
+      <button onclick="openQuoteInfoModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 text-amber-700 dark:text-brand-gold rounded-lg transition-colors flex items-center gap-1 border border-slate-200">
+        <i class="fa-solid fa-circle-nodes"></i> <span class="hidden xs:inline" data-i18n="detailsBtn">Details</span>
+      </button>
+      <button onclick="openCustomModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-lg transition-colors flex items-center gap-1 border border-slate-200">
+        <i class="fa-solid fa-users text-sky-600"></i> <span class="hidden xs:inline" data-i18n="customBtn">Custom</span>
+      </button>
+      <button onclick="openHelpModal()" class="p-1.5 sm:p-2 text-slate-500 hover:text-amber-600 dark:hover:text-brand-gold transition-colors">
+        <i class="fa-solid fa-circle-info text-base sm:text-lg"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sub-Header Status Bar -->
+  <div class="bg-slate-200/80 dark:bg-slate-900/80 border-b border-slate-300 dark:border-brand-border/50 px-3 py-1.5 flex items-center justify-between text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 shrink-0">
+    <div id="mode-indicator" class="flex items-center gap-1.5">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span id="mode-text" class="font-medium text-slate-800 dark:text-slate-300">Daily Challenge</span>
+    </div>
+    <div id="game-stats-quick" class="flex items-center gap-2 sm:gap-4">
+      <span><span data-i18n="mistakesLabel">Mistakes</span>: <strong id="stat-mistakes" class="text-rose-600 dark:text-rose-400">0</strong></span>
+      <span><span data-i18n="hintsLabel">Hints</span>: <strong id="stat-hints" class="text-amber-600 dark:text-amber-400">0</strong></span>
+      <span><span data-i18n="scoreLabel">Score</span>: <strong id="stat-score" class="text-amber-600 dark:text-brand-gold">100%</strong></span>
+    </div>
+  </div>
+
+  <!-- Main Game Container -->
+  <main id="main-content" class="flex-1 overflow-y-auto p-3 sm:p-4 flex flex-col items-center justify-start max-w-4xl mx-auto w-full pb-56">
+    
+    <!-- Daily Locked Banner -->
+    <div id="daily-locked-banner" class="hidden w-full bg-white dark:bg-slate-800/90 border border-amber-500/40 rounded-xl p-4 mb-4 text-center shadow-lg">
+      <div class="inline-flex p-2.5 bg-amber-500/10 text-amber-600 dark:text-brand-gold rounded-full mb-2">
+        <i class="fa-solid fa-lock text-xl"></i>
+      </div>
+      <h2 id="locked-title" class="font-serif text-lg text-amber-600 dark:text-brand-gold font-bold mb-1">Today's Puzzle Completed!</h2>
+      <p id="locked-score-summary" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3">You scored 100% on today's literary quote.</p>
+      
+      <div class="flex flex-wrap items-center justify-center gap-2.5">
+        <button onclick="shareResults()" class="px-4 py-2 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 text-white dark:text-slate-950 font-bold rounded-lg transition-colors flex items-center gap-2 text-xs sm:text-sm shadow-md">
+          <i class="fa-solid fa-share-nodes"></i> <span data-i18n="shareBtn">Share Score Card</span>
+        </button>
+        <div class="bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-brand-border text-xs text-slate-600 dark:text-slate-400">
+          <span data-i18n="nextQuoteLabel">Next Quote in</span>: <span id="countdown-timer" class="font-mono text-sky-600 dark:text-brand-accent font-bold">00:00:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clue Legend Bar -->
+    <div class="w-full max-w-md flex flex-wrap justify-center items-center gap-2 mb-2 text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-900/60 py-1 px-2.5 rounded-lg border border-slate-300 dark:border-brand-border/40 shadow-sm">
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span data-i18n="legendCorrect">Correct Slot</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span><span data-i18n="legendSameWord">Same Word</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span><span data-i18n="legendInQuote">In Quote</span></div>
+      <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-600"></span><span data-i18n="legendNotInQuote">Not in Quote</span></div>
+    </div>
+
+    <!-- Quote Grid Container -->
+    <div id="quote-container" class="w-full flex flex-wrap justify-center items-center py-2 sm:py-4 min-h-[140px]"></div>
+
+  </main>
+
+  <!-- Floating Reveal Card -->
+  <div id="floating-reveal-card" class="w-[90%] max-w-sm bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl shadow-2xl overflow-hidden hidden">
+    <div id="reveal-card-drag-handle" class="flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800/90 border-b border-slate-200 dark:border-brand-border/60 cursor-grab text-xs text-slate-700 dark:text-slate-300">
+      <div class="flex items-center gap-2 font-semibold text-amber-600 dark:text-brand-gold">
+        <i class="fa-solid fa-grip-lines text-slate-400"></i>
+        <span><i class="fa-solid fa-feather-pointed"></i> <span data-i18n="sourceRevealed">SOURCE REVEALED</span></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="resetRevealCardPosition()" class="p-1 text-slate-500 hover:text-slate-800 rounded" title="Center Card">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+        </button>
+        <button onclick="toggleRevealCardCollapse()" id="btn-toggle-reveal-card" class="p-1 text-slate-500 hover:text-slate-800 rounded">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+    <div id="reveal-card-body" class="p-4 text-center">
+      <h3 id="book-title" class="font-serif text-base sm:text-lg font-bold text-sky-600 dark:text-brand-accent mb-1 italic">Book Title</h3>
+      <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-quote">— <span id="author-name" class="text-slate-900 dark:text-slate-100 font-semibold not-italic">Author Name</span></p>
+    </div>
+  </div>
+
+  <!-- Floating Virtual Keyboard -->
+  <div id="floating-keyboard" class="w-[98%] max-w-md bg-white/95 dark:bg-brand-card/95 backdrop-blur-md border border-slate-200 dark:border-brand-border rounded-2xl shadow-2xl p-2">
+    <div id="keyboard-drag-handle" class="flex items-center justify-between px-3 py-1 cursor-grab border-b border-slate-200 dark:border-brand-border/60 mb-1.5">
+      <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+        <i class="fa-solid fa-grip-lines text-slate-400"></i>
+        <span data-i18n="keyboardTitle">KEYBOARD (Badges = Remaining)</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button onclick="resetKeyboardPosition()" class="text-[11px] text-slate-500 hover:text-slate-800 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800" title="Center">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+        </button>
+        <button onclick="toggleKeyboardCollapse()" id="btn-toggle-keyboard" class="text-[11px] text-slate-500 hover:text-slate-800 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="keyboard-keys-container" class="flex flex-col gap-1">
+      <div class="flex justify-center gap-1">
+        <button id="key-Q" onclick="handleVirtualKey('Q')" class="key-btn">Q<span class="key-count-badge" id="badge-Q"></span></button>
+        <button id="key-W" onclick="handleVirtualKey('W')" class="key-btn">W<span class="key-count-badge" id="badge-W"></span></button>
+        <button id="key-E" onclick="handleVirtualKey('E')" class="key-btn">E<span class="key-count-badge" id="badge-E"></span></button>
+        <button id="key-R" onclick="handleVirtualKey('R')" class="key-btn">R<span class="key-count-badge" id="badge-R"></span></button>
+        <button id="key-T" onclick="handleVirtualKey('T')" class="key-btn">T<span class="key-count-badge" id="badge-T"></span></button>
+        <button id="key-Y" onclick="handleVirtualKey('Y')" class="key-btn">Y<span class="key-count-badge" id="badge-Y"></span></button>
+        <button id="key-U" onclick="handleVirtualKey('U')" class="key-btn">U<span class="key-count-badge" id="badge-U"></span></button>
+        <button id="key-I" onclick="handleVirtualKey('I')" class="key-btn">I<span class="key-count-badge" id="badge-I"></span></button>
+        <button id="key-O" onclick="handleVirtualKey('O')" class="key-btn">O<span class="key-count-badge" id="badge-O"></span></button>
+        <button id="key-P" onclick="handleVirtualKey('P')" class="key-btn">P<span class="key-count-badge" id="badge-P"></span></button>
+      </div>
+      <div class="flex justify-center gap-1">
+        <button id="key-A" onclick="handleVirtualKey('A')" class="key-btn">A<span class="key-count-badge" id="badge-A"></span></button>
+        <button id="key-S" onclick="handleVirtualKey('S')" class="key-btn">S<span class="key-count-badge" id="badge-S"></span></button>
+        <button id="key-D" onclick="handleVirtualKey('D')" class="key-btn">D<span class="key-count-badge" id="badge-D"></span></button>
+        <button id="key-F" onclick="handleVirtualKey('F')" class="key-btn">F<span class="key-count-badge" id="badge-F"></span></button>
+        <button id="key-G" onclick="handleVirtualKey('G')" class="key-btn">G<span class="key-count-badge" id="badge-G"></span></button>
+        <button id="key-H" onclick="handleVirtualKey('H')" class="key-btn">H<span class="key-count-badge" id="badge-H"></span></button>
+        <button id="key-J" onclick="handleVirtualKey('J')" class="key-btn">J<span class="key-count-badge" id="badge-J"></span></button>
+        <button id="key-K" onclick="handleVirtualKey('K')" class="key-btn">K<span class="key-count-badge" id="badge-K"></span></button>
+        <button id="key-L" onclick="handleVirtualKey('L')" class="key-btn">L<span class="key-count-badge" id="badge-L"></span></button>
+        <button id="key-Ñ" onclick="handleVirtualKey('Ñ')" class="key-btn hidden" id-es-key="true">Ñ<span class="key-count-badge" id="badge-Ñ"></span></button>
+      </div>
+      <div class="flex justify-center gap-1">
+        <button onclick="useHint()" class="action-btn bg-amber-600 hover:bg-amber-700 text-white" title="Hint">
+          <i class="fa-solid fa-lightbulb"></i>
+        </button>
+        <button id="key-Z" onclick="handleVirtualKey('Z')" class="key-btn">Z<span class="key-count-badge" id="badge-Z"></span></button>
+        <button id="key-X" onclick="handleVirtualKey('X')" class="key-btn">X<span class="key-count-badge" id="badge-X"></span></button>
+        <button id="key-C" onclick="handleVirtualKey('C')" class="key-btn">C<span class="key-count-badge" id="badge-C"></span></button>
+        <button id="key-V" onclick="handleVirtualKey('V')" class="key-btn">V<span class="key-count-badge" id="badge-V"></span></button>
+        <button id="key-B" onclick="handleVirtualKey('B')" class="key-btn">B<span class="key-count-badge" id="badge-B"></span></button>
+        <button id="key-N" onclick="handleVirtualKey('N')" class="key-btn">N<span class="key-count-badge" id="badge-N"></span></button>
+        <button id="key-M" onclick="handleVirtualKey('M')" class="key-btn">M<span class="key-count-badge" id="badge-M"></span></button>
+        <button onclick="handleBackspace()" class="action-btn bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 text-slate-800 dark:text-slate-200">
+          <i class="fa-solid fa-delete-left"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals (Quote Info, Results, Help) -->
+  <div id="modal-quote-info" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-brand-border">
+        <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100 text-base flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-amber-600 dark:text-brand-gold"></i> <span data-i18n="quoteDetailsTitle">Quote Details</span>
+        </h3>
+        <button onclick="closeQuoteInfoModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div class="space-y-3 text-sm">
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="categoryLabel">Category</span>
+          <span id="info-category" class="text-slate-800 dark:text-slate-100 font-medium">-</span>
+        </div>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="subcategoryLabel">Sub-Category</span>
+          <span id="info-subcategory" class="text-slate-800 dark:text-slate-100 font-medium">-</span>
+        </div>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="authorLabel">Author</span>
+          <span id="info-author" class="text-amber-600 dark:text-brand-gold font-medium">-</span>
+        </div>
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-3 rounded-lg border border-slate-200 dark:border-brand-border/60">
+          <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold block mb-0.5" data-i18n="bookLabel">Book / Source</span>
+          <span id="info-book" class="text-sky-600 dark:text-brand-accent font-medium italic">-</span>
+        </div>
+      </div>
+      <button onclick="closeQuoteInfoModal()" class="w-full mt-5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-800 dark:text-slate-200 font-semibold py-2.5 rounded-lg text-sm transition-colors" data-i18n="closeBtn">Close</button>
+    </div>
+  </div>
+
+  <div id="modal-results" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden overflow-y-auto">
+    <div class="bg-white dark:bg-brand-card border border-amber-500/40 rounded-2xl max-w-sm w-full p-4 shadow-2xl text-center my-auto">
+      <div class="inline-flex p-2 bg-emerald-500/10 text-emerald-500 rounded-full mb-1"><i class="fa-solid fa-trophy text-lg"></i></div>
+      <h3 class="font-serif text-base font-bold text-slate-900 dark:text-slate-100 mb-0.5" data-i18n="puzzleSolvedTitle">Puzzle Solved!</h3>
+      <p id="results-author-quote" class="text-[11px] text-slate-500 dark:text-slate-400 italic mb-3 font-quote">"..."</p>
+      <div class="space-y-3 mb-3 text-left">
+        <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-brand-border rounded-xl p-3 text-[11px] space-y-1">
+          <div class="flex justify-between text-slate-700 dark:text-slate-300"><span data-i18n="quoteLettersLabel">Quote Letters:</span><span class="font-bold text-sky-600" id="res-total-letters">0</span></div>
+          <div class="flex justify-between text-slate-700 dark:text-slate-300"><span data-i18n="timeTakenLabel">Time Taken:</span><span class="font-bold text-amber-600 font-mono" id="res-time-taken">00:00</span></div>
+          <div class="border-t border-slate-200 dark:border-brand-border pt-1 flex justify-between text-xs font-bold text-slate-900 dark:text-slate-100"><span data-i18n="finalScoreLabel">Final Score:</span><span class="text-amber-600 dark:text-brand-gold" id="res-final-score">100%</span></div>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button id="btn-copy-card" onclick="shareResults()" class="flex-1 bg-amber-500 dark:bg-brand-gold hover:bg-amber-600 text-white dark:text-slate-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-image"></i> <span data-i18n="copyCardBtn">Copy Score Card</span>
+        </button>
+        <button onclick="closeResultsModal()" class="px-4 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold py-2.5" data-i18n="closeBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-help" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-brand-card border border-slate-200 dark:border-brand-border rounded-2xl max-w-sm w-full p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-serif font-bold text-slate-900 dark:text-slate-100 text-sm" data-i18n="helpTitle">How to Play & Clues</h3>
+        <button onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="text-xs text-slate-600 dark:text-slate-300 space-y-2 leading-relaxed">
+        <p data-i18n="helpLine1">• Fill in missing quote tiles using your physical or virtual keyboard.</p>
+        <p><strong class="text-emerald-600" data-i18n="helpEmerald">Emerald Green:</strong> Correct letter in exact tile slot!</p>
+        <p><strong class="text-amber-600" data-i18n="helpGold">Warm Gold:</strong> Letter belongs inside this word, wrong position!</p>
+        <p><strong class="text-sky-600" data-i18n="helpCyan">Cyan Blue:</strong> Letter exists in quote, different word.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TRANSLATIONS = {
+      en: {
+        langToggle: "ES", dailyChallenge: "Daily Challenge", customMode: "Custom Mode", mistakesLabel: "Mistakes",
+        hintsLabel: "Hints", scoreLabel: "Score", detailsBtn: "Details", customBtn: "Custom", lockedTitle: "Today's Puzzle Completed!",
+        shareBtn: "Share Score Card", nextQuoteLabel: "Next Quote in", legendCorrect: "Correct Slot", legendSameWord: "Same Word",
+        legendInQuote: "In Quote", legendNotInQuote: "Not in Quote", sourceRevealed: "SOURCE REVEALED", keyboardTitle: "KEYBOARD",
+        quoteDetailsTitle: "Quote Details", categoryLabel: "Category", subcategoryLabel: "Sub-Category", authorLabel: "Author",
+        bookLabel: "Book / Source", closeBtn: "Close", customSetupTitle: "Custom Game Setup", selectGenreLabel: "Select Genre Preset",
+        presetCustom: "-- Custom Quote Entry --", presetPhil: "Philosophy & Ethics", presetScifi: "Sci-Fi & Cyberpunk",
+        presetClassic: "Classic Fiction", presetScience: "Science & Physics", launchGameBtn: "Launch Game", backToDailyBtn: "Back to Daily",
+        puzzleSolvedTitle: "Puzzle Solved!", quoteLettersLabel: "Quote Letters:", timeTakenLabel: "Time Taken:", finalScoreLabel: "Final Score:",
+        copyCardBtn: "Copy Score Card", helpTitle: "How to Play & Clues", helpLine1: "• Fill in missing quote tiles using your keyboard.",
+        cardFinalScore: "FINAL SCORE", cardMistakes: "Mistakes:", cardHints: "Hints Used:", cardTime: "Time Taken:"
+      },
+      es: {
+        langToggle: "EN", dailyChallenge: "Desafío Diario", customMode: "Modo Personalizado", mistakesLabel: "Errores",
+        hintsLabel: "Pistas", scoreLabel: "Puntuación", detailsBtn: "Detalles", customBtn: "Personalizado", lockedTitle: "¡Rompecabezas Completado!",
+        shareBtn: "Compartir Tarjeta", nextQuoteLabel: "Siguiente Frase en", legendCorrect: "Casilla Correcta", legendSameWord: "Misma Palabra",
+        legendInQuote: "En la Frase", legendNotInQuote: "No en la Frase", sourceRevealed: "FUENTE REVELADA", keyboardTitle: "TECLADO",
+        quoteDetailsTitle: "Detalles de la Frase", categoryLabel: "Categoría", subcategoryLabel: "Subcategoría", authorLabel: "Autor",
+        bookLabel: "Libro / Fuente", closeBtn: "Cerrar", customSetupTitle: "Configuración Personalizada", selectGenreLabel: "Seleccionar Género",
+        presetCustom: "-- Ingresar Frase --", presetPhil: "Filosofía y Ética", presetScifi: "Ciencia Ficción",
+        presetClassic: "Ficción Clásica", presetScience: "Ciencia y Física", launchGameBtn: "Iniciar Juego", backToDailyBtn: "Volver al Diario",
+        puzzleSolvedTitle: "¡Resuelto!", quoteLettersLabel: "Letras:", timeTakenLabel: "Tiempo:", finalScoreLabel: "Puntuación Final:",
+        copyCardBtn: "Copiar Imagen", helpTitle: "Cómo Jugar y Pistas", helpLine1: "• Completa las casillas vacías usando el teclado.",
+        cardFinalScore: "PUNTUACIÓN FINAL", cardMistakes: "Errores:", cardHints: "Pistas Usadas:", cardTime: "Tiempo:"
+      }
+    };
+
+    const FALLBACK_PAYLOAD = {
+      daily: [
+        { 
+          en: { quote: "GOD DOES NOT PLAY DICE WITH THE UNIVERSE", author: "Albert Einstein", title: "Letter to Max Born", published: "1926", trivia: "Quantum mechanics view", category: "Science", subCategory: "Physics" },
+          es: { quote: "DIOS NO JUEGA A LOS DADOS CON EL UNIVERSO", author: "Albert Einstein", title: "Carta a Max Born", published: "1926", trivia: "Mecánica cuántica", category: "Ciencia", subCategory: "Física" }
+        }
+      ],
+      presets: {
+        philosophy: [
+          { en: { quote: "HE WHO HAS A WHY TO LIVE CAN BEAR ALMOST ANY HOW", author: "Friedrich Nietzsche", title: "Twilight of the Idols", published: "1889", trivia: "Maxims", category: "Philosophy", subCategory: "Ethics" },
+            es: { quote: "QUIEN TIENE UN PORQUE PARA VIVIR PUEDE SOPORTAR CASI CUALQUIER COMO", author: "Friedrich Nietzsche", title: "El crepúsculo", published: "1889", trivia: "Máximas", category: "Filosofía", subCategory: "Ética" } }
+        ]
+      }
+    };
+
+    let GAME_DATA = FALLBACK_PAYLOAD;
+    let currentLang = localStorage.getItem('bookgrid_lang') || 'en';
+    let currentGameMode = 'daily';
+    let targetQuote = "", targetAuthor = "", targetTitle = "", targetCategory = "", targetSubCategory = "", targetPublished = "", targetTrivia = "";
+    let cleanLetters = [], wordAssignments = [], wordsCleanLetters = [], userGuesses = [], lockedTiles = [], keyStates = {}, letterCountsTotal = {}, letterCountsSolved = {};
+    let selectedTileIndex = 0, countMistakes = 0, countHints = 0, isGameComplete = false, isNativeKeyboardActive = false;
+    let gameStartTime = null, gameElapsedTimeSeconds = 0, gameTimerInterval = null;
+
+    function loadGameData() {
+      if (typeof window.BOOKGRID_DATA !== 'undefined' && window.BOOKGRID_DATA && window.BOOKGRID_DATA.daily) {
+        GAME_DATA = window.BOOKGRID_DATA;
+        console.log("Loaded external quotes successfully.");
+      } else {
+        GAME_DATA = FALLBACK_PAYLOAD;
+      }
+      initDailyGame();
+    }
+
+    function toggleLanguage() {
+      saveCurrentProgress(); // Save current language progress before switching languages
+      
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+      localStorage.setItem('bookgrid_lang', currentLang);
+      updateLanguageUI();
+      if (currentGameMode === 'daily') initDailyGame();
+    }
+
+    function saveCurrentProgress() {
+      if (currentGameMode !== 'daily' || isGameComplete) return;
+      const todayStr = getTodayUTCString();
+      const progressKey = `bookgrid_daily_progress_${currentLang}_${todayStr}`;
+      
+      const progressData = {
+        userGuesses: userGuesses,
+        lockedTiles: lockedTiles,
+        countMistakes: countMistakes,
+        countHints: countHints,
+        timeSeconds: gameElapsedTimeSeconds
+      };
+      localStorage.setItem(progressKey, JSON.stringify(progressData));
+    }
+
+    function updateLanguageUI() {
+      const dict = TRANSLATIONS[currentLang];
+      document.getElementById('lang-label').innerText = currentLang === 'en' ? 'ES' : 'EN';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.innerHTML = dict[key];
+      });
+      const nKey = document.querySelector('[id-es-key="true"]');
+      if (nKey) {
+        if (currentLang === 'es') nKey.classList.remove('hidden');
+        else nKey.classList.add('hidden');
+      }
+    }
+
+    function t(key) { return TRANSLATIONS[currentLang][key] || key; }
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('bookgrid_theme');
+      if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); updateThemeIcon(false); }
+      else { document.documentElement.classList.add('dark'); updateThemeIcon(true); }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('bookgrid_theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('theme-icon');
+      if (!icon) return;
+      icon.className = isDark ? 'fa-solid fa-sun text-sm sm:text-lg text-amber-400' : 'fa-solid fa-moon text-sm sm:text-lg text-slate-700';
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
+      else if (document.exitFullscreen) { document.exitFullscreen(); }
+    }
+
+    function toggleVirtualKeyboard() {
+      const kb = document.getElementById('floating-keyboard');
+      if (kb) {
+        kb.classList.toggle('hidden');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      updateLanguageUI();
+      initKeyboardDrag();
+      initRevealCardDrag();
+      startCountdownTimer();
+      loadGameData();
+
+      window.addEventListener('keydown', (e) => {
+        if (isGameComplete) return;
+        const key = e.key.toUpperCase();
+        if (((key >= 'A' && key <= 'Z') || key === 'Ñ') && key.length === 1) handleVirtualKey(key);
+        else if (e.key === 'Backspace') handleBackspace();
+      });
+    });
+
+    function getTodayUTCString() {
+      const now = new Date();
+      return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
+    }
+
+    function startGameTimer() {
+      gameStartTime = Date.now();
+      if (gameTimerInterval) clearInterval(gameTimerInterval);
+      gameTimerInterval = setInterval(() => {
+        if (!isGameComplete) gameElapsedTimeSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
+      }, 1000);
+    }
+
+    function startCountdownTimer() {
+      function updateTimer() {
+        const now = new Date();
+        const nextUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
+        const diff = nextUTC - now;
+
+        const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+        const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+        const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+
+        const timerEl = document.getElementById('countdown-timer');
+        if (timerEl) {
+          timerEl.innerText = `${hours}:${minutes}:${seconds}`;
+        }
+      }
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    function formatTime(s) {
+      return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+    }
+
+    function initDailyGame() {
+      currentGameMode = 'daily';
+      document.getElementById('mode-text').innerText = t('dailyChallenge');
+      const todayStr = getTodayUTCString();
+      const solvedKey = `bookgrid_daily_solved_${currentLang}_${todayStr}`;
+      const progressKey = `bookgrid_daily_progress_${currentLang}_${todayStr}`;
+
+      const savedSolvedData = localStorage.getItem(solvedKey);
+      const savedProgressData = localStorage.getItem(progressKey);
+
+      let dateHash = 0;
+      for (let i = 0; i < todayStr.length; i++) dateHash += todayStr.charCodeAt(i);
+      
+      const dailyPool = GAME_DATA.daily || FALLBACK_PAYLOAD.daily;
+      const masterObj = dailyPool[dateHash % dailyPool.length];
+      const quoteObj = masterObj[currentLang] || masterObj['en'];
+
+      targetQuote = quoteObj.quote;
+      targetAuthor = quoteObj.author;
+      targetTitle = quoteObj.title;
+      targetCategory = quoteObj.category || "General";
+      targetSubCategory = quoteObj.subCategory || "Literature";
+      targetPublished = quoteObj.published || "Unknown";
+      targetTrivia = quoteObj.trivia || "Notable excerpt.";
+
+      updateQuoteInfoModalUI();
+
+      if (savedSolvedData) {
+        const data = JSON.parse(savedSolvedData);
+        countMistakes = data.mistakes;
+        countHints = data.hints;
+        gameElapsedTimeSeconds = data.timeSeconds || 0;
+        isGameComplete = true;
+
+        setupBoard();
+        userGuesses = [...cleanLetters];
+        lockedTiles = cleanLetters.map(() => true);
+        
+        cleanLetters.forEach(ch => {
+          letterCountsSolved[ch] = letterCountsTotal[ch];
+          updateVirtualKeyboardState(ch, 'correct');
+        });
+
+        renderBoard();
+        document.getElementById('daily-locked-banner').classList.remove('hidden');
+        document.getElementById('floating-keyboard').classList.add('hidden');
+        
+        const revealCard = document.getElementById('floating-reveal-card');
+        revealCard.classList.remove('hidden');
+        document.getElementById('author-name').innerText = targetAuthor;
+        document.getElementById('book-title').innerText = targetTitle;
+        document.getElementById('locked-score-summary').innerText = `Score: ${data.score}%`;
+        updateStatsDisplay();
+      } else {
+        setupBoard();
+
+        if (savedProgressData) {
+          const data = JSON.parse(savedProgressData);
+          userGuesses = data.userGuesses || [];
+          lockedTiles = data.lockedTiles || [];
+          countMistakes = data.countMistakes || 0;
+          countHints = data.countHints || 0;
+          gameElapsedTimeSeconds = data.timeSeconds || 0;
+          isGameComplete = false;
+
+          userGuesses.forEach((val, idx) => {
+            if (val && val === cleanLetters[idx]) {
+              lockedTiles[idx] = true;
+              letterCountsSolved[val] = (letterCountsSolved[val] || 0) + 1;
+              updateVirtualKeyboardState(val, 'correct');
+            } else if (val) {
+              const wordIdx = wordAssignments[idx];
+              const currentWordLetters = wordsCleanLetters[wordIdx] || [];
+              if (currentWordLetters.includes(val)) {
+                updateVirtualKeyboardState(val, 'same-word');
+              } else if (cleanLetters.includes(val)) {
+                updateVirtualKeyboardState(val, 'present');
+              } else {
+                updateVirtualKeyboardState(val, 'absent');
+              }
+            }
+          });
+
+          renderBoard();
+          updateStatsDisplay();
+        } else {
+          isGameComplete = false;
+          countMistakes = 0;
+          countHints = 0;
+          gameElapsedTimeSeconds = 0;
+          document.getElementById('daily-locked-banner').classList.add('hidden');
+          document.getElementById('floating-keyboard').classList.remove('hidden');
+          document.getElementById('floating-reveal-card').classList.add('hidden');
+        }
+        startGameTimer();
+      }
+    }
+
+    function updateQuoteInfoModalUI() {
+      document.getElementById('info-category').innerText = targetCategory;
+      document.getElementById('info-subcategory').innerText = targetSubCategory;
+      document.getElementById('info-author').innerText = targetAuthor;
+      document.getElementById('info-book').innerText = targetTitle;
+    }
+
+    function setupBoard() {
+      cleanLetters = []; wordAssignments = []; wordsCleanLetters = []; userGuesses = []; lockedTiles = []; keyStates = {}; letterCountsTotal = {}; letterCountsSolved = {}; selectedTileIndex = 0;
+      const rawWords = targetQuote.split(' ');
+      const container = document.getElementById('quote-container');
+      container.innerHTML = '';
+      let globalLetterIndex = 0;
+
+      rawWords.forEach((wordStr, wordIdx) => {
+        const wordEl = document.createElement('div');
+        wordEl.className = 'bg-word';
+        const currentWordLetters = [];
+
+        for (let i = 0; i < wordStr.length; i++) {
+          const char = wordStr[i], upperChar = char.toUpperCase();
+          if ((upperChar >= 'A' && upperChar <= 'Z') || upperChar === 'Ñ') {
+            cleanLetters.push(upperChar); wordAssignments.push(wordIdx); currentWordLetters.push(upperChar); userGuesses.push(''); lockedTiles.push(false);
+            letterCountsTotal[upperChar] = (letterCountsTotal[upperChar] || 0) + 1;
+            letterCountsSolved[upperChar] = 0;
+            const tile = document.createElement('div');
+            tile.id = `tile-${globalLetterIndex}`; tile.className = 'tile-box';
+            const idx = globalLetterIndex; tile.onclick = () => selectTile(idx);
+            wordEl.appendChild(tile); globalLetterIndex++;
+          } else {
+            const punct = document.createElement('span'); punct.className = 'punct-symbol'; punct.innerText = char; wordEl.appendChild(punct);
+          }
+        }
+        wordsCleanLetters.push(currentWordLetters);
+        container.appendChild(wordEl);
+      });
+      resetVirtualKeyboardUI();
+      findNextAvailableTileIndex();
+      renderBoard();
+      updateStatsDisplay();
+    }
+
+    function resetVirtualKeyboardUI() {
+      document.querySelectorAll('.key-btn').forEach(k => k.classList.remove('key-correct', 'key-same-word', 'key-present', 'key-absent'));
+      for (let i = 65; i <= 90; i++) {
+        const badge = document.getElementById(`badge-${String.fromCharCode(i)}`);
+        if (badge) badge.innerText = '';
+      }
+      const nBadge = document.getElementById('badge-Ñ');
+      if (nBadge) nBadge.innerText = '';
+    }
+
+    function updateVirtualKeyboardState(letter, state) {
+      const current = keyStates[letter], priority = { 'correct': 4, 'same-word': 3, 'present': 2, 'absent': 1 };
+      if (!current || priority[state] > (priority[current] || 0)) keyStates[letter] = state;
+      const keyBtn = letter === 'Ñ' ? document.getElementById('key-Ñ') : document.getElementById(`key-${letter}`);
+      if (keyBtn) {
+        keyBtn.classList.remove('key-correct', 'key-same-word', 'key-present', 'key-absent');
+        keyBtn.classList.add(`key-${keyStates[letter]}`);
+      }
+      updateKeyboardBadge(letter);
+    }
+
+    function updateKeyboardBadge(letter) {
+      const badge = letter === 'Ñ' ? document.getElementById('badge-Ñ') : document.getElementById(`badge-${letter}`);
+      if (!badge) return;
+      const total = letterCountsTotal[letter] || 0, solved = letterCountsSolved[letter] || 0, remaining = total - solved;
+      badge.innerText = total === 0 ? '' : (remaining > 0 ? remaining : '∗');
+    }
+
+    function renderBoard() {
+      for (let i = 0; i < cleanLetters.length; i++) {
+        const tile = document.getElementById(`tile-${i}`);
+        if (!tile) continue;
+        const val = userGuesses[i] || '';
+        tile.innerText = val;
+        tile.classList.remove('active', 'tile-correct', 'tile-same-word', 'tile-present', 'tile-absent');
+        if (isGameComplete || lockedTiles[i]) {
+          tile.classList.add('tile-correct');
+        } else if (val !== '') {
+          const wordIdx = wordAssignments[i], currentWordLetters = wordsCleanLetters[wordIdx] || [];
+          if (val === cleanLetters[i]) tile.classList.add('tile-correct');
+          else if (currentWordLetters.includes(val)) tile.classList.add('tile-same-word');
+          else if (cleanLetters.includes(val)) tile.classList.add('tile-present');
+          else tile.classList.add('tile-absent');
+        } else if (i === selectedTileIndex) {
+          tile.classList.add('active');
+        }
+      }
+    }
+
+    function selectTile(index) {
+      if (isGameComplete || lockedTiles[index]) return;
+      selectedTileIndex = index;
+      renderBoard();
+    }
+
+    function findNextAvailableTileIndex() {
+      for (let i = selectedTileIndex; i < cleanLetters.length; i++) { if (!lockedTiles[i]) { selectedTileIndex = i; return; } }
+      for (let i = 0; i < selectedTileIndex; i++) { if (!lockedTiles[i]) { selectedTileIndex = i; return; } }
+    }
+
+    function handleVirtualKey(letter) {
+      if (isGameComplete || lockedTiles[selectedTileIndex]) return;
+      userGuesses[selectedTileIndex] = letter;
+      const wordIdx = wordAssignments[selectedTileIndex], currentWordLetters = wordsCleanLetters[wordIdx] || [];
+
+      if (letter === cleanLetters[selectedTileIndex]) {
+        lockedTiles[selectedTileIndex] = true;
+        letterCountsSolved[letter] = (letterCountsSolved[letter] || 0) + 1;
+        updateVirtualKeyboardState(letter, 'correct');
+      } else {
+        countMistakes++;
+        if (currentWordLetters.includes(letter)) updateVirtualKeyboardState(letter, 'same-word');
+        else if (cleanLetters.includes(letter)) updateVirtualKeyboardState(letter, 'present');
+        else updateVirtualKeyboardState(letter, 'absent');
+      }
+      findNextAvailableTileIndex();
+      renderBoard();
+      updateStatsDisplay();
+      saveCurrentProgress();
+      checkWinCondition();
+    }
+
+    function handleBackspace() {
+      if (isGameComplete) return;
+      if (!lockedTiles[selectedTileIndex] && userGuesses[selectedTileIndex] !== '') {
+        userGuesses[selectedTileIndex] = '';
+      } else {
+        let prev = selectedTileIndex - 1;
+        while (prev >= 0 && lockedTiles[prev]) prev--;
+        if (prev >= 0) { selectedTileIndex = prev; if (!lockedTiles[selectedTileIndex]) userGuesses[selectedTileIndex] = ''; }
+      }
+      renderBoard();
+      saveCurrentProgress();
+    }
+
+    function useHint() {
+      if (isGameComplete) return;
+      const unrevealed = [];
+      for (let i = 0; i < cleanLetters.length; i++) { if (!lockedTiles[i]) unrevealed.push(i); }
+      if (unrevealed.length === 0) return;
+      const randomIdx = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+      const char = cleanLetters[randomIdx];
+      userGuesses[randomIdx] = char; lockedTiles[randomIdx] = true;
+      letterCountsSolved[char] = (letterCountsSolved[char] || 0) + 1;
+      countHints++;
+      updateVirtualKeyboardState(char, 'correct');
+      selectedTileIndex = randomIdx;
+      findNextAvailableTileIndex();
+      renderBoard();
+      updateStatsDisplay();
+      saveCurrentProgress();
+      checkWinCondition();
+    }
+
+    function checkWinCondition() {
+      if (lockedTiles.every(s => s === true)) {
+        isGameComplete = true;
+        if (gameTimerInterval) clearInterval(gameTimerInterval);
+        const finalScore = calculateScore();
+
+        if (currentGameMode === 'daily') {
+          const todayStr = getTodayUTCString();
+          // Explicitly namespace solved state by currentLang so languages never conflict
+          localStorage.setItem(`bookgrid_daily_solved_${currentLang}_${todayStr}`, JSON.stringify({
+            score: finalScore,
+            mistakes: countMistakes,
+            hints: countHints,
+            timeSeconds: gameElapsedTimeSeconds
+          }));
+          localStorage.removeItem(`bookgrid_daily_progress_${currentLang}_${todayStr}`);
+        }
+
+        setTimeout(() => {
+          document.getElementById('floating-reveal-card').classList.remove('hidden');
+          document.getElementById('author-name').innerText = targetAuthor;
+          document.getElementById('book-title').innerText = targetTitle;
+          openResultsModal();
+        }, 300);
+      }
+    }
+
+    function calculateScore() {
+      const total = cleanLetters.length || 1;
+      // Allow scores to drop below 0% for competitive tournament tracking
+      return Math.round((100 - (countMistakes * (100 / total)) - (countHints * (50 / total))) * 10) / 10;
+    }
+
+    function updateStatsDisplay() {
+      document.getElementById('stat-mistakes').innerText = countMistakes;
+      document.getElementById('stat-hints').innerText = countHints;
+      document.getElementById('stat-score').innerText = `${calculateScore()}%`;
+    }
+
+    function initKeyboardDrag() { makeDraggable('floating-keyboard', 'keyboard-drag-handle'); }
+    function initRevealCardDrag() { makeDraggable('floating-reveal-card', 'reveal-card-drag-handle'); }
+
+    function makeDraggable(containerId, handleId) {
+      const el = document.getElementById(containerId), handle = document.getElementById(handleId);
+      let isDragging = false, startX, startY, initL, initT;
+      handle.addEventListener('pointerdown', (e) => {
+        isDragging = true; const r = el.getBoundingClientRect();
+        startX = e.clientX; startY = e.clientY; initL = r.left; initT = r.top;
+        handle.setPointerCapture(e.pointerId);
+      });
+      handle.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        el.style.left = `${initL + (e.clientX - startX)}px`;
+        el.style.top = `${initT + (e.clientY - startY)}px`;
+        el.style.bottom = 'auto'; el.style.transform = 'none';
+      });
+      handle.addEventListener('pointerup', (e) => { isDragging = false; handle.releasePointerCapture(e.pointerId); });
+    }
+
+    function resetKeyboardPosition() {
+      const kb = document.getElementById('floating-keyboard');
+      kb.style.left = '50%'; kb.style.top = 'auto'; kb.style.bottom = 'calc(8px + env(safe-area-inset-bottom))'; kb.style.transform = 'translateX(-50%)';
+    }
+    function resetRevealCardPosition() {
+      const c = document.getElementById('floating-reveal-card');
+      c.style.left = '50%'; c.style.top = '90px'; c.style.transform = 'translateX(-50%)';
+    }
+    function toggleKeyboardCollapse() { document.getElementById('keyboard-keys-container').classList.toggle('hidden'); }
+    function toggleRevealCardCollapse() { document.getElementById('reveal-card-body').classList.toggle('hidden'); }
+
+    async function shareResults() {
+      const score = calculateScore();
+      const canvas = document.createElement('canvas');
+      canvas.width = 840; 
+      canvas.height = 760; 
+      const ctx = canvas.getContext('2d');
+      ctx.scale(2, 2);
+
+      // Background
+      ctx.fillStyle = '#0f172a'; 
+      ctx.fillRect(0, 0, 420, 380);
+
+      // Multi-color BOOKGRID® Title matching Main UI with Superscript Registered Mark
+      const titleY = 42;
+      const parts = [
+        { text: 'B', color: '#10b981', font: '800 28px Cinzel' }, // Emerald-500
+        { text: 'O', color: '#d4af37', font: '800 28px Cinzel' }, // Brand-gold / Amber-500
+        { text: 'O', color: '#38bdf8', font: '800 28px Cinzel' }, // Sky-500 / Brand-accent
+        { text: 'K', color: '#94a3b8', font: '800 28px Cinzel' }, // Slate-400
+        { text: 'G', color: '#10b981', font: '800 28px Cinzel' }, // Emerald-500
+        { text: 'R', color: '#d4af37', font: '800 28px Cinzel' }, // Brand-gold / Amber-500
+        { text: 'I', color: '#38bdf8', font: '800 28px Cinzel' }, // Sky-500 / Brand-accent
+        { text: 'D', color: '#94a3b8', font: '800 28px Cinzel' }, // Slate-400
+        { text: '®', color: '#dc2626', font: '700 13px Cinzel', superscript: true } // Superscript ® matching red color theme
+      ];
+
+      let totalWidth = 0;
+      parts.forEach(p => {
+        ctx.font = p.font;
+        totalWidth += ctx.measureText(p.text).width;
+      });
+
+      let currentX = 210 - (totalWidth / 2);
+      parts.forEach(p => {
+        ctx.font = p.font;
+        ctx.fillStyle = p.color;
+        if (p.superscript) {
+          ctx.fillText(p.text, currentX, titleY - 12);
+        } else {
+          ctx.fillText(p.text, currentX, titleY);
+        }
+        currentX += ctx.measureText(p.text).width;
+      });
+
+      // Source / Book Title & Author
+      ctx.fillStyle = '#38bdf8'; 
+      ctx.font = 'italic 13px Lora'; 
+      ctx.textAlign = 'center';
+      ctx.fillText(`"${targetTitle}" — ${targetAuthor}`, 210, 72);
+
+      // Final Score Header (Localized)
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 11px Inter';
+      ctx.fillText(t('cardFinalScore'), 210, 108);
+
+      // Score Value (Supports negative numbers)
+      ctx.fillStyle = score < 0 ? '#f43f5e' : '#f59e0b'; 
+      ctx.font = '800 44px Inter'; 
+      ctx.fillText(`${score}%`, 210, 156);
+
+      // Stats Breakdown Box
+      ctx.fillStyle = '#1e293b';
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(40, 185, 340, 140, 12);
+        ctx.fill();
+      } else {
+        ctx.fillRect(40, 185, 340, 140);
+      }
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(40, 185, 340, 140, 12);
+        ctx.stroke();
+      } else {
+        ctx.strokeRect(40, 185, 340, 140);
+      }
+
+      // Stats Text
+      ctx.font = '600 13px Inter';
+      ctx.textAlign = 'left';
+
+      // Mistakes (Localized)
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(t('cardMistakes'), 70, 225);
+      ctx.fillStyle = '#f43f5e';
+      ctx.textAlign = 'right';
+      ctx.fillText(countMistakes, 350, 225);
+
+      // Hints (Localized)
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(t('cardHints'), 70, 260);
+      ctx.fillStyle = '#fbbf24';
+      ctx.textAlign = 'right';
+      ctx.fillText(countHints, 350, 260);
+
+      // Time Taken (Localized)
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(t('cardTime'), 70, 295);
+      ctx.fillStyle = '#38bdf8';
+      ctx.textAlign = 'right';
+      ctx.fillText(formatTime(gameElapsedTimeSeconds), 350, 295);
+
+      canvas.toBlob(async (blob) => {
+        try {
+          if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {
+            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+            alert(currentLang === 'es' ? "¡Tarjeta de puntuación copiada al portapapeles!" : "Scorecard copied to clipboard!");
+          } else {
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'bookgrid-scorecard.png'; a.click();
+          }
+        } catch(e) { console.warn(e); }
+      }, 'image/png');
+    }
+
+    function openQuoteInfoModal() { updateQuoteInfoModalUI(); document.getElementById('modal-quote-info').classList.remove('hidden'); }
+    function closeQuoteInfoModal() { document.getElementById('modal-quote-info').classList.add('hidden'); }
+    
+    // Temporarily disabled custom modal with a bilingual holding notice
+    function openCustomModal() {
+      const msg = currentLang === 'es' 
+        ? "¡Pronto! Estamos trabajando en la configuración personalizada y los modos multijugador. ¡Mantente atento a las novedades mientras se desarrolla la emoción!" 
+        : "Coming Soon! We are currently developing custom setups and multiplayer modes. Stand by while the excitement is being developed!";
+      alert(msg);
+    }
+
+    function openHelpModal() { document.getElementById('modal-help').classList.remove('hidden'); }
+    function closeHelpModal() { document.getElementById('modal-help').classList.add('hidden'); }
+    function openResultsModal() {
+      document.getElementById('res-total-letters').innerText = cleanLetters.length;
+      document.getElementById('res-time-taken').innerText = formatTime(gameElapsedTimeSeconds);
+      document.getElementById('res-final-score').innerText = `${calculateScore()}%`;
+      document.getElementById('results-author-quote').innerText = `"${targetQuote}"`;
+      document.getElementById('modal-results').classList.remove('hidden');
+    }
+    function closeResultsModal() { document.getElementById('modal-results').classList.add('hidden'); initDailyGame(); }
+  </script>
+</body>
+</html>
