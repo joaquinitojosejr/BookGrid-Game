@@ -280,7 +280,215 @@ window.BOOKGRID_DATA = {
         "category": "Filosofía",
         "subCategory": "Filosofía Clásica"
       }
+    },
+
+
+    {
+      "en": {
+        "quote": "There is no charm equal to tenderness of heart.",
+        "author": "Jane Austen",
+        "title": "Emma",
+        "published": "1815",
+        "trivia": "Austen published Emma anonymously as 'By the author of Pride and Prejudice'.",
+        "category": "Literature",
+        "subCategory": "Classic Novels"
+      },
+      "es": {
+        "quote": "No hay encanto igual a la ternura del corazón.",
+        "author": "Jane Austen",
+        "title": "Emma",
+        "published": "1815",
+        "trivia": "Austen publicó Emma de forma anónima como 'Por la autora de Orgullo y prejuicio'.",
+        "category": "Literatura",
+        "subCategory": "Novela Clásica"
+      }
+    },
+    {
+      "en": {
+        "quote": "Not all those who wander are lost.",
+        "author": "J.R.R. Tolkien",
+        "title": "The Fellowship of the Ring",
+        "published": "1954",
+        "trivia": "This line is part of a poem written for the character Aragorn.",
+        "category": "Literature",
+        "subCategory": "Fantasy"
+      },
+      "es": {
+        "quote": "No todos los que vagan están perdidos.",
+        "author": "J.R.R. Tolkien",
+        "title": "La Comunidad del Anillo",
+        "published": "1954",
+        "trivia": "Esta frase forma parte de un poema escrito para el personaje Aragorn.",
+        "category": "Literatura",
+        "subCategory": "Fantasía"
+      }
+    },
+    {
+      "en": {
+        "quote": "To live is the rarest thing in the world. Most people exist, that is all.",
+        "author": "Oscar Wilde",
+        "title": "The Soul of Man under Socialism",
+        "published": "1891",
+        "trivia": "Oscar Wilde was famous for his brilliant wit and flamboyant aesthetic style.",
+        "category": "Literature",
+        "subCategory": "Essays"
+      },
+      "es": {
+        "quote": "Vivir es lo más raro del mundo. La mayoría de la gente existe, eso es todo.",
+        "author": "Oscar Wilde",
+        "title": "El alma del hombre bajo el socialismo",
+        "published": "1891",
+        "trivia": "Oscar Wilde fue famoso por su brillante ingenio y su estilo estético extravagante.",
+        "category": "Literatura",
+        "subCategory": "Ensayos"
+      }
+    },
+    {
+      "en": {
+        "quote": "It is never too late to be what you might have been.",
+        "author": "George Eliot",
+        "title": "Attributed Writings",
+        "published": "1881",
+        "trivia": "George Eliot was the pen name of Mary Ann Evans, who used a male pseudonym to ensure her work was taken seriously.",
+        "category": "Philosophy",
+        "subCategory": "Wisdom"
+      },
+      "es": {
+        "quote": "Nunca es demasiado tarde para ser lo que podrías haber sido.",
+        "author": "George Eliot",
+        "title": "Escritos atribuidos",
+        "published": "1881",
+        "trivia": "George Eliot era el seudónimo de Mary Ann Evans, quien usó un nombre masculino para asegurar que su obra fuera tomada en serio.",
+        "category": "Filosofía",
+        "subCategory": "Sabiduría"
+      }
+    },
+    {
+      "en": {
+        "quote": "Real courage is when you know you're licked before you begin, but you begin anyway and see it through no matter what.",
+        "author": "Harper Lee",
+        "title": "To Kill a Mockingbird",
+        "published": "1960",
+        "trivia": "To Kill a Mockingbird won the Pulitzer Prize for Fiction in 1961.",
+        "category": "Literature",
+        "subCategory": "Modern Classics"
+      },
+      "es": {
+        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar, pero empiezas de todos modos y lo llevas hasta el final pase lo que pase.",
+        "author": "Harper Lee",
+        "title": "Matar a un ruiseñor",
+        "published": "1960",
+        "trivia": "Matar a un ruiseñor ganó el Premio Pulitzer de Ficción en 1961.",
+        "category": "Literatura",
+        "subCategory": "Clásicos Modernos"
+      }
+    },
+
+
+
+        {
+      "en": {
+        "quote": "Beware the barrenness of a busy life.",
+        "author": "Socrates",
+        "title": "Dialogues Recorded by Plato",
+        "published": "399 BCE",
+        "trivia": "Socrates never wrote down his teachings; everything we know comes through the accounts of his students like Plato and Xenophon.",
+        "category": "Philosophy",
+        "subCategory": "Ethics"
+      },
+      "es": {
+        "quote": "Teme la esterilidad de una vida ocupada.",
+        "author": "Sócrates",
+        "title": "Diálogos registrados por Platón",
+        "published": "399 a.C.",
+        "trivia": "Sócrates nunca puso por escrito sus enseñanzas; todo lo que sabemos proviene de los testimonios de sus discípulos como Platón y Jenofonte.",
+        "category": "Filosofía",
+        "subCategory": "Ética"
+      }
+    },
+    {
+      "en": {
+        "quote": "There is some good in this world, and it's worth fighting for.",
+        "author": "J.R.R. Tolkien",
+        "title": "The Two Towers",
+        "published": "1954",
+        "trivia": "This famous line spoken by Samwise Gamgee is one of the emotional emotional anchors of the middle chapter of the epic trilogy.",
+        "category": "Literature",
+        "subCategory": "Fantasy"
+      },
+      "es": {
+        "quote": "Hay algo de bueno en este mundo, y vale la pena luchar por ello.",
+        "author": "J.R.R. Tolkien",
+        "title": "Las Dos Torres",
+        "published": "1954",
+        "trivia": "Esta célebre frase pronunciada por Samsagaz Gamyi constituye uno de los pilares emocionales del libro central de la trilogía épica.",
+        "category": "Literatura",
+        "subCategory": "Fantasía"
+      }
+    },
+    {
+      "en": {
+        "quote": "Turn your face to the sun and the shadows fall behind you.",
+        "author": "Walt Whitman",
+        "title": "Leaves of Grass",
+        "published": "1855",
+        "trivia": "Whitman self-published the first edition of Leaves of Grass, altering American poetry forever with his free-verse style.",
+        "category": "Literature",
+        "subCategory": "Poetry"
+      },
+      "es": {
+        "quote": "Gira tu rostro hacia el sol y las sombras caerán detrás de ti.",
+        "author": "Walt Whitman",
+        "title": "Hojas de hierba",
+        "published": "1855",
+        "trivia": "Whitman autopublicó la primera edición de Hojas de hierba, transformando para siempre la poesía estadounidense con su estilo de verso libre.",
+        "category": "Literatura",
+        "subCategory": "Poesía"
+      }
+    },
+    {
+      "en": {
+        "quote": "Man is nothing else but what he makes of himself.",
+        "author": "Jean-Paul Sartre",
+        "title": "Existentialism is a Humanism",
+        "published": "1946",
+        "trivia": "Sartre famously argued that 'existence precedes essence', meaning humans define their own purpose rather than being born with a preset one.",
+        "category": "Philosophy",
+        "subCategory": "Existentialism"
+      },
+      "es": {
+        "quote": "El hombre no es otra cosa que lo que él se hace.",
+        "author": "Jean-Paul Sartre",
+        "title": "El existencialismo es un humanismo",
+        "published": "1946",
+        "trivia": "Sartre argumentó famosamente que 'la existencia precede a la esencia', lo que significa que el ser humano define su propio propósito.",
+        "category": "Filosofía",
+        "subCategory": "Existencialismo"
+      }
+    },
+    {
+      "en": {
+        "quote": "Knowing yourself is the beginning of all wisdom.",
+        "author": "Aristotle",
+        "title": "Nicomachean Ethics",
+        "published": "350 BCE",
+        "trivia": "Aristotle was a student of Plato and tutor to Alexander the Great, shaping Western scientific and political thought for millennia.",
+        "category": "Philosophy",
+        "subCategory": "Classical Philosophy"
+      },
+      "es": {
+        "quote": "Conocerse a sí mismo es el principio de toda sabiduría.",
+        "author": "Aristóteles",
+        "title": "Ética nicomáquea",
+        "published": "350 a.C.",
+        "trivia": "Aristóteles fue discípulo de Platón y maestro de Alejandro Magno, marcando el pensamiento científico y político occidental durante milenios.",
+        "category": "Filosofía",
+        "subCategory": "Filosofía Clásica"
+      }
     }
+
+
+    
   ],
   "presets": {}
 };
