@@ -396,8 +396,7 @@
     }
 
     function toggleLanguage() {
-      saveCurrentProgress(); // Save current language progress before switching languages
-      
+      saveCurrentProgress();
       currentLang = currentLang === 'en' ? 'es' : 'en';
       localStorage.setItem('bookgrid_lang', currentLang);
       updateLanguageUI();
@@ -417,6 +416,7 @@
         timeSeconds: gameElapsedTimeSeconds
       };
       localStorage.setItem(progressKey, JSON.stringify(progressData));
+      localStorage.setItem(`bookgrid_session_active_${currentLang}_${todayStr}`, 'true');
     }
 
     function updateLanguageUI() {
@@ -523,9 +523,11 @@
       const todayStr = getTodayUTCString();
       const solvedKey = `bookgrid_daily_solved_${currentLang}_${todayStr}`;
       const progressKey = `bookgrid_daily_progress_${currentLang}_${todayStr}`;
+      const sessionActiveKey = `bookgrid_session_active_${currentLang}_${todayStr}`;
 
       const savedSolvedData = localStorage.getItem(solvedKey);
       const savedProgressData = localStorage.getItem(progressKey);
+      const wasActiveSession = localStorage.getItem(sessionActiveKey);
 
       let dateHash = 0;
       for (let i = 0; i < todayStr.length; i++) dateHash += todayStr.charCodeAt(i);
@@ -580,6 +582,12 @@
           countMistakes = data.countMistakes || 0;
           countHints = data.countHints || 0;
           gameElapsedTimeSeconds = data.timeSeconds || 0;
+          
+          // Anti-Cheat / Anti-Refresh Penalty: If a session was active and the page reloaded mid-game, apply a refresh penalty
+          if (wasActiveSession) {
+            countMistakes += 5; // Apply a 5-mistake penalty for browser refreshing/abandonment
+          }
+
           isGameComplete = false;
 
           userGuesses.forEach((val, idx) => {
@@ -611,6 +619,9 @@
           document.getElementById('floating-keyboard').classList.remove('hidden');
           document.getElementById('floating-reveal-card').classList.add('hidden');
         }
+        
+        // Mark session as active now that board is initialized
+        localStorage.setItem(sessionActiveKey, 'true');
         startGameTimer();
       }
     }
@@ -779,7 +790,6 @@
 
         if (currentGameMode === 'daily') {
           const todayStr = getTodayUTCString();
-          // Explicitly namespace solved state by currentLang so languages never conflict
           localStorage.setItem(`bookgrid_daily_solved_${currentLang}_${todayStr}`, JSON.stringify({
             score: finalScore,
             mistakes: countMistakes,
@@ -787,6 +797,7 @@
             timeSeconds: gameElapsedTimeSeconds
           }));
           localStorage.removeItem(`bookgrid_daily_progress_${currentLang}_${todayStr}`);
+          localStorage.removeItem(`bookgrid_session_active_${currentLang}_${todayStr}`);
         }
 
         setTimeout(() => {
@@ -800,7 +811,6 @@
 
     function calculateScore() {
       const total = cleanLetters.length || 1;
-      // Allow scores to drop below 0% for competitive tournament tracking
       return Math.round((100 - (countMistakes * (100 / total)) - (countHints * (50 / total))) * 10) / 10;
     }
 
