@@ -937,6 +937,107 @@
       ctx.fillStyle = '#f8fafc';
       ctx.textAlign = 'right';
       ctx.fillText(todayStr, 355, boxY + 32);
+    async function shareResults() {
+      const score = calculateScore();
+      const canvas = document.createElement('canvas');
+      canvas.width = 840; 
+      canvas.height = 760; 
+      const ctx = canvas.getContext('2d');
+      ctx.scale(2, 2);
+
+      // Background (420 x 380 drawing area)
+      ctx.fillStyle = '#0f172a'; 
+      ctx.fillRect(0, 0, 420, 380);
+
+      // Multi-color BOOKGRID® Title matching Main UI with Superscript Registered Mark
+      const titleY = 38;
+      const parts = [
+        { text: 'B', color: '#10b981', font: '800 26px Cinzel' }, 
+        { text: 'O', color: '#d4af37', font: '800 26px Cinzel' }, 
+        { text: 'O', color: '#38bdf8', font: '800 26px Cinzel' }, 
+        { text: 'K', color: '#94a3b8', font: '800 26px Cinzel' }, 
+        { text: 'G', color: '#10b981', font: '800 26px Cinzel' }, 
+        { text: 'R', color: '#d4af37', font: '800 26px Cinzel' }, 
+        { text: 'I', color: '#38bdf8', font: '800 26px Cinzel' }, 
+        { text: 'D', color: '#94a3b8', font: '800 26px Cinzel' }, 
+        { text: '®', color: '#ffffff', font: '800 50px Cinzel', superscript: true } 
+      ];
+
+      let totalWidth = 0;
+      parts.forEach(p => {
+        ctx.font = p.font;
+        totalWidth += ctx.measureText(p.text).width;
+      });
+
+      let currentX = 210 - (totalWidth / 2);
+      parts.forEach(p => {
+        ctx.font = p.font;
+        ctx.fillStyle = p.color;
+        if (p.superscript) {
+          ctx.fillText(p.text, currentX, titleY - 4);
+        } else {
+          ctx.fillText(p.text, currentX, titleY);
+        }
+        currentX += ctx.measureText(p.text).width;
+      });
+
+      // Subtitle below logo: "Daily Challenge: Puzzle #YYYYMMDD (EN/ES)"
+      const todayStr = getTodayUTCString(); // YYYY-MM-DD
+      const puzzleId = todayStr.replace(/-/g, ''); // YYYYMMDD
+      const langUpper = currentLang.toUpperCase();
+      
+      ctx.fillStyle = '#38bdf8'; 
+      ctx.font = '600 11px Inter'; 
+      ctx.textAlign = 'center';
+      ctx.fillText(`Daily Challenge: Puzzle #${puzzleId} (${langUpper})`, 210, 60);
+
+      // Final Score Header (Localized)
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 10px Inter';
+      ctx.fillText(t('cardFinalScore'), 210, 84);
+
+      // Score Value (Supports negative numbers)
+      ctx.fillStyle = score < 0 ? '#f43f5e' : '#f59e0b'; 
+      ctx.font = '800 34px Inter'; 
+      ctx.fillText(`${score}%`, 210, 120);
+
+      // Author & Book Title Work Reference
+      ctx.fillStyle = '#38bdf8'; 
+      ctx.font = 'italic 12px Lora'; 
+      ctx.fillText(`"${targetTitle}" — ${targetAuthor}`, 210, 142);
+
+      // Stats Breakdown Box (4 items: Date, Mistakes, Hints, Time)
+      const boxY = 155;
+      const boxHeight = 175;
+      ctx.fillStyle = '#1e293b';
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(40, boxY, 340, boxHeight, 12);
+        ctx.fill();
+      } else {
+        ctx.fillRect(40, boxY, 340, boxHeight);
+      }
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(40, boxY, 340, boxHeight, 12);
+        ctx.stroke();
+      } else {
+        ctx.strokeRect(40, boxY, 340, boxHeight);
+      }
+
+      // Stats Text
+      ctx.font = '600 12px Inter';
+
+      // Row 1: Date of Puzzle (Calendar icon 📅)
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('📅 ' + t('cardDate'), 65, boxY + 32);
+      ctx.fillStyle = '#f8fafc';
+      ctx.textAlign = 'right';
+      ctx.fillText(todayStr, 355, boxY + 32);
 
       // Row 2: Mistakes (Red X icon ❌)
       ctx.textAlign = 'left';
