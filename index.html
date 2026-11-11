@@ -384,6 +384,7 @@
     let cleanLetters = [], wordAssignments = [], wordsCleanLetters = [], userGuesses = [], lockedTiles = [], keyStates = {}, letterCountsTotal = {}, letterCountsSolved = {};
     let selectedTileIndex = 0, countMistakes = 0, countHints = 0, isGameComplete = false, isNativeKeyboardActive = false;
     let gameStartTime = null, gameElapsedTimeSeconds = 0, gameTimerInterval = null;
+    let isTogglingLanguage = false; // Gate flag to protect language switches from refresh penalties
 
     function loadGameData() {
       if (typeof window.BOOKGRID_DATA !== 'undefined' && window.BOOKGRID_DATA && window.BOOKGRID_DATA.daily) {
@@ -396,7 +397,10 @@
     }
 
     function toggleLanguage() {
-      // Clear active session flag for current language before switching so language swaps aren't penalized as refreshes
+      // Set protection flag so initDailyGame knows this is an intentional language swap
+      isTogglingLanguage = true;
+
+      // Clear active session flag for the language we are leaving
       const todayStr = getTodayUTCString();
       localStorage.removeItem(`bookgrid_session_active_${currentLang}_${todayStr}`);
       
@@ -592,8 +596,8 @@
           countHints = data.countHints || 0;
           gameElapsedTimeSeconds = data.timeSeconds || 0;
           
-          // Anti-Cheat / Anti-Refresh Penalty: If a session was active and the page reloaded mid-game, apply a refresh penalty
-          if (wasActiveSession) {
+          // Anti-Cheat / Anti-Refresh Penalty: Only apply if it's a true page reload/abandonment, NOT a language switch
+          if (wasActiveSession && !isTogglingLanguage) {
             countMistakes += 5; // Apply a 5-mistake penalty for browser refreshing/abandonment
           }
 
@@ -629,8 +633,9 @@
           document.getElementById('floating-reveal-card').classList.add('hidden');
         }
         
-        // Mark session as active now that board is initialized
+        // Mark session as active and clear toggle protection flag
         localStorage.setItem(sessionActiveKey, 'true');
+        isTogglingLanguage = false;
         startGameTimer();
       }
     }
