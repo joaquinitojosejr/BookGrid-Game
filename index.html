@@ -386,6 +386,12 @@
     let gameStartTime = null, gameElapsedTimeSeconds = 0, gameTimerInterval = null;
     let isTogglingLanguage = false; // Gate flag to protect language switches from refresh penalties
 
+    // Language-scoped state containers for independent English and Spanish scorekeeping
+    let languageStates = {
+      en: { userGuesses: [], lockedTiles: [], countMistakes: 0, countHints: 0, timeSeconds: 0, isComplete: false },
+      es: { userGuesses: [], lockedTiles: [], countMistakes: 0, countHints: 0, timeSeconds: 0, isComplete: false }
+    };
+
     function loadGameData() {
       if (typeof window.BOOKGRID_DATA !== 'undefined' && window.BOOKGRID_DATA && window.BOOKGRID_DATA.daily) {
         GAME_DATA = window.BOOKGRID_DATA;
@@ -400,11 +406,13 @@
       // Set protection flag so initDailyGame knows this is an intentional language swap
       isTogglingLanguage = true;
 
+      // Save current language progress before switching
+      saveCurrentProgress();
+
       // Clear active session flag for the language we are leaving
       const todayStr = getTodayUTCString();
       localStorage.removeItem(`bookgrid_session_active_${currentLang}_${todayStr}`);
       
-      saveCurrentProgress();
       currentLang = currentLang === 'en' ? 'es' : 'en';
       localStorage.setItem('bookgrid_lang', currentLang);
       updateLanguageUI();
@@ -414,13 +422,21 @@
     function saveCurrentProgress() {
       if (currentGameMode !== 'daily' || isGameComplete) return;
       
-      // Do not save or flag active session if the player hasn't made any moves yet
       const hasPlayedMoves = userGuesses.some(g => g !== '') || countMistakes > 0 || countHints > 0;
       if (!hasPlayedMoves) return;
 
       const todayStr = getTodayUTCString();
       const progressKey = `bookgrid_daily_progress_${currentLang}_${todayStr}`;
       
+      // Update language-specific state container
+      if (languageStates[currentLang]) {
+        languageStates[currentLang].userGuesses = [...userGuesses];
+        languageStates[currentLang].lockedTiles = [...lockedTiles];
+        languageStates[currentLang].countMistakes = countMistakes;
+        languageStates[currentLang].countHints = countHints;
+        languageStates[currentLang].timeSeconds = gameElapsedTimeSeconds;
+      }
+
       const progressData = {
         userGuesses: userGuesses,
         lockedTiles: lockedTiles,
@@ -503,7 +519,12 @@
       gameStartTime = Date.now();
       if (gameTimerInterval) clearInterval(gameTimerInterval);
       gameTimerInterval = setInterval(() => {
-        if (!isGameComplete) gameElapsedTimeSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
+        if (!isGameComplete) {
+          gameElapsedTimeSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
+          if (languageStates[currentLang]) {
+            languageStates[currentLang].timeSeconds = gameElapsedTimeSeconds;
+          }
+        }
       }, 1000);
     }
 
@@ -559,16 +580,28 @@
 
       updateQuoteInfoModalUI();
 
+      // Ensure language state container exists for current language
+      if (!languageStates[currentLang]) {
+        languageStates[currentLang] = { userGuesses: [], lockedTiles: [], countMistakes: 0, countHints: 0, timeSeconds: 0, isComplete: false };
+      }
+      let currentState = languageStates[currentLang];
+
       if (savedSolvedData) {
         const data = JSON.parse(savedSolvedData);
-        countMistakes = data.mistakes;
-        countHints = data.hints;
-        gameElapsedTimeSeconds = data.timeSeconds || 0;
+        currentState.countMistakes = data.mistakes;
+        currentState.countHints = data.hints;
+        currentState.timeSeconds = data.timeSeconds || 0;
+        currentState.isComplete = true;
         isGameComplete = true;
+        countMistakes = currentState.countMistakes;
+        countHints = currentState.countHints;
+        gameElapsedTimeSeconds = currentState.timeSeconds;
 
         setupBoard();
         userGuesses = [...cleanLetters];
         lockedTiles = cleanLetters.map(() => true);
+        currentState.userGuesses = [...userGuesses];
+        currentState.lockedTiles = [...lockedTiles];
         
         cleanLetters.forEach(ch => {
           letterCountsSolved[ch] = letterCountsTotal[ch];
@@ -590,22 +623,31 @@
 
         if (savedProgressData) {
           const data = JSON.parse(savedProgressData);
-          userGuesses = data.userGuesses || [];
-          lockedTiles = data.lockedTiles || [];
-          countMistakes = data.countMistakes || 0;
-          countHints = data.countHints || 0;
-          gameElapsedTimeSeconds = data.timeSeconds || 0;
+          currentState.userGuesses = data.userGuesses || [];
+          currentState.lockedTiles = data.lockedTiles || [];
+          currentState.countMistakes = data.countMistakes || 0;
+          currentState.countHints = data.countHints || 0;
+          currentState.timeSeconds = data.timeSeconds || 0;
           
-          // Anti-Cheat / Anti-Refresh Penalty: Only apply if it's a true page reload/abandonment, NOT a language switch
+          userGuesses = [...currentState.userGuesses];
+          lockedTiles = [...currentState.lockedTiles];
+          countMistakes = currentState.countMistakes;
+          countHints = currentState.countHints;
+          gameElapsedTimeSeconds = currentState.timeSeconds;
+          
+          // Anti-Cheat / Anti-Refresh Penalty: Only apply if it's a true page reload, NOT a language switch
           if (wasActiveSession && !isTogglingLanguage) {
-            countMistakes += 5; // Apply a 5-mistake penalty for browser refreshing/abandonment
+            countMistakes += 5; 
+            currentState.countMistakes = countMistakes;
           }
 
+          currentState.isComplete = false;
           isGameComplete = false;
 
           userGuesses.forEach((val, idx) => {
             if (val && val === cleanLetters[idx]) {
               lockedTiles[idx] = true;
+              currentState.lockedTiles[idx] = true;
               letterCountsSolved[val] = (letterCountsSolved[val] || 0) + 1;
               updateVirtualKeyboardState(val, 'correct');
             } else if (val) {
@@ -624,13 +666,24 @@
           renderBoard();
           updateStatsDisplay();
         } else {
+          currentState.isComplete = false;
           isGameComplete = false;
+          currentState.countMistakes = 0;
+          currentState.countHints = 0;
+          currentState.timeSeconds = 0;
+          currentState.userGuesses = [];
+          currentState.lockedTiles = cleanLetters.map(() => false);
+          
           countMistakes = 0;
           countHints = 0;
           gameElapsedTimeSeconds = 0;
+          userGuesses = cleanLetters.map(() => '');
+          lockedTiles = cleanLetters.map(() => false);
+
           document.getElementById('daily-locked-banner').classList.add('hidden');
           document.getElementById('floating-keyboard').classList.remove('hidden');
           document.getElementById('floating-reveal-card').classList.add('hidden');
+          updateStatsDisplay();
         }
         
         // Mark session as active and clear toggle protection flag
@@ -799,6 +852,7 @@
     function checkWinCondition() {
       if (lockedTiles.every(s => s === true)) {
         isGameComplete = true;
+        if (languageStates[currentLang]) languageStates[currentLang].isComplete = true;
         if (gameTimerInterval) clearInterval(gameTimerInterval);
         const finalScore = calculateScore();
 
