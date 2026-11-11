@@ -396,6 +396,10 @@
     }
 
     function toggleLanguage() {
+      // Clear active session flag for current language before switching so language swaps aren't penalized as refreshes
+      const todayStr = getTodayUTCString();
+      localStorage.removeItem(`bookgrid_session_active_${currentLang}_${todayStr}`);
+      
       saveCurrentProgress();
       currentLang = currentLang === 'en' ? 'es' : 'en';
       localStorage.setItem('bookgrid_lang', currentLang);
@@ -405,6 +409,11 @@
 
     function saveCurrentProgress() {
       if (currentGameMode !== 'daily' || isGameComplete) return;
+      
+      // Do not save or flag active session if the player hasn't made any moves yet
+      const hasPlayedMoves = userGuesses.some(g => g !== '') || countMistakes > 0 || countHints > 0;
+      if (!hasPlayedMoves) return;
+
       const todayStr = getTodayUTCString();
       const progressKey = `bookgrid_daily_progress_${currentLang}_${todayStr}`;
       
