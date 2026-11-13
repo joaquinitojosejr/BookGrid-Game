@@ -60,7 +60,7 @@
     }
     .bg-word { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 3px; margin-right: 10px; margin-bottom: 10px; }
     #floating-keyboard { position: fixed; bottom: calc(8px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 50; touch-action: none; }
-    #floating-reveal-card { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); z-index: 45; touch-action: none; }
+    #floating-reveal-card { position: fixed; top: 110px; left: 50%; transform: translateX(-50%); z-index: 45; touch-action: none; }
     .key-btn {
       position: relative; background-color: #1e293b; color: #f8fafc; font-weight: 600; border-radius: 0.375rem;
       font-size: 0.75rem; height: 2.35rem; min-width: 28px; display: flex; align-items: center; justify-content: center;
@@ -130,39 +130,55 @@
 
   <input type="text" id="hidden-keyboard-input" autocomplete="off" autocapitalize="none" spellcheck="false" class="sr-only opacity-0 absolute -z-50 pointer-events-none" aria-hidden="true" />
 
-  <!-- Header -->
-  <header class="bg-white dark:bg-brand-card border-b border-slate-200 dark:border-brand-border px-2 sm:px-4 py-2 flex items-center justify-between shrink-0 z-10 shadow-sm dark:shadow-none">
-    <div class="flex items-center space-x-1.5 shrink-0">
-      <i class="fa-solid fa-book-bookmark text-amber-600 dark:text-brand-gold text-lg sm:text-xl"></i>
-      <h1 class="font-serif font-bold text-base sm:text-2xl tracking-wider inline-flex items-baseline select-none">
-        <span class="text-emerald-500">B</span><span class="text-amber-500 dark:text-brand-gold">O</span><span class="text-sky-500 dark:text-brand-accent">O</span><span class="text-slate-400 dark:text-slate-500">K</span><span class="text-emerald-500">G</span><span class="text-amber-500 dark:text-brand-gold">R</span><span class="text-sky-500 dark:text-brand-accent">I</span><span class="text-slate-400 dark:text-slate-500">D</span>
-        <span class="text-[18px] sm:text-xs font-sans font-extrabold text-red-600/70 dark:text-brand-red/70 ml-0.5 relative -top-1">®</span>
-      </h1>
-    </div>
+  <!-- Two-Line Stacked Header -->
+  <header class="bg-white dark:bg-brand-card border-b border-slate-200 dark:border-brand-border px-2 sm:px-4 py-2 flex flex-col gap-1.5 shrink-0 z-10 shadow-sm dark:shadow-none">
     
-    <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
-      <!-- Virtual Keyboard Toggle Button -->
-      <button onclick="toggleVirtualKeyboard()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center" title="Toggle Virtual Keyboard">
-        <i class="fa-solid fa-keyboard text-sm sm:text-lg"></i>
-      </button>
+    <!-- Top Row: Logo & Core State Actions -->
+    <div class="flex items-center justify-between w-full">
+      <div class="flex items-center space-x-1.5 shrink-0">
+        <i class="fa-solid fa-book-bookmark text-amber-600 dark:text-brand-gold text-lg sm:text-xl"></i>
+        <h1 class="font-serif font-bold text-base sm:text-2xl tracking-wider inline-flex items-baseline select-none">
+          <span class="text-emerald-500">B</span><span class="text-amber-500 dark:text-brand-gold">O</span><span class="text-sky-500 dark:text-brand-accent">O</span><span class="text-slate-400 dark:text-slate-500">K</span><span class="text-emerald-500">G</span><span class="text-amber-500 dark:text-brand-gold">R</span><span class="text-sky-500 dark:text-brand-accent">I</span><span class="text-slate-400 dark:text-slate-500">D</span>
+          <span class="text-[18px] sm:text-xs font-sans font-extrabold text-red-600/70 dark:text-brand-red/70 ml-0.5 relative -top-1">®</span>
+        </h1>
+      </div>
 
-      <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-2 py-1.5 text-[11px] sm:text-xs font-bold text-amber-600 dark:text-brand-gold hover:text-amber-700 transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1">
-        <i class="fa-solid fa-globe"></i> <span id="lang-label">ES</span>
-      </button>
-      <button onclick="toggleTheme()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-        <i id="theme-icon" class="fa-solid fa-sun text-sm sm:text-lg"></i>
-      </button>
-      <button onclick="openQuoteInfoModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 text-amber-700 dark:text-brand-gold rounded-lg transition-colors flex items-center gap-1 border border-slate-200">
-        <i class="fa-solid fa-circle-nodes"></i> <span class="hidden xs:inline" data-i18n="detailsBtn">Details</span>
-      </button>
-      <button onclick="openCustomModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-lg transition-colors flex items-center gap-1 border border-slate-200">
-        <i class="fa-solid fa-users text-sky-600"></i> <span class="hidden xs:inline" data-i18n="customBtn">Custom</span>
-      </button>
-      <!-- Clean Exit Button -->
-      <button onclick="exitGameCleanly()" class="p-1.5 sm:p-2 text-rose-500 hover:text-rose-600 transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center" title="Exit Game">
-        <i class="fa-solid fa-right-from-bracket text-sm sm:text-lg"></i>
-      </button>
+      <div class="flex items-center space-x-1.5 shrink-0">
+        <!-- Virtual Keyboard Toggle Button -->
+        <button onclick="toggleVirtualKeyboard()" class="px-2 py-1.5 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5" title="Toggle Virtual Keyboard">
+          <i class="fa-solid fa-keyboard text-sm sm:text-base"></i> <span class="hidden md:inline" data-i18n="keyboardBtnText">Keyboard</span>
+        </button>
+
+        <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-2.5 py-1.5 text-[11px] sm:text-xs font-bold text-amber-600 dark:text-brand-gold hover:text-amber-700 transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1">
+          <i class="fa-solid fa-globe"></i> <span id="lang-label">ES</span>
+        </button>
+        <button onclick="toggleTheme()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <i id="theme-icon" class="fa-solid fa-sun text-sm sm:text-lg"></i>
+        </button>
+      </div>
     </div>
+
+    <!-- Bottom Row: Game Controls & Navigation Buttons -->
+    <div class="flex items-center justify-between overflow-x-auto w-full pt-1 border-t border-slate-100 dark:border-slate-800/80 gap-1 text-[11px] sm:text-xs">
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button onclick="openQuoteInfoModal()" class="px-2.5 py-1.5 font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 text-amber-700 dark:text-brand-gold rounded-lg transition-colors flex items-center gap-1 border border-slate-200 dark:border-slate-700">
+          <i class="fa-solid fa-circle-nodes"></i> <span data-i18n="detailsBtn">Details</span>
+        </button>
+        <button onclick="openCustomModal()" class="px-2.5 py-1.5 font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-lg transition-colors flex items-center gap-1 border border-slate-200 dark:border-slate-700">
+          <i class="fa-solid fa-users text-sky-600"></i> <span data-i18n="customBtn">Custom</span>
+        </button>
+        <button onclick="openHelpModal()" class="px-2.5 py-1.5 font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 text-slate-600 dark:text-slate-300 rounded-lg transition-colors flex items-center gap-1 border border-slate-200 dark:border-slate-700">
+          <i class="fa-solid fa-circle-info text-sky-500"></i> <span data-i18n="howToBtn">How To</span>
+        </button>
+      </div>
+
+      <div class="flex items-center shrink-0">
+        <button onclick="exitGameCleanly()" class="px-2.5 py-1.5 font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1">
+          <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="exitBtn">Exit</span>
+        </button>
+      </div>
+    </div>
+
   </header>
 
   <!-- Sub-Header Status Bar -->
@@ -365,7 +381,7 @@
     const TRANSLATIONS = {
       en: {
         langToggle: "ES", dailyChallenge: "Daily Challenge", customMode: "Custom Mode", mistakesLabel: "Mistakes",
-        hintsLabel: "Hints", scoreLabel: "Score", detailsBtn: "Details", customBtn: "Custom", lockedTitle: "Today's Puzzle Completed!",
+        hintsLabel: "Hints", scoreLabel: "Score", detailsBtn: "Details", customBtn: "Custom", howToBtn: "How To", exitBtn: "Exit", keyboardBtnText: "Keyboard", lockedTitle: "Today's Puzzle Completed!",
         shareBtn: ">>>>>>> Share Score Card <<<<<<<", nextQuoteLabel: "Next Quote in", legendCorrect: "Correct Slot", legendSameWord: "Same Word",
         legendInQuote: "In Quote", legendNotInQuote: "Not in Quote", sourceRevealed: "SOURCE REVEALED", keyboardTitle: "KEYBOARD",
         quoteDetailsTitle: "Quote Details", categoryLabel: "Category", subcategoryLabel: "Sub-Category", authorLabel: "Author",
@@ -381,7 +397,7 @@
       },
       es: {
         langToggle: "EN", dailyChallenge: "Desafío Diario", customMode: "Modo Personalizado", mistakesLabel: "Errores",
-        hintsLabel: "Pistas", scoreLabel: "Puntuación", detailsBtn: "Detalles", customBtn: "Personalizado", lockedTitle: "¡Rompecabezas Completado!",
+        hintsLabel: "Pistas", scoreLabel: "Puntuación", detailsBtn: "Detalles", customBtn: "Personalizado", howToBtn: "Cómo Jugar", exitBtn: "Salir", keyboardBtnText: "Teclado", lockedTitle: "¡Rompecabezas Completado!",
         shareBtn: ">> Compartir Tarjeta de Marcación <<", nextQuoteLabel: "Siguiente Frase en", legendCorrect: "Casilla Correcta", legendSameWord: "Misma Palabra",
         legendInQuote: "En la Frase", legendNotInQuote: "No en la Frase", sourceRevealed: "FUENTE REVELADA", keyboardTitle: "TECLADO",
         quoteDetailsTitle: "Detalles de la Frase", categoryLabel: "Categoría", subcategoryLabel: "Subcategoría", authorLabel: "Autor",
@@ -450,7 +466,6 @@
       startGameTimer();
     }
 
-    // Monitor Fullscreen changes (intercepts phone back button or Esc key exit)
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
@@ -459,7 +474,6 @@
       const splash = document.getElementById('splash-overlay');
       const isSplashActive = splash && !splash.classList.contains('hidden');
 
-      // If user exited fullscreen and splash isn't active, enforce blocker overlay
       if (!isFullscreen && !isSplashActive && !isGameComplete) {
         if (gameTimerInterval) clearInterval(gameTimerInterval);
         saveCurrentProgress();
@@ -481,7 +495,6 @@
       saveCurrentProgress();
       if (gameTimerInterval) clearInterval(gameTimerInterval);
       
-      // Attempt to exit fullscreen and return to splash / reset view
       if (document.exitFullscreen) {
         document.exitFullscreen().catch(() => {});
       }
@@ -763,7 +776,6 @@
         
         localStorage.setItem(sessionActiveKey, 'true');
         isTogglingLanguage = false;
-        // Note: Timer starts after launchImmersiveGame() is clicked
       }
     }
 
@@ -990,7 +1002,7 @@
     }
     function resetRevealCardPosition() {
       const c = document.getElementById('floating-reveal-card');
-      c.style.left = '50%'; c.style.top = '90px'; c.style.transform = 'translateX(-50%)';
+      c.style.left = '50%'; c.style.top = '110px'; c.style.transform = 'translateX(-50%)';
     }
     function toggleKeyboardCollapse() { document.getElementById('keyboard-keys-container').classList.toggle('hidden'); }
     function toggleRevealCardCollapse() { document.getElementById('reveal-card-body').classList.toggle('hidden'); }
