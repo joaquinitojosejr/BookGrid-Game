@@ -384,9 +384,9 @@
     let cleanLetters = [], wordAssignments = [], wordsCleanLetters = [], userGuesses = [], lockedTiles = [], keyStates = {}, letterCountsTotal = {}, letterCountsSolved = {};
     let selectedTileIndex = 0, countMistakes = 0, countHints = 0, isGameComplete = false, isNativeKeyboardActive = false;
     let gameStartTime = null, gameElapsedTimeSeconds = 0, gameTimerInterval = null;
-    let isTogglingLanguage = false; // Gate flag to protect language switches from refresh penalties
+    let isTogglingLanguage = false;
 
-    // Language-scoped state containers for independent English and Spanish scorekeeping
+    // Language-scoped state containers
     let languageStates = {
       en: { userGuesses: [], lockedTiles: [], countMistakes: 0, countHints: 0, timeSeconds: 0, isComplete: false },
       es: { userGuesses: [], lockedTiles: [], countMistakes: 0, countHints: 0, timeSeconds: 0, isComplete: false }
@@ -403,13 +403,9 @@
     }
 
     function toggleLanguage() {
-      // Set protection flag so initDailyGame knows this is an intentional language swap
       isTogglingLanguage = true;
-
-      // Save current language progress before switching
       saveCurrentProgress();
 
-      // Clear active session flag for the language we are leaving
       const todayStr = getTodayUTCString();
       localStorage.removeItem(`bookgrid_session_active_${currentLang}_${todayStr}`);
       
@@ -428,13 +424,13 @@
       const todayStr = getTodayUTCString();
       const progressKey = `bookgrid_daily_progress_${currentLang}_${todayStr}`;
       
-      // Update language-specific state container
       if (languageStates[currentLang]) {
         languageStates[currentLang].userGuesses = [...userGuesses];
         languageStates[currentLang].lockedTiles = [...lockedTiles];
         languageStates[currentLang].countMistakes = countMistakes;
         languageStates[currentLang].countHints = countHints;
         languageStates[currentLang].timeSeconds = gameElapsedTimeSeconds;
+        languageStates[currentLang].isComplete = isGameComplete;
       }
 
       const progressData = {
@@ -580,7 +576,6 @@
 
       updateQuoteInfoModalUI();
 
-      // Ensure language state container exists for current language
       if (!languageStates[currentLang]) {
         languageStates[currentLang] = { userGuesses: [], lockedTiles: [], countMistakes: 0, countHints: 0, timeSeconds: 0, isComplete: false };
       }
@@ -619,6 +614,10 @@
         document.getElementById('locked-score-summary').innerText = `Score: ${data.score}%`;
         updateStatsDisplay();
       } else {
+        // Explicitly force completion flag to false before building board
+        isGameComplete = false;
+        currentState.isComplete = false;
+
         setupBoard();
 
         if (savedProgressData) {
@@ -635,14 +634,10 @@
           countHints = currentState.countHints;
           gameElapsedTimeSeconds = currentState.timeSeconds;
           
-          // Anti-Cheat / Anti-Refresh Penalty: Only apply if it's a true page reload, NOT a language switch
           if (wasActiveSession && !isTogglingLanguage) {
             countMistakes += 5; 
             currentState.countMistakes = countMistakes;
           }
-
-          currentState.isComplete = false;
-          isGameComplete = false;
 
           userGuesses.forEach((val, idx) => {
             if (val && val === cleanLetters[idx]) {
@@ -666,12 +661,10 @@
           renderBoard();
           updateStatsDisplay();
         } else {
-          currentState.isComplete = false;
-          isGameComplete = false;
           currentState.countMistakes = 0;
           currentState.countHints = 0;
           currentState.timeSeconds = 0;
-          currentState.userGuesses = [];
+          currentState.userGuesses = cleanLetters.map(() => '');
           currentState.lockedTiles = cleanLetters.map(() => false);
           
           countMistakes = 0;
@@ -686,7 +679,6 @@
           updateStatsDisplay();
         }
         
-        // Mark session as active and clear toggle protection flag
         localStorage.setItem(sessionActiveKey, 'true');
         isTogglingLanguage = false;
         startGameTimer();
@@ -850,7 +842,10 @@
     }
 
     function checkWinCondition() {
-      if (lockedTiles.every(s => s === true)) {
+      // Guard: Ensure board is populated and game is not already flagged complete
+      if (isGameComplete || cleanLetters.length === 0) return;
+
+      if (lockedTiles.length > 0 && lockedTiles.every(s => s === true)) {
         isGameComplete = true;
         if (languageStates[currentLang]) languageStates[currentLang].isComplete = true;
         if (gameTimerInterval) clearInterval(gameTimerInterval);
@@ -927,11 +922,9 @@
       const ctx = canvas.getContext('2d');
       ctx.scale(2, 2);
 
-      // Background (420 x 380 drawing area)
       ctx.fillStyle = '#0f172a'; 
       ctx.fillRect(0, 0, 420, 380);
 
-      // Multi-color BOOKGRID® Title matching Main UI with Superscript Registered Mark
       const titleY = 48;
       const parts = [
         { text: 'B', color: '#10b981', font: '800 26px Cinzel' }, 
@@ -963,9 +956,8 @@
         currentX += ctx.measureText(p.text).width;
       });
 
-      // Subtitle below logo: "Daily Challenge: Puzzle #YYYYMMDD (EN/ES)"
-      const todayStr = getTodayUTCString(); // YYYY-MM-DD
-      const puzzleId = todayStr.replace(/-/g, ''); // YYYYMMDD
+      const todayStr = getTodayUTCString();
+      const puzzleId = todayStr.replace(/-/g, '');
       const langUpper = currentLang.toUpperCase();
       
       ctx.fillStyle = '#38bdf8'; 
@@ -973,22 +965,18 @@
       ctx.textAlign = 'center';
       ctx.fillText(`Daily Challenge: Puzzle #${puzzleId} (${langUpper})`, 210, 64);
 
-      // Final Score Header (Localized)
       ctx.fillStyle = '#94a3b8';
       ctx.font = '600 9px Inter';
       ctx.fillText(t('cardFinalScore'), 210, 80);
 
-      // Score Value (Supports negative numbers)
       ctx.fillStyle = score < 0 ? '#f43f5e' : '#f59e0b'; 
       ctx.font = '800 28px Inter'; 
       ctx.fillText(`${score}%`, 210, 108);
 
-      // Author & Book Title Work Reference
       ctx.fillStyle = '#38bdf8'; 
       ctx.font = 'italic 11px Lora'; 
       ctx.fillText(`"${targetTitle}" — ${targetAuthor}`, 210, 126);
 
-      // Stats Breakdown Box (4 items: Date, Mistakes, Hints, Time)
       const boxY = 138;
       const boxHeight = 185;
       ctx.fillStyle = '#1e293b';
@@ -1010,10 +998,8 @@
         ctx.strokeRect(40, boxY, 340, boxHeight);
       }
 
-      // Stats Text
       ctx.font = '600 12px Inter';
 
-      // Row 1: Date of Puzzle (Calendar icon 📅)
       ctx.textAlign = 'left';
       ctx.fillStyle = '#94a3b8';
       ctx.fillText('📅 ' + t('cardDate'), 65, boxY + 32);
@@ -1021,7 +1007,6 @@
       ctx.textAlign = 'right';
       ctx.fillText(todayStr, 355, boxY + 32);
 
-      // Row 2: Mistakes (Red X icon ❌)
       ctx.textAlign = 'left';
       ctx.fillStyle = '#94a3b8';
       ctx.fillText('❌ ' + t('cardMistakes'), 65, boxY + 74);
@@ -1029,7 +1014,6 @@
       ctx.textAlign = 'right';
       ctx.fillText(countMistakes, 355, boxY + 74);
 
-      // Row 3: Hints Used (Lightbulb icon 💡)
       ctx.textAlign = 'left';
       ctx.fillStyle = '#94a3b8';
       ctx.fillText('💡 ' + t('cardHints'), 65, boxY + 116);
@@ -1037,7 +1021,6 @@
       ctx.textAlign = 'right';
       ctx.fillText(countHints, 355, boxY + 116);
 
-      // Row 4: Time Taken (Clock icon ⏱)
       ctx.textAlign = 'left';
       ctx.fillStyle = '#94a3b8';
       ctx.fillText('⏱ ' + t('cardTime'), 65, boxY + 158);
@@ -1060,7 +1043,6 @@
     function openQuoteInfoModal() { updateQuoteInfoModalUI(); document.getElementById('modal-quote-info').classList.remove('hidden'); }
     function closeQuoteInfoModal() { document.getElementById('modal-quote-info').classList.add('hidden'); }
     
-    // Temporarily disabled custom modal with a bilingual holding notice
     function openCustomModal() {
       const msg = currentLang === 'es' 
         ? "¡Pronto en Estreno! Estamos trabajando en la configuración personalizada y los modos multijugador. ¡Mantente atento a las novedades mientras se desarrolla la emoción!" 
