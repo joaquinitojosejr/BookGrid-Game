@@ -111,6 +111,23 @@
     </div>
   </div>
 
+  <!-- Fullscreen Enforcer / Exit Blocker Overlay -->
+  <div id="fullscreen-blocker" class="fixed inset-0 bg-slate-950/95 z-50 flex flex-col items-center justify-center p-6 text-center hidden">
+    <div class="max-w-xs space-y-4">
+      <div class="inline-flex p-3 bg-rose-500/10 text-rose-500 rounded-2xl mb-1">
+        <i class="fa-solid fa-lock text-3xl"></i>
+      </div>
+      <h2 class="font-serif text-lg font-bold text-slate-100" data-i18n="blockerTitle">Immersive Mode Required</h2>
+      <p class="text-xs text-slate-400" data-i18n="blockerDesc">Game progress has been safely saved. Fullscreen mode is required to continue playing.</p>
+      <button onclick="resumeImmersiveGame()" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-sm transition-colors shadow-lg flex items-center justify-center gap-2">
+        <i class="fa-solid fa-expand"></i> <span data-i18n="blockerResumeBtn">Resume Fullscreen</span>
+      </button>
+      <button onclick="exitGameCleanly()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-xs transition-colors border border-slate-700 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="blockerExitBtn">Exit & Save Session</span>
+      </button>
+    </div>
+  </div>
+
   <input type="text" id="hidden-keyboard-input" autocomplete="off" autocapitalize="none" spellcheck="false" class="sr-only opacity-0 absolute -z-50 pointer-events-none" aria-hidden="true" />
 
   <!-- Header -->
@@ -132,9 +149,6 @@
       <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-2 py-1.5 text-[11px] sm:text-xs font-bold text-amber-600 dark:text-brand-gold hover:text-amber-700 transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1">
         <i class="fa-solid fa-globe"></i> <span id="lang-label">ES</span>
       </button>
-      <button onclick="toggleFullscreen()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
-        <i id="fullscreen-icon" class="fa-solid fa-expand text-sm sm:text-lg"></i>
-      </button>
       <button onclick="toggleTheme()" class="p-1.5 sm:p-2 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-brand-gold transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
         <i id="theme-icon" class="fa-solid fa-sun text-sm sm:text-lg"></i>
       </button>
@@ -144,8 +158,9 @@
       <button onclick="openCustomModal()" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold bg-slate-100 dark:bg-brand-border hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-lg transition-colors flex items-center gap-1 border border-slate-200">
         <i class="fa-solid fa-users text-sky-600"></i> <span class="hidden xs:inline" data-i18n="customBtn">Custom</span>
       </button>
-      <button onclick="openHelpModal()" class="p-1.5 sm:p-2 text-slate-500 hover:text-amber-600 dark:hover:text-brand-gold transition-colors">
-        <i class="fa-solid fa-circle-info text-base sm:text-lg"></i>
+      <!-- Clean Exit Button -->
+      <button onclick="exitGameCleanly()" class="p-1.5 sm:p-2 text-rose-500 hover:text-rose-600 transition-colors rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center" title="Exit Game">
+        <i class="fa-solid fa-right-from-bracket text-sm sm:text-lg"></i>
       </button>
     </div>
   </header>
@@ -360,7 +375,9 @@
         puzzleSolvedTitle: "Puzzle Solved!", quoteLettersLabel: "Quote Letters:", timeTakenLabel: "Time Taken:", finalScoreLabel: "Final Score:",
         copyCardBtn: "Copy Score Card", helpTitle: "How to Play & Clues", helpLine1: "• Fill in missing quote tiles using your keyboard.",
         cardFinalScore: "FINAL SCORE", cardMistakes: "Mistakes:", cardHints: "Hints Used:", cardTime: "Time Taken:", cardDate: "Date:",
-        splashTitle: "BOOKGRID®", splashDesc: "Step into today's literary word puzzle. Enter immersive mode to begin.", splashBtn: "Start Daily Challenge"
+        splashTitle: "BOOKGRID®", splashDesc: "Step into today's literary word puzzle. Enter immersive mode to begin.", splashBtn: "Start Daily Challenge",
+        blockerTitle: "Immersive Mode Required", blockerDesc: "Game progress has been safely saved. Fullscreen mode is required to continue playing.",
+        blockerResumeBtn: "Resume Fullscreen", blockerExitBtn: "Exit & Save Session"
       },
       es: {
         langToggle: "EN", dailyChallenge: "Desafío Diario", customMode: "Modo Personalizado", mistakesLabel: "Errores",
@@ -374,7 +391,9 @@
         puzzleSolvedTitle: "¡Resuelto!", quoteLettersLabel: "Letras:", timeTakenLabel: "Tiempo:", finalScoreLabel: "Puntuación Final:",
         copyCardBtn: "Copiar Imagen", helpTitle: "Cómo Jugar y Pistas", helpLine1: "• Completa las casillas vacías usando el teclado.",
         cardFinalScore: "PUNTUACIÓN FINAL", cardMistakes: "Errores:", cardHints: "Pistas Usadas:", cardTime: "Tiempo:", cardDate: "Fecha:",
-        splashTitle: "BOOKGRID®", splashDesc: "Adéntrate en el rompecabezas literario de hoy. Entra en el modo inmersivo para comenzar.", splashBtn: "Iniciar Desafío Diario"
+        splashTitle: "BOOKGRID®", splashDesc: "Adéntrate en el rompecabezas literario de hoy. Entra en el modo inmersivo para comenzar.", splashBtn: "Iniciar Desafío Diario",
+        blockerTitle: "Modo Inmersivo Requerido", blockerDesc: "Tu progreso se ha guardado de forma segura. Se requiere pantalla completa para continuar jugando.",
+        blockerResumeBtn: "Reanudar Pantalla Completa", blockerExitBtn: "Salir y Guardar Sesión"
       }
     };
 
@@ -419,19 +438,56 @@
     }
 
     function launchImmersiveGame() {
-      // Hide splash overlay
       const splash = document.getElementById('splash-overlay');
       if (splash) splash.classList.add('hidden');
 
-      // Request browser fullscreen via user gesture
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen().catch(() => {});
       } else if (document.documentElement.webkitRequestFullscreen) {
         document.documentElement.webkitRequestFullscreen();
       }
 
-      // Start game timer
       startGameTimer();
+    }
+
+    // Monitor Fullscreen changes (intercepts phone back button or Esc key exit)
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+    function handleFullscreenChange() {
+      const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+      const splash = document.getElementById('splash-overlay');
+      const isSplashActive = splash && !splash.classList.contains('hidden');
+
+      // If user exited fullscreen and splash isn't active, enforce blocker overlay
+      if (!isFullscreen && !isSplashActive && !isGameComplete) {
+        if (gameTimerInterval) clearInterval(gameTimerInterval);
+        saveCurrentProgress();
+        document.getElementById('fullscreen-blocker').classList.remove('hidden');
+      }
+    }
+
+    function resumeImmersiveGame() {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      }
+      document.getElementById('fullscreen-blocker').classList.add('hidden');
+      startGameTimer();
+    }
+
+    function exitGameCleanly() {
+      saveCurrentProgress();
+      if (gameTimerInterval) clearInterval(gameTimerInterval);
+      
+      // Attempt to exit fullscreen and return to splash / reset view
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      
+      document.getElementById('fullscreen-blocker').classList.add('hidden');
+      document.getElementById('splash-overlay').classList.remove('hidden');
     }
 
     function toggleLanguage() {
@@ -508,11 +564,6 @@
       const icon = document.getElementById('theme-icon');
       if (!icon) return;
       icon.className = isDark ? 'fa-solid fa-sun text-sm sm:text-lg text-amber-400' : 'fa-solid fa-moon text-sm sm:text-lg text-slate-700';
-    }
-
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
-      else if (document.exitFullscreen) { document.exitFullscreen(); }
     }
 
     function toggleVirtualKeyboard() {
@@ -712,7 +763,7 @@
         
         localStorage.setItem(sessionActiveKey, 'true');
         isTogglingLanguage = false;
-        startGameTimer();
+        // Note: Timer starts after launchImmersiveGame() is clicked
       }
     }
 
