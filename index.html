@@ -97,6 +97,20 @@
 </head>
 <body class="bg-slate-100 dark:bg-brand-dark text-slate-800 dark:text-slate-100 font-body h-[100dvh] flex flex-col overflow-hidden no-select transition-colors duration-200">
 
+  <!-- Immersive Launch Splash Overlay -->
+  <div id="splash-overlay" class="fixed inset-0 bg-slate-950/95 z-50 flex flex-col items-center justify-center p-6 text-center">
+    <div class="max-w-xs space-y-4">
+      <div class="inline-flex p-3 bg-amber-500/10 text-amber-500 rounded-2xl mb-1">
+        <i class="fa-solid fa-book-bookmark text-3xl"></i>
+      </div>
+      <h2 class="font-serif text-xl font-bold text-slate-100" data-i18n="splashTitle">BOOKGRID®</h2>
+      <p class="text-xs text-slate-400" data-i18n="splashDesc">Step into today's literary word puzzle. Enter immersive mode to begin.</p>
+      <button onclick="launchImmersiveGame()" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-sm transition-colors shadow-lg flex items-center justify-center gap-2">
+        <i class="fa-solid fa-expand"></i> <span data-i18n="splashBtn">Start Daily Challenge</span>
+      </button>
+    </div>
+  </div>
+
   <input type="text" id="hidden-keyboard-input" autocomplete="off" autocapitalize="none" spellcheck="false" class="sr-only opacity-0 absolute -z-50 pointer-events-none" aria-hidden="true" />
 
   <!-- Header -->
@@ -345,7 +359,8 @@
         presetClassic: "Classic Fiction", presetScience: "Science & Physics", launchGameBtn: "Launch Game", backToDailyBtn: "Back to Daily",
         puzzleSolvedTitle: "Puzzle Solved!", quoteLettersLabel: "Quote Letters:", timeTakenLabel: "Time Taken:", finalScoreLabel: "Final Score:",
         copyCardBtn: "Copy Score Card", helpTitle: "How to Play & Clues", helpLine1: "• Fill in missing quote tiles using your keyboard.",
-        cardFinalScore: "FINAL SCORE", cardMistakes: "Mistakes:", cardHints: "Hints Used:", cardTime: "Time Taken:", cardDate: "Date:"
+        cardFinalScore: "FINAL SCORE", cardMistakes: "Mistakes:", cardHints: "Hints Used:", cardTime: "Time Taken:", cardDate: "Date:",
+        splashTitle: "BOOKGRID®", splashDesc: "Step into today's literary word puzzle. Enter immersive mode to begin.", splashBtn: "Start Daily Challenge"
       },
       es: {
         langToggle: "EN", dailyChallenge: "Desafío Diario", customMode: "Modo Personalizado", mistakesLabel: "Errores",
@@ -358,7 +373,8 @@
         presetClassic: "Ficción Clásica", presetScience: "Ciencia y Física", launchGameBtn: "Iniciar Juego", backToDailyBtn: "Volver al Diario",
         puzzleSolvedTitle: "¡Resuelto!", quoteLettersLabel: "Letras:", timeTakenLabel: "Tiempo:", finalScoreLabel: "Puntuación Final:",
         copyCardBtn: "Copiar Imagen", helpTitle: "Cómo Jugar y Pistas", helpLine1: "• Completa las casillas vacías usando el teclado.",
-        cardFinalScore: "PUNTUACIÓN FINAL", cardMistakes: "Errores:", cardHints: "Pistas Usadas:", cardTime: "Tiempo:", cardDate: "Fecha:"
+        cardFinalScore: "PUNTUACIÓN FINAL", cardMistakes: "Errores:", cardHints: "Pistas Usadas:", cardTime: "Tiempo:", cardDate: "Fecha:",
+        splashTitle: "BOOKGRID®", splashDesc: "Adéntrate en el rompecabezas literario de hoy. Entra en el modo inmersivo para comenzar.", splashBtn: "Iniciar Desafío Diario"
       }
     };
 
@@ -400,6 +416,22 @@
         GAME_DATA = FALLBACK_PAYLOAD;
       }
       initDailyGame();
+    }
+
+    function launchImmersiveGame() {
+      // Hide splash overlay
+      const splash = document.getElementById('splash-overlay');
+      if (splash) splash.classList.add('hidden');
+
+      // Request browser fullscreen via user gesture
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      }
+
+      // Start game timer
+      startGameTimer();
     }
 
     function toggleLanguage() {
@@ -614,7 +646,6 @@
         document.getElementById('locked-score-summary').innerText = `Score: ${data.score}%`;
         updateStatsDisplay();
       } else {
-        // Explicitly force completion flag to false before building board
         isGameComplete = false;
         currentState.isComplete = false;
 
@@ -842,7 +873,6 @@
     }
 
     function checkWinCondition() {
-      // Guard: Ensure board is populated and game is not already flagged complete
       if (isGameComplete || cleanLetters.length === 0) return;
 
       if (lockedTiles.length > 0 && lockedTiles.every(s => s === true)) {
