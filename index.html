@@ -250,8 +250,8 @@
     </div>
   </div>
 
-  <!-- Floating Virtual Keyboard -->
-  <div id="floating-keyboard" class="w-[98%] max-w-md bg-white/95 dark:bg-brand-card/95 backdrop-blur-md border border-slate-200 dark:border-brand-border rounded-2xl shadow-2xl p-2">
+  <!-- Floating Virtual Keyboard (Hidden by default until game starts) -->
+  <div id="floating-keyboard" class="w-[98%] max-w-md bg-white/95 dark:bg-brand-card/95 backdrop-blur-md border border-slate-200 dark:border-brand-border rounded-2xl shadow-2xl p-2 hidden">
     <div id="keyboard-drag-handle" class="flex items-center justify-between px-3 py-1 cursor-grab border-b border-slate-200 dark:border-brand-border/60 mb-1.5">
       <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
         <i class="fa-solid fa-grip-lines text-slate-400"></i>
@@ -463,6 +463,11 @@
         document.documentElement.webkitRequestFullscreen();
       }
 
+      // Show keyboard only after starting the game (if not complete)
+      if (!isGameComplete) {
+        document.getElementById('floating-keyboard').classList.remove('hidden');
+      }
+
       startGameTimer();
     }
 
@@ -477,6 +482,8 @@
       if (!isFullscreen && !isSplashActive && !isGameComplete) {
         if (gameTimerInterval) clearInterval(gameTimerInterval);
         saveCurrentProgress();
+        // Hide keyboard when blocker pops up
+        document.getElementById('floating-keyboard').classList.add('hidden');
         document.getElementById('fullscreen-blocker').classList.remove('hidden');
       }
     }
@@ -488,6 +495,9 @@
         document.documentElement.webkitRequestFullscreen();
       }
       document.getElementById('fullscreen-blocker').classList.add('hidden');
+      if (!isGameComplete) {
+        document.getElementById('floating-keyboard').classList.remove('hidden');
+      }
       startGameTimer();
     }
 
@@ -500,6 +510,7 @@
       }
       
       document.getElementById('fullscreen-blocker').classList.add('hidden');
+      document.getElementById('floating-keyboard').classList.add('hidden');
       document.getElementById('splash-overlay').classList.remove('hidden');
     }
 
@@ -595,7 +606,11 @@
       loadGameData();
 
       window.addEventListener('keydown', (e) => {
-        if (isGameComplete) return;
+        // Prevent key inputs if splash overlay or fullscreen blocker is active
+        const splash = document.getElementById('splash-overlay');
+        const blocker = document.getElementById('fullscreen-blocker');
+        if (isGameComplete || (splash && !splash.classList.contains('hidden')) || (blocker && !blocker.classList.contains('hidden'))) return;
+        
         const key = e.key.toUpperCase();
         if (((key >= 'A' && key <= 'Z') || key === 'Ñ') && key.length === 1) handleVirtualKey(key);
         else if (e.key === 'Backspace') handleBackspace();
@@ -769,7 +784,8 @@
           lockedTiles = cleanLetters.map(() => false);
 
           document.getElementById('daily-locked-banner').classList.add('hidden');
-          document.getElementById('floating-keyboard').classList.remove('hidden');
+          // Keep floating keyboard hidden until start button is clicked
+          document.getElementById('floating-keyboard').classList.add('hidden');
           document.getElementById('floating-reveal-card').classList.add('hidden');
           updateStatsDisplay();
         }
