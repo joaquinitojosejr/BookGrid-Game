@@ -59,6 +59,26 @@
         "category": "Filosofía",
         "subCategory": "Existencialismo"
       }
+    },
+    {
+      "en": {
+        "quote": "I have laboured carefully, not to mock, lament, or execrate human actions, but to understand them.",
+        "author": "Baruch Spinoza",
+        "title": "Tractatus Politicus (Political Treatise)",
+        "published": "1677",
+        "trivia": "Written near the end of Spinoza's life and published posthumously, this passage establishes his radical rationalist methodology: treating human emotional and political behaviors with the same objective neutrality as geometric figures.",
+        "category": "Philosophy",
+        "subCategory": "Political Philosophy"
+      },
+      "es": {
+        "quote": "He procurado con empeño no burlarme de las acciones humanas, ni deplorarlas ni aborrecerlas, sino entenderlas.",
+        "author": "Baruch Spinoza",
+        "title": "Tratado político (Tractatus Politicus)",
+        "published": "1677",
+        "trivia": "Escrito hacia el final de la vida de Spinoza y publicado póstumamente, este pasaje establece su metodología racionalista: analizar las pasiones y conductas políticas humanas con la misma neutralidad objetiva que las figuras geométricas.",
+        "category": "Filosofía",
+        "subCategory": "Filosofía política"
+      }
     }
   ],
   "presets": {}
