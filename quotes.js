@@ -161,47 +161,7 @@ window.BOOKGRID_DATA = {
         "subCategory": "Innovación"
       }
     },
-    {
-      "en": {
-        "quote": "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
-        "author": "Will Durant (interpreting Aristotle)",
-        "title": "The Story of Philosophy",
-        "published": "1926",
-        "trivia": "Though frequently attributed directly to Aristotle, this summary line was coined by historian Will Durant.",
-        "category": "Philosophy",
-        "subCategory": "Ethics"
-      },
-      "es": {
-        "quote": "Somos lo que hacemos repetidamente. La excelencia, por tanto, no es un acto, sino un hábito.",
-        "author": "Will Durant (interpretando a Aristóteles)",
-        "title": "La historia de la filosofía",
-        "published": "1926",
-        "trivia": "Aunque a menudo se atribuye directamente a Aristóteles, esta frase fue redactada por el historiador Will Durant.",
-        "category": "Filosofía",
-        "subCategory": "Ética"
-      }
-    },
-    {
-      "en": {
-        "quote": "Not all those who wander are lost.",
-        "author": "J.R.R. Tolkien",
-        "title": "The Fellowship of the Ring",
-        "published": "1954",
-        "trivia": "This line forms part of the famous poem 'All that is gold does not glitter', written for the character Aragorn.",
-        "category": "Literature",
-        "subCategory": "Fantasy"
-      },
-      "es": {
-        "quote": "No todos los que vagan están perdidos.",
-        "author": "J.R.R. Tolkien",
-        "title": "La Comunidad del Anillo",
-        "published": "1954",
-        "trivia": "Esta frase forma parte del famoso poema 'No todo lo que es oro reluce', escrito para el personaje Aragorn.",
-        "category": "Literatura",
-        "subCategory": "Fantasía"
-      }
-    },
-    {
+    {      
       "en": {
         "quote": "Science is a way of thinking much more than it is a body of knowledge.",
         "author": "Carl Sagan",
@@ -221,26 +181,7 @@ window.BOOKGRID_DATA = {
         "subCategory": "Astronomía"
       }
     },
-    {
-      "en": {
-        "quote": "The important thing is not to stop questioning. Curiosity has its own reason for existing.",
-        "author": "Albert Einstein",
-        "title": "LIFE Magazine Interview",
-        "published": "1955",
-        "trivia": "Einstein gave this quote to William Miller in an interview published shortly after his death in 1955.",
-        "category": "Science",
-        "subCategory": "Physics"
-      },
-      "es": {
-        "quote": "Lo importante es no dejar de hacerse preguntas. La curiosidad tiene su propia razón de existir.",
-        "author": "Albert Einstein",
-        "title": "Entrevista en la revista LIFE",
-        "published": "1955",
-        "trivia": "Einstein compartió esta reflexión con William Miller en una entrevista publicada poco después de su muerte en 1955.",
-        "category": "Ciencia",
-        "subCategory": "Física"
-      }
-    },
+    
     {
       "en": {
         "quote": "In the middle of difficulty lies opportunity.",
@@ -261,68 +202,7 @@ window.BOOKGRID_DATA = {
         "subCategory": "Sabiduría"
       }
     },
-    {
-      "en": {
-        "quote": "We can easily forgive a child who is afraid of the dark; the real tragedy of life is when men are afraid of the light.",
-        "author": "Plato",
-        "title": "Philosophical Dialogues",
-        "published": "380 BCE",
-        "trivia": "Plato was the founder of the Academy in Athens, the first institution of higher learning in the Western world.",
-        "category": "Philosophy",
-        "subCategory": "Classical Philosophy"
-      },
-      "es": {
-        "quote": "Podemos perdonar fácilmente a un niño que teme a la oscuridad; la verdadera tragedia de la vida es cuando los hombres temen a la luz.",
-        "author": "Platón",
-        "title": "Diálogos filosóficos",
-        "published": "380 a.C.",
-        "trivia": "Platón fue el fundador de la Academia de Atenas, la primera institución de educación superior del mundo occidental.",
-        "category": "Filosofía",
-        "subCategory": "Filosofía Clásica"
-      }
-    },
-
-
-    {
-      "en": {
-        "quote": "There is no charm equal to tenderness of heart.",
-        "author": "Jane Austen",
-        "title": "Emma",
-        "published": "1815",
-        "trivia": "Austen published Emma anonymously as 'By the author of Pride and Prejudice'.",
-        "category": "Literature",
-        "subCategory": "Classic Novels"
-      },
-      "es": {
-        "quote": "No hay encanto igual a la ternura del corazón.",
-        "author": "Jane Austen",
-        "title": "Emma",
-        "published": "1815",
-        "trivia": "Austen publicó Emma de forma anónima como 'Por la autora de Orgullo y prejuicio'.",
-        "category": "Literatura",
-        "subCategory": "Novela Clásica"
-      }
-    },
-    {
-      "en": {
-        "quote": "Not all those who wander are lost.",
-        "author": "J.R.R. Tolkien",
-        "title": "The Fellowship of the Ring",
-        "published": "1954",
-        "trivia": "This line is part of a poem written for the character Aragorn.",
-        "category": "Literature",
-        "subCategory": "Fantasy"
-      },
-      "es": {
-        "quote": "No todos los que vagan están perdidos.",
-        "author": "J.R.R. Tolkien",
-        "title": "La Comunidad del Anillo",
-        "published": "1954",
-        "trivia": "Esta frase forma parte de un poema escrito para el personaje Aragorn.",
-        "category": "Literatura",
-        "subCategory": "Fantasía"
-      }
-    },
+    
     {
       "en": {
         "quote": "To live is the rarest thing in the world. Most people exist, that is all.",
@@ -363,29 +243,6 @@ window.BOOKGRID_DATA = {
         "subCategory": "Sabiduría"
       }
     },
-    {
-      "en": {
-        "quote": "Real courage is when you know you're licked before you begin, but you begin anyway and see it through no matter what.",
-        "author": "Harper Lee",
-        "title": "To Kill a Mockingbird",
-        "published": "1960",
-        "trivia": "To Kill a Mockingbird won the Pulitzer Prize for Fiction in 1961.",
-        "category": "Literature",
-        "subCategory": "Modern Classics"
-      },
-      "es": {
-        "quote": "El verdadero valor es cuando sabes que estás vencido antes de empezar, pero empiezas de todos modos y lo llevas hasta el final pase lo que pase.",
-        "author": "Harper Lee",
-        "title": "Matar a un ruiseñor",
-        "published": "1960",
-        "trivia": "Matar a un ruiseñor ganó el Premio Pulitzer de Ficción en 1961.",
-        "category": "Literatura",
-        "subCategory": "Clásicos Modernos"
-      }
-    },
-
-
-
         {
       "en": {
         "quote": "Beware the barrenness of a busy life.",
