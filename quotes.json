@@ -39,6 +39,26 @@
         "category": "Filosofía",
         "subCategory": "Existencialismo"
       }
+    },
+    {
+      "en": {
+        "quote": "In the depth of winter, I finally learned that within me there lay an invincible summer.",
+        "author": "Albert Camus",
+        "title": "Return to Tipasa (Summer)",
+        "published": "1954",
+        "trivia": "Camus wrote this essay upon revisiting Tipasa, Algeria, after the devastation of World War II, discovering enduring hope and inner resilience in the landscape of his youth.",
+        "category": "Philosophy",
+        "subCategory": "Existentialism"
+      },
+      "es": {
+        "quote": "En medio del invierno, aprendí por fin que había en mí un verano invencible.",
+        "author": "Albert Camus",
+        "title": "Retorno a Tipasa (El verano)",
+        "published": "1954",
+        "trivia": "Camus escribió este ensayo tras regresar a Tipasa, Argelia, después de la devastación de la Segunda Guerra Mundial, descubriendo una esperanza duradera y resiliencia interior en los paisajes de su juventud.",
+        "category": "Filosofía",
+        "subCategory": "Existencialismo"
+      }
     }
   ],
   "presets": {}
