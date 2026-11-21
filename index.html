@@ -186,6 +186,9 @@
     <div id="mode-indicator" class="flex items-center gap-1.5">
       <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
       <span id="mode-text" class="font-medium text-slate-800 dark:text-slate-300">Daily Challenge</span>
+      <span id="incognito-badge" class="hidden ml-1.5 px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-600 dark:text-purple-300 border border-purple-500/30 text-[10px] font-semibold">
+        <i class="fa-solid fa-user-secret"></i> Incognito
+      </span>
     </div>
     <div id="game-stats-quick" class="flex items-center gap-2 sm:gap-4">
       <span><span data-i18n="mistakesLabel">Mistakes</span>: <strong id="stat-mistakes" class="text-rose-600 dark:text-rose-400">0</strong></span>
@@ -436,12 +439,84 @@
     let selectedTileIndex = 0, countMistakes = 0, countHints = 0, isGameComplete = false, isNativeKeyboardActive = false;
     let gameStartTime = null, gameElapsedTimeSeconds = 0, gameTimerInterval = null;
     let isTogglingLanguage = false;
+    let isIncognitoSession = false;
 
     // Language-scoped state containers
     let languageStates = {
       en: { userGuesses: [], lockedTiles: [], countMistakes: 0, countHints: 0, timeSeconds: 0, isComplete: false },
       es: { userGuesses: [], lockedTiles: [], countMistakes: 0, countHints: 0, timeSeconds: 0, isComplete: false }
     };
+
+    async function detectIncognitoMode() {
+      let detected = false;
+      try {
+        if (navigator.storage && typeof navigator.storage.estimate === 'function') {
+          const { quota } = await navigator.storage.estimate();
+          // Chromium incognito/private tabs typically cap quota around ~120MB or less
+          if (typeof quota === 'number' && quota > 0 && quota < 150 * 1024 * 1024) {
+            detected = true;
+          }
+        }
+      } catch (_) {}
+
+      // Fallback check if localStorage throws or is restricted
+      if (!detected) {
+        try {
+          const testKey = '__bg_incognito_probe__';
+          localStorage.setItem(testKey, '1');
+          localStorage.removeItem(testKey);
+        } catch (_) {
+          detected = true;
+        }
+      }
+
+      isIncognitoSession = detected;
+      const badge = document.getElementById('incognito-badge');
+      if (badge) {
+        if (isIncognitoSession) badge.classList.remove('hidden');
+        else badge.classList.add('hidden');
+      }
+    }
+
+    function drawIncognitoMark(ctx, centerX, centerY, scale = 1) {
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.scale(scale, scale);
+
+      // Hat crown
+      ctx.fillStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.roundRect(-8, -11, 16, 7, 2);
+      ctx.fill();
+
+      // Hat brim
+      ctx.beginPath();
+      ctx.roundRect(-13, -5, 26, 3, 1.5);
+      ctx.fill();
+
+      // Glasses left & right lenses
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.fillStyle = '#0f172a';
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      ctx.arc(-6, 3, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(6, 3, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Glasses bridge
+      ctx.beginPath();
+      ctx.moveTo(-1.5, 3);
+      ctx.lineTo(1.5, 3);
+      ctx.stroke();
+
+      ctx.restore();
+    }
 
     function loadGameData() {
       if (typeof window.BOOKGRID_DATA !== 'undefined' && window.BOOKGRID_DATA && window.BOOKGRID_DATA.daily) {
@@ -597,16 +672,16 @@
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       initTheme();
       updateLanguageUI();
       initKeyboardDrag();
       initRevealCardDrag();
       startCountdownTimer();
+      await detectIncognitoMode();
       loadGameData();
 
       window.addEventListener('keydown', (e) => {
-        // Prevent key inputs if splash overlay or fullscreen blocker is active
         const splash = document.getElementById('splash-overlay');
         const blocker = document.getElementById('fullscreen-blocker');
         if (isGameComplete || (splash && !splash.classList.contains('hidden')) || (blocker && !blocker.classList.contains('hidden'))) return;
@@ -784,7 +859,6 @@
           lockedTiles = cleanLetters.map(() => false);
 
           document.getElementById('daily-locked-banner').classList.add('hidden');
-          // Keep floating keyboard hidden until start button is clicked
           document.getElementById('floating-keyboard').classList.add('hidden');
           document.getElementById('floating-reveal-card').classList.add('hidden');
           updateStatsDisplay();
@@ -1024,6 +1098,7 @@
     function toggleRevealCardCollapse() { document.getElementById('reveal-card-body').classList.toggle('hidden'); }
 
     async function shareResults() {
+      await detectIncognitoMode();
       const score = calculateScore();
       const canvas = document.createElement('canvas');
       canvas.width = 840; 
@@ -1033,6 +1108,15 @@
 
       ctx.fillStyle = '#0f172a'; 
       ctx.fillRect(0, 0, 420, 380);
+
+      // Draw Incognito Hat & Glasses Mark if in Incognito Session
+      if (isIncognitoSession) {
+        drawIncognitoMark(ctx, 372, 30, 0.85);
+        ctx.fillStyle = '#c084fc';
+        ctx.font = '700 8px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText('INCOGNITO', 372, 48);
+      }
 
       const titleY = 48;
       const parts = [
